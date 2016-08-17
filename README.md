@@ -5,6 +5,16 @@ application up and running.
 
 Things you may want to cover:
 
+* Instructions
+  - Run all tests
+    ```
+      bundle exec rspec
+    ```
+  - Development mode (auto reload files, auto run tests)
+    ```
+      bundle exec guard
+    ```
+
 * Ruby version
 
 * System dependencies
