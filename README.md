@@ -16,7 +16,7 @@ Things you may want to cover:
     ```
   - Generate model
     ```
-      bundle exec rails generate scaffold <model_name> _id:string properties:hash
+      bundle exec rails generate scaffold <model_name> _id:string properties:hash --skip-template-engine
     ```
   - Build docker image
     ```
