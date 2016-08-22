@@ -42,6 +42,26 @@ RSpec.configure do |config|
     mocks.verify_partial_doubles = true
   end
 
+	config.backtrace_exclusion_patterns = [/\.rvm\/gems\//]
+	config.expect_with :rspec do |expectations|
+		expectations.include_chain_clauses_in_custom_matcher_descriptions = true
+	end
+
+	config.before :suite do
+		DatabaseCleaner.strategy = :truncation
+		DatabaseCleaner.clean_with :truncation
+	end
+
+	config.before :each do |example|
+		DatabaseCleaner.strategy = :truncation
+	end
+
+	config.around :each do |example|
+		DatabaseCleaner.cleaning do
+			example.run
+		end
+	end
+
   # This option will default to `:apply_to_host_groups` in RSpec 4 (and will
   # have no way to turn it off -- the option exists only for backwards
   # compatibility in RSpec 3). It causes shared context metadata to be
