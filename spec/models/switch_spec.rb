@@ -5,7 +5,7 @@ RSpec.describe Switch, type: :model do
 
   describe "Model validations" do
     before :each do
-      @swich = build :switch
+      @switch = build :switch
       @switch_hasnt_uuid = build :inv_switch_hasnt_uuid
       @switch_different_id_and_uuid = build :inv_switch_different_id_and_uuid
     end
