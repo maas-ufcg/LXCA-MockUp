@@ -14,6 +14,18 @@ Things you may want to cover:
     ```
       bundle exec guard
     ```
+  - Generate model
+    ```
+      bundle exec rake generate:scaffold[model_name]
+    ```
+  - Build docker image
+    ```
+      docker build . -t <image_name>
+    ```
+  - Run docker image on localhost:3000
+    ```
+      docker run --name <container_name> -p 3000:3000 -d <image_name>
+    ```
 
 * Ruby version
 
