@@ -1,0 +1,2 @@
+module ChassisHelper
+end
