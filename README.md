@@ -16,7 +16,7 @@ Things you may want to cover:
     ```
   - Generate model
     ```
-      bundle exec rake generate:scaffold[model_name]
+      bundle exec rails generate scaffold <model_name> _id:string properties:hash
     ```
   - Build docker image
     ```
