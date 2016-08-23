@@ -1,4 +1,4 @@
-class SwitchValidators
+class SwitchValidators << ActiveModel::Validator
 	def validate(record)
 		#call private specific methods of validation bellow 
 	end
@@ -10,9 +10,9 @@ class SwitchValidators
 
 		if record_v == nil
 			record_v.errors[:base] << "AccessState attribute cannot be nil"
-		elsif not record_v.is_a? String 
+		elsif not record_v.properties[:AccessState].is_a? String 
 			record_v.errors[:base] << "AccessState attribute must be of the type String"
-		elsif valid_values.include? record_v.properties[:AccessState]
+		elsif not valid_values.include? record_v.properties[:AccessState]
 			record_v.errors[:base] << "AccessState attribute is not valid"
 		end
 	end
@@ -20,7 +20,7 @@ class SwitchValidators
 	def validate_apply_pending(record_v)
 		if record_v == nil
 			record_v.errors[:base] << "ApllyPending attribute can't be nil"
-		elsif not record_v.is_a? Integer
+		elsif not record_v.properties[:applyPending].is_a? Integer
 			record_v.errors[:base] << "ApllyPending attribute must be an Integer value"
 		end
 	end
@@ -28,7 +28,7 @@ class SwitchValidators
 	def validate_attached_nodes(record_v)
 		if record_v == nil
 			record_v.errors[:base] << "AttachedNodes attribute can't be nil"
-		elsif not record_v.is_a? Array
+		elsif not record_v.properties[:attachedNodes].is_a? Array
 			record_v.errors[:base] << "AttachedNodes attribute must be an array of nodes values"
 		end
 	end
@@ -36,9 +36,9 @@ class SwitchValidators
 	def validate_display_name(record_v)
 		if record_v == nil
 			record_v.errors[:base] << "CMMDisplayName attribute can't be nil"
-		elsif not record_v.is_a? String
+		elsif not record_v.properties[:cmmHealthState].is_a? String
 			record_v.errors[:base] << "CMMDisplayName attribute must be a String"
-		elsif record_v == ""
+		elsif record_v.properties[:cmmHealthState] == ""
 			record_v.errors[:base] << "CMMDisplayName attribute can't be empty"
 		end
 	end
@@ -48,9 +48,9 @@ class SwitchValidators
 		
 		if record_v == nil
 			record_v.errors[:base] << "CMMHealthState attribute can't be nil"
-		elsif not record_v.is_a? String
+		elsif not record_v.properties[:cmmHealthState].is_a? String
 			record_v.errors[:base] << "CMMHealthState attribute must be a String"
-		elsif valid_values.include? record_v.properties[:cmmHealthState]
+		elsif not valid_values.include? record_v.properties[:cmmHealthState]
 			record_v.errors[:base] << "CMMHealthState attribute is not valid"
 		end
 	end
