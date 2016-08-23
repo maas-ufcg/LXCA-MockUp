@@ -31,19 +31,19 @@ class ChassiValidators < ActiveModel::Validator
       sub_keys = %w(corrIDs id location msg msgID severity)
       severity = %w(FATAL CRITICAL MAJOR MINOR WARNING INFORMATIONAL UNKNOWN)
 
-      if not record.properties[:accessState].is_a? Hash
+      if not record.properties[:activeAlerts].is_a? Hash
         record.errors[:base] << "ActiveAlerts attribute must be a Hash"
       end
 
       sub_keys.each do |key|
-        if record.properties[:accessState][:key] == nil
+        if record.properties[:activeAlerts][:key] == nil
           record.errors[:base] << "ActiveAlerts hash must contain #{key} attribute"
-        elsif not record.properties[:accessState][:key].is_a? String
+        elsif not record.properties[:activeAlerts][:key].is_a? String
           record.errors[:base] << "#{key} must be a String"
         end
       end
 
-      if not severity.include? record.properties[:accessState]["severity"]
+      if not severity.include? record.properties[:activeAlerts][:severity]
         record.errors[:base] << "Severity attribute is not valid."
       end
     end
