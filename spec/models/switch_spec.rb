@@ -9,6 +9,13 @@ RSpec.describe Switch, type: :model do
       @switch_missing_uuid = build :inv_switch_missing_uuid
       @switch_different_id_and_uuid = build :inv_switch_different_id_and_uuid
       @switch_missing_property = build :inv_switch_missing_property
+
+      #Testing properties values that have a predefined list of values.
+      @switch_with_invalid_accessState = build :inv_switch_invalid_accessState
+      @switch_with_invalid_backedBy = build :inv_switch_invalid_backedBy
+      @switch_with_invalid_cmmHealthState =  build :inv_switch_invalid_cmmHealthState
+      @switch_with_invalid_excludedHealthState = build :inv_switch_invalid_excludedHealthState
+
     end
 
 
@@ -28,8 +35,23 @@ RSpec.describe Switch, type: :model do
       expect(@switch).to be_valid(Switch)
     end
 
+    it "is invalid if accessState is not in a predefined list" do
+        expect(@switch_with_invalid_accessState).to_not be_valid(Switch)
+    end
+
+    it "is invalid if backedBy is not in a predefined list" do
+        expect(@switch_with_invalid_backedBy).to_not be_valid(Switch)
+    end
 
 
+    it "is invalid if cmmHealthState is not in a predefined list" do
+        expect(@switch_with_invalid_cmmHealthState).to_not be_valid(Switch)
+    end
+
+
+    it "is invalid if excludedHealthState is not in a predefined list" do
+        expect(@switch_with_invalid_excludedHealthState).to_not be_valid(Switch)
+    end
 
   end
 
