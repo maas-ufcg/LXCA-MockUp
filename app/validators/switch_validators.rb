@@ -1,6 +1,7 @@
 class SwitchValidators < ActiveModel::Validator
 	def validate(record)
 		validate_access_state(record)
+		validate_apply_pending(record)
 	end
 
 	private
