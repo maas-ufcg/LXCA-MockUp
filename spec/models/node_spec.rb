@@ -4,7 +4,7 @@ RSpec.describe Node, type: :model do
 
   describe "Database Data Validation" do
 
-    context "Invalid accessState Attribute Value" do
+    context "Validity of the accessState Attribute Value" do
       before :each do
         @invalid_node = build :invalid_access_state_node
         @valid_node = build :valid_access_state_node
@@ -20,7 +20,7 @@ RSpec.describe Node, type: :model do
     end
 
 
-    context "Invalid keyIdentifierType Attribute Value" do
+    skip context "Validity of the keyIdentifierType Attribute Value" do
       before :each do
         @invalid_node = build :invalid_key_identifier_type
         @valid_node = build :valid_key_identifier_type
