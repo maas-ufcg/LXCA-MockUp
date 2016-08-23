@@ -53,7 +53,7 @@ RSpec.describe Switch, type: :model do
       @switch_with_invalid_panicDump_type = build :inv_switch_with_invalid_panicDump_type
       @switch_with_invalid_ports_type = build :inv_switch_with_invalid_ports_type
       @switch_with_invalid_productID_type = build :inv_switch_with_invalid_productID_type
-      @switch_with_invalid_productName_type = build :inv_switch_with_invalid_productName_type
+      @switch_with_invalid_productName_type = build   :inv_switch_with_invalid_productName_type
       @switch_with_invalid_resetReason_type = build :inv_switch_with_invalid_resetReason_type
       @switch_with_invalid_serialNumber_type = build :inv_switch_with_invalid_serialNumber_type
       @switch_with_invalid_slots_type = build :inv_switch_with_invalid_slots_type
@@ -86,9 +86,7 @@ RSpec.describe Switch, type: :model do
     end
 
     it "is invalid if accessState is not in a predefined list" do
-        expect(@switch_with_invalid_accessState).to_not be_valid(Switch)
-    end
-
+        expect(@switch_with_invalid_accessState).to_not be_valid(Sw
     it "is invalid if backedBy is not in a predefined list" do
         expect(@switch_with_invalid_backedBy).to_not be_valid(Switch)
     end
@@ -100,6 +98,30 @@ RSpec.describe Switch, type: :model do
 
     it "is invalid if excludedHealthState is not in a predefined list" do
         expect(@switch_with_invalid_excludedHealthState).to_not be_valid(Switch)
+    end
+
+    it "is invalid if overallHealthState is not in a predefined list" do
+        expect(@switch_with_invalid_overallHealthState).to_not be_valid(Switch)
+    end
+
+    it "is invalid if panicDump is not in a predefined list" do
+        expect(@switch_with_invalid_panicDump).to_not be_valid(Switch)
+    end
+
+    it "is invalid if powerState is not in a predefined list" do
+        expect(@switch_with_invalid_powerState).to_not be_valid(Switch)
+    end
+
+    it "is invalid if protectedMode is not in a predefined list" do
+        expect(@switch_with_invalid_protectedMode).to_not be_valid(Switch)
+    end
+
+    it "is invalid if savePending is not in a predefined list" do
+        expect(@switch_with_invalid_savePending).to_not be_valid(Switch)
+    end
+
+    it "is invalid if savePending is not in a predefined list" do
+        expect(@switch_with_invalid_stackedMode).to_not be_valid(Switch)
     end
 
   end
