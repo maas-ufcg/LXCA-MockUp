@@ -28,23 +28,32 @@ class ChassiValidators < ActiveModel::Validator
   end
 
     def validate_active_alerts(record)
-      sub_keys = %w(corrIDs id location msg msgID severity)
+      sub_keys = %i(corrIDs id location msg msgID severity)
       severity = %w(FATAL CRITICAL MAJOR MINOR WARNING INFORMATIONAL UNKNOWN)
 
-      if not record.properties[:activeAlerts].is_a? Hash
+      if not record.properties[:activeAlerts].is_a? Array
         record.errors[:base] << "ActiveAlerts attribute must be a Hash"
       end
 
-      sub_keys.each do |key|
-        if record.properties[:activeAlerts][:key] == nil
-          record.errors[:base] << "ActiveAlerts hash must contain #{key} attribute"
-        elsif not record.properties[:activeAlerts][:key].is_a? String
-          record.errors[:base] << "#{key} must be a String"
+      record.properties[:activeAlerts].each do |alert|
+        if alert == nil
+          record.errors[:base] << "Alert cannot be nil"
+        elsif not alert.is_a? Hash
+          record.errors[:base] << "Alert must be a Hash"
         end
-      end
 
-      if not severity.include? record.properties[:activeAlerts][:severity]
-        record.errors[:base] << "Severity attribute is not valid."
+        sub_keys.each do |key|
+          if alert[key] == nil
+            record.errors[:base] << "ActiveAlerts hash must contain #{key} attribute"
+          elsif not alert[key].is_a? String
+            record.errors[:base] << "#{key} must be a String"
+          end
+        end
+
+        if not severity.include? alert[:severity]
+          record.errors[:base] << "Severity attribute is not valid."
+        end
+        
       end
     end
 
