@@ -1,6 +1,6 @@
 class SwitchValidators
 	def validate(record)
-		#call private specific methods of validation bellow 
+		#call private specific methods of validation bellow
 	end
 
 	private
@@ -10,7 +10,7 @@ class SwitchValidators
 
 		if record_v == nil
 			record_v.errors[:base] << "AccessState attribute cannot be nil"
-		elsif not record_v.is_a? String 
+		elsif not record_v.is_a? String
 			record_v.errors[:base] << "AccessState attribute must be of the type String"
 		elsif valid_values.include? record_v.properties[:AccessState]
 			record_v.errors[:base] << "AccessState attribute is not valid"
@@ -42,10 +42,10 @@ class SwitchValidators
 			record_v.errors[:base] << "CMMDisplayName attribute can't be empty"
 		end
 	end
-	
+
 	def validate_health_state(record_v)
 		valid_values = ["Normal", "Non-Critical", "Warning", "Minor-Failure", "Major-Failure", "Non-Recoverable", "Critical", "Unknown"]
-		
+
 		if record_v == nil
 			record_v.errors[:base] << "CMMHealthState attribute can't be nil"
 		elsif not record_v.is_a? String

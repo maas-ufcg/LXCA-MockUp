@@ -46,6 +46,7 @@ group :development, :test do
   gem 'guard-puma'
   gem 'factory_girl_rails'
   gem 'simplecov'
+  gem 'faker'
 end
 
 group :test do
@@ -60,4 +61,3 @@ group :development do
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
   gem 'spring'
 end
-
