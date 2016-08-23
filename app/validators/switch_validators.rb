@@ -1,6 +1,6 @@
-class SwitchValidators << ActiveModel::Validator
+class SwitchValidators < ActiveModel::Validator
 	def validate(record)
-		#call private specific methods of validation bellow
+		validate_access_state(record)
 	end
 
 	private
@@ -10,9 +10,9 @@ class SwitchValidators << ActiveModel::Validator
 
 		if record_v == nil
 			record_v.errors[:base] << "AccessState attribute cannot be nil"
-		elsif not record_v.properties[:AccessState].is_a? String 
+		elsif not record_v.properties[:accessState].is_a? String
 			record_v.errors[:base] << "AccessState attribute must be of the type String"
-		elsif not valid_values.include? record_v.properties[:AccessState]
+		elsif not valid_values.include? record_v.properties[:accessState]
 			record_v.errors[:base] << "AccessState attribute is not valid"
 		end
 	end

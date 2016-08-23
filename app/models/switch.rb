@@ -5,14 +5,16 @@ class Switch
   field :_id, type: String
   field :properties, type: Hash
 
-  after_create  :changeId, prepend: true
+  #before_create  :changeId, prepend: true
 
- validates_with SwitchValidators
+  def initialize(params={})
+    super params
 
-  private
-    def changeId
-      self._id = self.properties["uuid"]
-    end
+    # self._id = self.properties[:uuid]
+
+  end
+
+  validates_with SwitchValidators
 
 
 end

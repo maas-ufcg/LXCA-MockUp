@@ -3,7 +3,7 @@ FactoryGirl.define do
     properties FactoryGirl.build(:switch_properties)
 
     after(:build) do |switch|
-      switch._id =  switch.properties["uuid"]
+      switch._id =  switch.properties[:uuid]
 
     end
 
