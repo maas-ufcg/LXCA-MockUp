@@ -1,8 +1,9 @@
 FactoryGirl.define do
 
   factory :invalid_access_state_node, class: Node do
-    _id {Faker::Number.number(2).to_s}
-    properties {{accessState: Faker::Lorem.characters(5)}}
+    node_properties = FactoryGirl.build :node_properties
+    _id {node_properties[:uuid]}
+    properties {accessState Faker::Lorem.characters(10)}
   end
 
   factory :valid_access_state_node, class: Node do
