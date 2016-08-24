@@ -1,6 +1,6 @@
 FactoryGirl.define do
 
-  factory :chassis_bay, class Hash do
+  factory :chassis_bay, class: Hash do
     isExceeded { ["N", "Y"].sample }
     sensorName { Faker::Lorem.word }
     sensorValue { [true, false].sample }
@@ -10,3 +10,4 @@ FactoryGirl.define do
     initialize_with { attributes }
 
   end
+end

@@ -5,10 +5,12 @@ FactoryGirl.define do
     "UNKNOWN"
   ]
 
-  factory :power_capping_policy, class Hash do
+  factory :power_capping_policy, class: Hash do
     cappingPolicy { power_capping_policy.sample }
     currentPowerCap { rand(2**32..2**64-1) }
     maxPowerCap { rand(2**32..2**64-1) }
     minPowerCap { rand(2**32..2**64-1) }
+
+    initialize_with { attributes }
   end
 end

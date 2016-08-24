@@ -46,6 +46,7 @@ group :development, :test do
   gem 'guard-puma'
   gem 'factory_girl_rails'
   gem 'simplecov'
+  gem 'faker'
 end
 
 group :test do

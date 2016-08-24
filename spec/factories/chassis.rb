@@ -1,6 +1,12 @@
 FactoryGirl.define do
+
+
   factory :chassi do
-    _id "MyString"
-    properties ""
+    properties FactoryGirl.build :chassi_properties
+
+    after(:build) do |chassi|
+      chassi._id = chassi.properties['uuid']
+    end
+
   end
 end
