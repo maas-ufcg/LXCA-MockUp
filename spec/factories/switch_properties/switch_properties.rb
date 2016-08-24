@@ -2,13 +2,13 @@ require 'securerandom'
 
 FactoryGirl.define do
   health_states = %w(
-    Normal 
-    Non-Critical 
-    Warning 
-    Minor-Failure 
+    Normal
+    Non-Critical
+    Warning
+    Minor-Failure
     Major-Failure
-    Non-Recoverable 
-    Critical 
+    Non-Recoverable
+    Critical
     Unknown
   )
 
@@ -32,7 +32,7 @@ FactoryGirl.define do
     cmmHealthState { health_states.sample }
     contact { Faker::Company.name }
     cpuUtilization { Random.rand * 100 }
-    dataHandle  { Random.rand 0...2**64 }
+    dataHandle  { Random.rand 0...2**61 }
     description { Faker::Company.catch_phrase }
     dnsHostnames do
       (0...Random.rand(0..5)).map { Faker::Internet.domain_name }
@@ -87,19 +87,19 @@ FactoryGirl.define do
     macAddress do
       (0..5).map { |number| Faker::Internet.mac_address }
     end
-    machineType { Random.rand 0...2**64 }
-    manufacturer "" 
+    machineType { Random.rand 0...2**61 }
+    manufacturer ""
     manufacturerID ""
     manufacturingDate { "#{Random.rand 0...10000}" }
     memoryUtilization do
-      total = Random.rand 0...2**64
+      total = Random.rand 0...2**61
       "Total : #{total} Free : #{total/2}"
     end
     model "" # Special attention
     name { Faker::Hipster.word }
     overallHealthState { health_states.sample }
     panicDump { %w(Yes No).sample }
-    ports do 
+    ports do
       (0..10).map do |number|
         {
           "portName" => "#{number}",
@@ -138,6 +138,6 @@ FactoryGirl.define do
     uuid { SecureRandom.uuid }
     vpdID "" # Special attention
 
-		initialize_with { attributes } 
+		initialize_with { attributes }
   end
 end

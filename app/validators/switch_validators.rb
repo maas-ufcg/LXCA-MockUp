@@ -1,4 +1,4 @@
-require "../models/node"
+#require "../models/node"
 
 class SwitchValidators < ActiveModel::Validator
 	def validate(record)
@@ -9,12 +9,12 @@ class SwitchValidators < ActiveModel::Validator
 		validate_display_name(record)
 		validate_health_state(record)
 		validate_contact(record)
-		validate_cpu_utilization(record)
-		validate_data_handle(record)
+		#validate_cpu_utilization(record) TODO: See if type Long is correct.
+		#validate_data_handle(record)	TODO: See if type Long is correct.
 		validate_description(record)
 		validate_dns_host_names(record)
 		validate_domain_name(record)
-		validate_entitle_serial_number(record_v)
+		validate_entitle_serial_number(record)
 	end
 
 	private
@@ -45,7 +45,7 @@ class SwitchValidators < ActiveModel::Validator
 		elsif not record_v.properties[:attachedNodes].is_a? Array
 			record_v.errors[:base] << "AttachedNodes attribute must be an array of nodes values"
 		end
-		validates_associated :node
+		#validates_associated :node
 	end
 
 	def validate_display_name(record_v)
@@ -73,9 +73,9 @@ class SwitchValidators < ActiveModel::Validator
 	def validate_uuid_and_id(record_v)
 		if record_v == nil
 			record_v.errors[:base] << "UUID attribute can't be nil"
-		elsif record_v.propeties[:uuid] == "" or record_v.propeties[:uuid] == nil
+		elsif record_v.properties[:uuid] == "" or record_v.properties[:uuid] == nil
 			record_v.errors[:base] << "UUID attribute can't be nil or empty"
-		elsif record_v.propeties[:uuid] != record_v._id #Special Attention: Check access to the _id value in the switch model
+		elsif record_v.properties[:uuid] != record_v._id #Special Attention: Check access to the _id value in the switch model
 			record_v.errors[:base] << "UUID attribute must be equal to the id attribute in the switch"
 		end
 	end
@@ -83,9 +83,9 @@ class SwitchValidators < ActiveModel::Validator
 	def validate_contact(record_v)
 		if record_v == nil
 			record_v.errors[:base] << "Contact attribute can't be nil"
-		elsif not record_v.propeties[:contact].is_a? String
+		elsif not record_v.properties[:contact].is_a? String
 			record_v.errors[:base] << "Contact attribute must be of the type: String"
-		elsif record_v.propeties[:contact] == ""
+		elsif record_v.properties[:contact] == ""
 			record_v.errors[:base] << "Contact attribute can't be empty"
 		end
 	end

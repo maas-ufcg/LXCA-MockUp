@@ -3,22 +3,27 @@ require 'rails_helper'
 RSpec.describe Switch, type: :model do
   #pending "add some examples to (or delete) #{__FILE__}"
 
-  describe "Model validations" do
-    context "for valid switch: " do
+  describe "Model validations:" do
+    context "A Switch" do
         before :each do
           @switch = build :switch
 
         end
 
-        it "A valid Switch that can be saved" do
+        it "is consistent." do
           expect(@switch).to be_valid(Switch)
-          #@switch.save
+        end
+
+        it "can be save." do
+          expect{
+            @switch.save
+          }.to change {Switch.count}.by 1
         end
 
     end
 
 
-    context "Invalid Switch" do
+    context "The Switch" do
 
       before :each do
 
@@ -27,7 +32,7 @@ RSpec.describe Switch, type: :model do
         @switch_missing_property = build :inv_switch_missing_property
 
         #Testing properties values that have a predefined list of values.
-        @switch_with_invalid_accessState = build :inv_switch_invalid_accessState
+          @switch_with_invalid_accessState = build :inv_switch_invalid_accessState
         @switch_with_invalid_backedBy = build :inv_switch_invalid_backedBy
         @switch_with_invalid_cmmHealthState =  build :inv_switch_invalid_cmmHealthState
         @switch_with_invalid_excludedHealthState = build :inv_switch_invalid_excludedHealthState
@@ -54,9 +59,7 @@ RSpec.describe Switch, type: :model do
         @switch_with_invalid_firmware_type = build :inv_switch_with_invalid_firmware_type
         @switch_with_invalid_FRU_type = build :inv_switch_with_invalid_FRU_type
         @switch_with_invalid_fruSerialNumber_type = build :inv_switch_with_invalid_fruSerialNumber_type
-        @switch_with_invalid_hostname_type = build :inv_switch_with_invalid_hostname_type
-        @switch_with_invalid_ipInterfaces_type = build :inv_switch_with_invalid_ipInterfaces_type
-        @switch_with_invalid_ipv4Address_type = build :inv_switch_with_invalid_ipv4Address_type
+        @switch_with_invalid_hostname_type = build :inv_switch_with_invalid_hostnameddress_type
         @switch_with_invalid_ipv6Address_type = build :inv_switch_with_invalid_ipv6Address_type
         @switch_with_invalid_leds_type = build :inv_switch_with_invalid_leds_type
         @switch_with_invalid_macAddress_type = build :inv_switch_with_invalid_macAddress_type
@@ -84,59 +87,59 @@ RSpec.describe Switch, type: :model do
 
       end
 
-      context "Testing validations" do
-          it "is invalid if has no uuid in properties" do
+      context "is invalid" do
+          it "if has no uuid in properties" do
             expect(@switch_hasnt_uuid).to_not be_valid(Switch)
           end
 
-          it "is invalid if _id is different from properties.uuid" do
+          it "if _id is different from properties.uuid" do
             expect(@switch_different_id_and_uuid).to_not be_valid(Switch)
           end
 
-          it "is invalid if some property is missing" do
+          it "if some property is missing" do
             expect(@switch_missing_property).to_not be_valid(Switch)
           end
 
 
 
-          it "is invalid if accessState is not in a predefined list" do
+          it "if accessState is not in a predefined list" do
               expect(@switch_with_invalid_accessState).to_not be_valid(Switch)
           end
 
-          it "is invalid if backedBy is not in a predefined list" do
+          it "if backedBy is not in a predefined list" do
               expect(@switch_with_invalid_backedBy).to_not be_valid(Switch)
           end
 
-          it "is invalid if cmmHealthState is not in a predefined list" do
+          it "if cmmHealthState is not in a predefined list" do
               expect(@switch_with_invalid_cmmHealthState).to_not be_valid(Switch)
           end
 
 
-          it "is invalid if excludedHealthState is not in a predefined list" do
+          it "if excludedHealthState is not in a predefined list" do
               expect(@switch_with_invalid_excludedHealthState).to_not be_valid(Switch)
           end
 
-          it "is invalid if overallHealthState is not in a predefined list" do
+          it "if overallHealthState is not in a predefined list" do
               expect(@switch_with_invalid_overallHealthState).to_not be_valid(Switch)
           end
 
-          it "is invalid if panicDump is not in a predefined list" do
+          it "if panicDump is not in a predefined list" do
               expect(@switch_with_invalid_panicDump).to_not be_valid(Switch)
           end
 
-          it "is invalid if powerState is not in a predefined list" do
+          it "if powerState is not in a predefined list" do
               expect(@switch_with_invalid_powerState).to_not be_valid(Switch)
           end
 
-          it "is invalid if protectedMode is not in a predefined list" do
+          it "if protectedMode is not in a predefined list" do
               expect(@switch_with_invalid_protectedMode).to_not be_valid(Switch)
           end
 
-          it "is invalid if savePending is not in a predefined list" do
+          it "if savePending is not in a predefined list" do
               expect(@switch_with_invalid_savePending).to_not be_valid(Switch)
           end
 
-          it "is invalid if stackedMode is not in a predefined list" do
+          it "if stackedMode is not in a predefined list" do
               expect(@switch_with_invalid_stackedMode).to_not be_valid(Switch)
           end
 
