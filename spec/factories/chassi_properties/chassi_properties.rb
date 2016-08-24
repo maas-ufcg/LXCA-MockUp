@@ -1,4 +1,5 @@
 require 'securerandom'
+require 'date'
 
 FactoryGirl.define do
 
@@ -108,13 +109,14 @@ FactoryGirl.define do
     cmmSlots { Faker::Number.number(2) }
     complex [] #review_this_parameters: Information about a other resource
     contact { Faker::Hipster.sentence(4) }
-    dataHandle { Faker::Number.number(13) }
+    dataHandle { DateTime.now.strftime('%Q') }
     description { Faker::Hipster.sentence(4) }
     domainName { "Lenovo-#{Faker::Number.number(7)}" }
     encapsulation do
       {
-        :encapsulationMode => encapsulation_mode.sample,
-        :nonBlockedIpAddressList => "qualquer String"
+        :encapsulationMode => encapsulation_mode.sample
+        #:nonBlockedIpAddressList => Esse atributo é setado
+        #só depois do mock das propriedades feito.
       }
     end
 
@@ -228,13 +230,21 @@ FactoryGirl.define do
     uuid { uuid.to_s }
     vpdID { Faker::Number.number(2) }
 
-    initialize_with { attributes }
+
+
+    after(:create) do |chassi_properties|
+      chassi_properties[:nonBlockedIpAddressList] = FactoryGirl.build :blocked_ip_list unless chassi_properties[:encapsulationMode] != "encapsulationLite"
+    end
+
+   initialize_with { attributes }
 
   end
 
-  factory :blocked_ip_list, class: Array do
-    (0..10).map do
-      Faker::Internet.ip_v4_address
+  factory :blocked_ip_list, class: Hash do
+    nonBlockedIpAddressList do
+      (0..10).map do
+        Faker::Internet.ip_v4_address
+      end
     end
 
     initialize_with { attributes }
