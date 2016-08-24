@@ -1,4 +1,4 @@
-require_relative "../validators/power_supply_validators"
+# require_relative "../validators/power_supply_validators"
 
 class PowerSupply
   include Mongoid::Document
@@ -7,7 +7,7 @@ class PowerSupply
 
   after_create  :changeId, prepend: true
 
- validates_with PowerSuppliesValidators
+ # validates_with PowerSuppliesValidators
 
   private
     def changeId
