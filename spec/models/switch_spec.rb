@@ -4,7 +4,7 @@ RSpec.describe Switch, type: :model do
   #pending "add some examples to (or delete) #{__FILE__}"
 
   describe "Model validations:" do
-    context "A Switch" do
+    context "The Switch" do
         before :each do
           @switch = build :switch
 
@@ -21,6 +21,7 @@ RSpec.describe Switch, type: :model do
         end
 
     end
+
 
 
     context "The Switch" do

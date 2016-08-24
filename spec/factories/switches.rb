@@ -11,9 +11,9 @@ FactoryGirl.define do
 
   factory :inv_switch_missing_uuid do
       properties build(:switch_properties)
+
       after(:build) do |switch|
-        switch._id =  switch.properties["uuid"]
-        switch.properties.remove("uuid")
+        switch._id =  switch.properties[:uuid]
       end
 
   end
@@ -23,6 +23,12 @@ FactoryGirl.define do
 
     after(:build) do |switch|
       switch._id =  switch.properties["uuid"]
+
+      #Some important properties
+      keys = %i(accessState attachedNodes cmmHealthState firmware macAddress productName serialNumber type uuid)
+
+      selected_key = keys[Random.rand 0..9]
+      switch.properties.delete(selected_key)
 
     end
 

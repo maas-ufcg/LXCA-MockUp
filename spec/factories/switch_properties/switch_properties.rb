@@ -26,8 +26,8 @@ FactoryGirl.define do
 
   factory :switch_properties, class: Hash do
     accessState { %w(Online Offline Partial Pending Unknown).sample }
-    applyPending { Random.rand 0..3 } # Special attention
-    attachedNodes [] # Special attention
+    applyPending { Random.rand 0..3 } #TODO: documentation inconsistency
+    attachedNodes [] #TODO: documentation inconsistency
     cmmDisplayName { Faker::Hipster.word }
     cmmHealthState { health_states.sample }
     contact { Faker::Company.name }
@@ -38,8 +38,8 @@ FactoryGirl.define do
       (0...Random.rand(0..5)).map { Faker::Internet.domain_name }
     end
     domainName { Faker::Internet.domain_name }
-    entitleSerialNumber "" # Special attention
-    errorFields [] # Special attention
+    entitleSerialNumber "" #TODO: documentation inconsistency
+    errorFields [] #TODO: documentation inconsistency
     excludedHealthState { health_states.sample }
     fans do
       (1..10).map do |fan_id|
@@ -60,8 +60,8 @@ FactoryGirl.define do
         "version" => Faker::App.version
       }
     end
-    FRU "" # Special attention
-    fruSerialNumber "" # Special attention
+    FRU "" #TODO: documentation inconsistency
+    fruSerialNumber "" #TODO: documentation inconsistency
     hostname { Faker::Internet.domain_name }
     ipInterfaces { FactoryGirl.build :ip_interfaces }
     ipv4Address do
@@ -95,7 +95,7 @@ FactoryGirl.define do
       total = Random.rand 0...2**61
       "Total : #{total} Free : #{total/2}"
     end
-    model "" # Special attention
+    model "" #TODO: documentation inconsistency
     name { Faker::Hipster.word }
     overallHealthState { health_states.sample }
     panicDump { %w(Yes No).sample }
@@ -111,17 +111,17 @@ FactoryGirl.define do
         }
       end
     end
-    posID "" # Special Attention
+    posID "" #TODO: documentation inconsistency
     powerState { power_states.sample }
-    productID "" # Special Attention
+    productID "" #TODO: documentation inconsistency
     productName { Faker::App.name }
     protectedMode { [true, false].sample }
     resetReason ""
     savePending { %w(yes no).sample }
     serialNumber { "US#{Random.rand 1000...100000}S"}
-    slots 1 # Special attention
+    slots 1 #TODO: documentation inconsistency
     stackMode { [true, false].sample }
-    stackRole "" # Special attention
+    stackRole "" #TODO: documentation inconsistency
     sysObjectID { Faker::App.version }
     temperatureSensors do
       (1..Random.rand(1..10)).map do |sensor|
@@ -136,7 +136,7 @@ FactoryGirl.define do
     uri { Faker::Internet.url }
     userDescription { Faker::Lorem.sentence }
     uuid { SecureRandom.uuid }
-    vpdID "" # Special attention
+    vpdID "" #TODO: documentation inconsistency
 
 		initialize_with { attributes }
   end
