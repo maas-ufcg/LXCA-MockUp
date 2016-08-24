@@ -12,7 +12,7 @@ class SwitchValidators < ActiveModel::Validator
 
 	def validate_keys(record_v)
 		SwitchesHelper::required_fields.each do |key|
-			if record_v.properties[key] == nil
+			if record_v.properties[key].nil?
 				record_v.errors[:base] << "inconsistent object, missing propertie #{key}."
 				break
 			end
@@ -23,9 +23,9 @@ class SwitchValidators < ActiveModel::Validator
 	end
 
 	def validate_properties(record_v)
-		if record_v == nil
+		if record_v.nil?
 			record_v.errors[:base] << "nil object is not valid."
-		elsif record_v.properties == nil
+		elsif record_v.properties.nil?
 			record_v.errors[:base] << "properties cannot be nil."
 		elsif  not record_v.properties.is_a? Hash
 				record_v.errors[:base] << "properties only should be a Hash."
@@ -34,9 +34,9 @@ class SwitchValidators < ActiveModel::Validator
 
 
 def validate_uuid_and_id(record_v)
-		if record_v == nil
+		if record_v.nil?
 			record_v.errors[:base] << "UUID attribute can't be nil"
-		elsif  record_v.properties[:uuid] == nil or record_v.properties[:uuid] == ""
+		elsif  record_v.properties[:uuid].nil? or record_v.properties[:uuid] == ""
 			record_v.errors[:base] << "UUID attribute can't be nil or empty"
 		elsif record_v.properties[:uuid] != record_v._id #Special Attention: Check access to the _id value in the switch model
 			record_v.errors[:base] << "UUID attribute must be equal to the id attribute in the switch"
@@ -44,9 +44,9 @@ def validate_uuid_and_id(record_v)
 	end
 
 	def validate_uuid(record_v)
-		if record_v == nil
+		if record_v.nil?
 			record_v.errors[:base] << "nil object is not valid."
-		elsif record_v.properties[:uuid] == nil
+		elsif record_v.properties[:uuid].nil?
 			record_v.errors[:base] << "UUID attribute can't be nil."
 		elsif record_v.properties[:uuid] == ""
 			record_v.errors[:base] << "UUID attribute can't be empty."
