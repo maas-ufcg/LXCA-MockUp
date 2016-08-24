@@ -94,6 +94,5 @@ FactoryGirl.define do
       vpdID { "#{Random.rand 1...1000}" }
 
       initialize_with { attributes }
-
     end
   end

@@ -1,10 +1,10 @@
 require 'rails_helper'
 
 RSpec.describe PowerSupply, type: :model do
-  pending "add some examples to (or delete) #{__FILE__}"
 
-  describe "Database data validation" do
-    context "Invalid cmmHealthState attribute value" do
+  describe "Model validation Power Supplies" do
+
+    context "Power Supplies" do
       before :each do
         @invalid_node = build :invalid_cmm_health_state_power_supply
         @valid_node = build :valid_cmm_Health_State_power_supply
