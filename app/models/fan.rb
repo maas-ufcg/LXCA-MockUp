@@ -4,4 +4,6 @@ class Fan
   field :properties, type: Hash
 
   attr_accessor :_id
+  
+  validates_with FanRequiredPropertiesValidator
 end
