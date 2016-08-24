@@ -43,7 +43,7 @@ FactoryGirl.define do
 
     cmmDisplayName { Faker::Hipster.word }
     cmmHealthState { health_states.sample }
-    dataHandle { Random.rand 0...2**64 }
+    dataHandle { Random.rand 2**61 }
     description { Faker::Hipster.sentence }
     errorFields []
     firmware do
@@ -87,7 +87,7 @@ FactoryGirl.define do
     partNumber { Faker::Code.asin }
     posID { "#{Random.rand 1000}" }
     powerAllocation do
-      power = Random.rand 2**64
+      power = Random.rand 2**61
       {
         maximumAllocatedPower: power,
         minimumAllocatedPower: power/2
