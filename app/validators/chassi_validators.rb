@@ -27,7 +27,7 @@ class ChassiValidators < ActiveModel::Validator
       validate_type(record, record.properties[:type], "Type", Chassis)
       validate_type(record, record.properties[:userDescription], "userDescription", String)
       validate_type(record, record.properties[:uuid], "Uuid", String)
-      validate_type(record, record.properties[:vpdID], "vpdID", String)
+      validate_type(record, record.properties[:vpdID], "VpdID", String)
 
   end
 

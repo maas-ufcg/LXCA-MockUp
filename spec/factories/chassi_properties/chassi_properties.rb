@@ -156,7 +156,7 @@ FactoryGirl.define do
     location do
       {
         :location => Faker::Address.state,
-        :lowesRackUnit => Faker::Number.number(1),
+        :lowestRackUnit => Faker::Number.number(1),
         :rack => Faker::Hipster.sentence(1),
         :room => Faker::Hipster.sentence(1)
       }
@@ -195,7 +195,7 @@ FactoryGirl.define do
         :allocatedOutputPower => Faker::Number.number(4),
         :totalOutputPower => Faker::Number.number(4),
         :totalInputPower => Faker::Number.number(5),
-        :remaingOutputPower => Faker::Number.number(4),
+        :remainingOutputPower => Faker::Number.number(4),
         :midPlaneCardMinimumAllocatedPower => Faker::Number.number(2),
         :midPlaneCardMaximumAllocatedPower => Faker::Number.number(2)
       }
@@ -203,7 +203,7 @@ FactoryGirl.define do
 
     poweSupplySlots { Faker::Number.number(1) }
     powerSupplies [] #review_this_parameter: Will re-use powerSupplies Factory
-    productId { Faker::Number.number(8).to_s }
+    productID { Faker::Number.number(8).to_s }
     overallHealthState { cmm_health_states.sample }
 
     SecurityPolicy do
