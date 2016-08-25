@@ -149,4 +149,109 @@ RSpec.describe "Fans", type: :request do
       end
     end
   end
+
+  describe "GET /fans/:uuid" do
+    context "Without excludeAttributes or includeAttributes parameters" do
+      before :each do
+        fan = create :fan
+
+        get fan_path(fan)
+      end
+
+      it "HTTP response code is 200 (OK)" do
+        expect(response).to have_http_status(:ok)
+      end
+
+      it "Response content-type must be json" do
+        expect(response.content_type).to eq("application/json")
+      end
+
+      it "The body should contain an array of objects" do
+        expect(JSON.parse(response.body)).to be_a(Hash)
+      end
+
+      it "Should have type: \"Fan\" in properties" do
+        expect(JSON.parse(response.body)["type"]).to eq("Fan")
+      end
+    end
+
+    context "With includeAttributes parameters" do
+      before :each do
+        fan = create :fan
+
+        @includeAttributes = %i(
+          description
+          hardwareRevision
+          dataHandle
+        )
+
+        get fan_path(fan), {includeAttributes: @includeAttributes.join(",")}
+        @fetched_fan = JSON.parse(response.body)
+      end
+
+      it "HTTP response code is 200 (OK)" do
+        expect(response).to have_http_status(:ok)
+      end
+
+      it "Response content-type must be json" do
+        expect(response.content_type).to eq("application/json")
+      end
+
+      it "The body should contain an array of objects" do
+        expect(@fetched_fan).to be_a(Hash)
+      end
+
+      it "All items in response should've all the specified attributes" do
+        @includeAttributes.each do |attribute|
+          expect(@fetched_fan.has_key? attribute.to_s).to eq(true)
+        end
+      end
+
+      it "All items in response shouldn't have any attribute not specified" do
+        absent = FansHelper::required_fields - @includeAttributes
+        absent.each do |attribute|
+          expect(@fetched_fan.has_key? attribute.to_s).to eq(false)
+        end
+      end
+    end
+
+    context "With excludeAttributes parameters" do
+      before :each do
+        fan = create :fan
+        @excludeAttributes = %i(
+          description
+          hardwareRevision
+          dataHandle
+        )
+
+        get fan_path(fan), {excludeAttributes: @excludeAttributes.join(",")}
+        @fetched_fan = JSON.parse(response.body)
+      end
+
+      it "HTTP response code is 200 (OK)" do
+        expect(response).to have_http_status(:ok)
+      end
+
+      it "Response content-type must be json" do
+        expect(response.content_type).to eq("application/json")
+      end
+
+      it "The body should contain an array of objects" do
+        expect(@fetched_fan).to be_a(Hash)
+      end
+
+      it "All items in response shouldn't have any of the specified attributes" do
+        @excludeAttributes.each do |attribute|
+          expect(@fetched_fan.has_key? attribute.to_s).to eq(false)
+        end
+      end
+
+      it "All items in response should have all unspecified attributes" do
+        absent = FansHelper::required_fields - @excludeAttributes
+        absent.each do |attribute|
+          expect(@fetched_fan.has_key? attribute.to_s).to eq(true)
+        end
+      end
+    end
+  end
 end
