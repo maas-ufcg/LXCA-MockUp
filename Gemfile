@@ -46,11 +46,11 @@ group :development, :test do
   gem 'guard-puma'
   gem 'factory_girl_rails'
   gem 'simplecov'
+  gem 'faker'
 end
 
 group :test do
   gem 'database_cleaner'
-  gem 'faker'
 end
 
 group :development do
