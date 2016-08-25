@@ -146,48 +146,6 @@ class ChassiValidators < ActiveModel::Validator
       end
     end
 
-    # def validate_cmms(record)
-    #   if not record.properties[:cmms].is_a? Array
-    #     record.errors[:base] << "Cmms attribute must be an array (actual: #{record.properties[:cmms].class})"
-    #   end
-    # end
-    #
-    # def validate_cmm_slots(record)
-    #   if not record.properties[:cmmSlots].is_a? Integer
-    #     record.errors[:base] << "CmmSlots attribute must be an Integer (actual: #{record.properties[:cmmSlots].class})"
-    #   end
-    # end
-    #
-    # def validate_complex(record)
-    #   if not record.properties[:complex].is_a? Array
-    #     record.errors[:base] << "Complex attribute must be an Array (actual: #{record.properties[:complex].class})"
-    #   end
-    # end
-    #
-    # def validate_contact(record)
-    #   if not record.properties[:contact].is_a? String
-    #     record.errors[:base] << "Contact attribute must be a String (actual: #{record.properties[:contact].class})"
-    #   end
-    # end
-    #
-    # def validate_data_handle(record)
-    #   if not record.properties[:dataHandle].is_a? Fixnum
-    #     record.errors[:base] << "DataHandle attribute must be a Fixnum (actual: #{record.properties[:dataHandle].class})"
-    #   end
-    # end
-    #
-    # def validate_description(record)
-    #   if not record.properties[:description].is_a? String
-    #     record.errors[:base] << "Description attribute must be a String (actual: #{record.properties[:description].class})"
-    #   end
-    # end
-    #
-    # def validate_domain_name(record)
-    #   if not record.properties[:domainName].is_a? String
-    #     record.errors[:base] << "DomainName attribute must be a String (actual: #{record.properties[:domainName].class})"
-    #   end
-    # end
-
     def validate_encapsulation(record)
       encapsulation_mode = %w(
         notSupported
@@ -243,8 +201,8 @@ class ChassiValidators < ActiveModel::Validator
       valid_values = %w(FETCH_SUCCESS FETCH_FAILED NO_CONNECTOR FATAL_EXCEPTION NETWORK_FAIL)
       if not record.properties[:errorFields].is_a? Array
         record.errors[:base] << "ErrorFields attribute must be a Array (actual: #{record.properties[:errorFields].class})"
-      elsif not valid_values.included? record.properties[:errorFields][:errorCode]
-        record.errors[:base] << "ErrorFields attribute is invalid"
+      elsif not valid_values.include? record.properties[:errorFields][:errorCode]
+        record.errors[:base] << "ErrorFields is invalid. (Cause: errorCode)"
       end
     end
 
@@ -358,8 +316,8 @@ class ChassiValidators < ActiveModel::Validator
        end
 
     # this method should not be included in the main validate method body
-    def validate_inner_hot_air_recirculation(hot_air_recirculation, record)
-      validate_inner_chassis_bay(hot_air_recirculation[:chassisBay], record)
+    def validate_inner_hot_air_recirculation(hot_air_recirculation)
+      validate_inner_chassis_bay(hot_air_recirculation[:chassisBay])
 
       isEnabled = [true, false]
 
