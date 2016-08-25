@@ -5,6 +5,9 @@ class Chassi
 
   after_create :changeId, prepend: true
 
+  validates_with ChassiPropertiesValidators
+  validates_with ChassiConscistencyValidator
+
   private
    def changeId
      self._id = self.properties["uuid"]
