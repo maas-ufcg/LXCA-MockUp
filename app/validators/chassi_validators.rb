@@ -18,7 +18,7 @@ class ChassiValidators < ActiveModel::Validator
 
 
       validate_security_policy(record)
-      
+
       validate_type(record, record.properties[:serialNumber], "SerialNumber", String)
       validate_status(record)
       validate_type(record, record.properties[:switches], "Switches", Array)
@@ -274,7 +274,7 @@ class ChassiValidators < ActiveModel::Validator
       cmm_policy_level_values = %w(LEGACY SECURE)
       cmm_policy_state_values = %w(ERROR UNKNOWN ACTIVE PENDING)
 
-      validate_keys(record, record.properties[:SecurityPolicy], "SecurityPolicy", sub_keys)
+      validate_hash_keys(record, record.properties[:SecurityPolicy], "SecurityPolicy", sub_keys)
       validate_values(record, record.properties[:SecurityPolicy][:cmmPolicyLevel], "CmmPolicyLevel", cmm_policy_level_values)
       validate_values(record, record.properties[:SecurityPolicy][:cmmPolicyState], "CmmPolicyState", cmm_policy_state_values)
 
@@ -346,7 +346,7 @@ class ChassiValidators < ActiveModel::Validator
     end
 
     # this method verifies whether the given object is a hash and verifies if it contains the expected keys
-    def validate_keys(record, hash, attribute_name, expected_keys)
+    def validate_hash_keys(record, hash, attribute_name, expected_keys)
       validate_type(record, hash, attribute_name, Hash)
 
       expected_keys.each do |key|
