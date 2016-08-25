@@ -190,8 +190,8 @@ class ChassiValidators < ActiveModel::Validator
         record.errors[:base] << "AccousticAttenuationMode attribute is not valid"
       end
 
-      validate_inner_hot_air_recirculation(record.properties[:energyPolicies][:hotAirRecirculation])
-      validate_inner_power_capping_policy(record.properties[:powerCappingPolicy])
+      validate_inner_hot_air_recirculation(record.properties[:energyPolicies][:hotAirRecirculation], record)
+      validate_inner_power_capping_policy(record.properties[:powerCappingPolicy], record)
 
       if not record.properties[:energyPolicies][:powerRedundancyMode].is_a? Fixnum
         record.errors[:base] << "PowerRedundancyMode attribute must be a Fixnum (actual: #{record.properties[:energyPolicies][:powerRedundancyMode].class})"
@@ -220,7 +220,7 @@ class ChassiValidators < ActiveModel::Validator
     end
 
     # this method should not be included in the main validate method body
-    def validate_inner_chassis_bay(chassis_bay)
+    def validate_inner_chassis_bay(chassis_bay, record)
          if not chassis_bay.is_a? Hash
            record.errors[:base] >> "ChassisBay attribute must be a Hash (actual: #{chassis_bay.class}"
          elsif not chassis_bay[:isExceeded].is_a? String
@@ -238,8 +238,8 @@ class ChassiValidators < ActiveModel::Validator
        end
 
     # this method should not be included in the main validate method body
-    def validate_inner_hot_air_recirculation(hot_air_recirculation)
-      validate_inner_chassis_bay(hot_air_recirculation[:chassisBay])
+    def validate_inner_hot_air_recirculation(hot_air_recirculation, record)
+      validate_inner_chassis_bay(hot_air_recirculation[:chassisBay], record)
 
       isEnabled = [true, false]
 
@@ -250,7 +250,7 @@ class ChassiValidators < ActiveModel::Validator
       end
     end
 
-    def validate_inner_power_capping_policy(power_capping_policy)
+    def validate_inner_power_capping_policy(power_capping_policy, record)
       capping_policy_values = %w(OFF STATIC UNKNOWN)
 
       if not power_capping_policy.is_a? Hash
