@@ -4,7 +4,11 @@ class PowerSuppliesController < ApplicationController
   # GET /power_supplies
   # GET /power_supplies.json
   def index
-    @power_supplies = PowerSupply.all
+    @power_supplies = PowerSupply.all.to_a
+    render(json: @power_supplies.map do |power_supply|
+      setup_power_supply_properties power_supply
+      power_supply.properties
+    end)
   end
 
   # GET /power_supplies/1
