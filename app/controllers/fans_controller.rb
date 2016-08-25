@@ -33,16 +33,20 @@ class FansController < ApplicationController
 
     def setup_fan_properties(fan)
       return if fan.nil?
-      excludeAttributes = params[:excludeAttributes]
-      includeAttributes = params[:includeAttributes]
+      excludeAttributes = split_to_sym params[:excludeAttributes]
+      includeAttributes = split_to_sym params[:includeAttributes]
       unless includeAttributes.nil?
-        excludeAttributes = FansHelper::required_fields - includeAttributes.map(&:to_sym)
+        excludeAttributes = FansHelper::required_fields-includeAttributes
       end
       unless excludeAttributes.nil?
-        excludeAttributes.map(&:to_sym).each do |attribute|
+        excludeAttributes.each do |attribute|
           fan.properties.delete(attribute)
         end
       end
+    end
+
+    def split_to_sym(string)
+      string.split(",").map(&:to_sym) if string.is_a?(String)
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.

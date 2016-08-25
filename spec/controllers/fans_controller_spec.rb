@@ -39,7 +39,7 @@ RSpec.describe FansController, type: :controller do
             dataHandle
           )
           @fans = (0..5).map {|n| create :valid_fan}
-          get :index, {includeAttributes: @includeAttributes}
+          get :index, {includeAttributes: @includeAttributes.join(",")}
         end
 
         it "must assign an Array to @fans" do
@@ -80,7 +80,7 @@ RSpec.describe FansController, type: :controller do
             dataHandle
           )
           @fans = (0..5).map {|n| create :valid_fan}
-          get :index, {excludeAttributes: @excludeAttributes}
+          get :index, {excludeAttributes: @excludeAttributes.join(",")}
         end
 
         it "must assign an Array to @fans" do
@@ -142,7 +142,7 @@ RSpec.describe FansController, type: :controller do
           @fans.each do |fan| 
             get :show, {
               id: fan._id, 
-              excludeAttributes: @excludeAttributes
+              excludeAttributes: @excludeAttributes.join(",")
             }
             expect(response).to have_http_status(:success)
           end
@@ -152,7 +152,7 @@ RSpec.describe FansController, type: :controller do
           @fans.each do |fan| 
             get :show, {
               id: fan._id, 
-              excludeAttributes: @excludeAttributes
+              excludeAttributes: @excludeAttributes.join(",")
             }
             @excludeAttributes.each do |attribute|
               fan_properties = assigns(:fan).properties
@@ -176,7 +176,7 @@ RSpec.describe FansController, type: :controller do
           @fans.each do |fan| 
             get :show, {
               id: fan._id, 
-              includeAttributes: @includeAttributes
+              includeAttributes: @includeAttributes.join(",")
             }
             expect(response).to have_http_status(:success)
           end
@@ -186,7 +186,7 @@ RSpec.describe FansController, type: :controller do
           @fans.each do |fan| 
             get :show, {
               id: fan._id, 
-              includeAttributes: @includeAttributes
+              includeAttributes: @includeAttributes.join(",")
             }
             @includeAttributes.each do |attribute|
               fan_properties = assigns(:fan).properties
@@ -199,7 +199,7 @@ RSpec.describe FansController, type: :controller do
           @fans.each do |fan| 
             get :show, {
               id: fan._id, 
-              includeAttributes: @includeAttributes
+              includeAttributes: @includeAttributes.join(",")
             }
             absent = FansHelper::required_fields - @includeAttributes
             absent.each do |attribute|
