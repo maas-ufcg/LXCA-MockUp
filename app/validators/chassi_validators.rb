@@ -242,10 +242,9 @@ class ChassiValidators < ActiveModel::Validator
     def validate_error_fields(record)
       valid_values = %w(FETCH_SUCCESS FETCH_FAILED NO_CONNECTOR FATAL_EXCEPTION NETWORK_FAIL)
       if not record.properties[:errorFields].is_a? Array
-        recordo.errors[:base] << "ErrorFields attribute must be a Array (actual: #{record.properties[:errorFields].class})"
+        record.errors[:base] << "ErrorFields attribute must be a Array (actual: #{record.properties[:errorFields].class})"
       elsif not valid_values.included? record.properties[:errorFields][:errorCode]
-
-
+        record.errors[:base] << "ErrorFields attribute is invalid"
       end
     end
 
