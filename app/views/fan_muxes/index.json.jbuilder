@@ -1,0 +1,1 @@
+json.array! @fan_muxes, partial: 'fan_muxes/fan_mux', as: :fan_mux
