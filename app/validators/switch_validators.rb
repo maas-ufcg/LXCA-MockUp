@@ -51,8 +51,46 @@ def validate_uuid_and_id(record_v)
 		elsif record_v.properties[:uuid] == ""
 			record_v.errors[:base] << "UUID attribute can't be empty."
 		end
+	end
 
+	def validate_AT_values(record_v)
+		valid_values = ["Online", "Offline", "Partial", "Pending", "Unknown"]
 
+		if not valid_values.include? record_v.properties[:accessState].to_s
+			record_v.errors[:base] << "Access State value is not valid."
+		end
+	end
+
+	def validate_HS_values(record_v)
+		valid_values = ["Normal", "Non-Critical","Warning", "Minor-Failure", "Major-Failure", "Non-Recoverable", "Critical", "Unknown"]
+
+		if not valid_values.include? record_v.properties[:cmmHealthState]
+			record_v.errors[:base] << "CMM Health State value is not valid."
+		end
+	end
+
+	def validate_EHS_value(record_v)
+		valid_values = ["Normal", "Non-Critical", "Warning", "Minor-Failure", "Major-Failure", "Non-Recoverable", "Critical", "Unknown"]
+
+		if not valid_values.include? record_v.properties[:excludedHealthState]
+			record_v.errors[:base] << "Excluded Health State value is not valid."
+		end
+	end
+#TODO check validators for invalid values in an Array
+	def validate_IPV4Ass_values(record_v)
+		valid_values = ["INUSE", "CONFIGURED", "ALIAS", "UNKNOWN"]
+
+		if not valid_values.include? record_v.properties[:ipInterfaces[:ipv4_assignment]] [3]
+			record_v.errors[:base] << "IPV4 Assingment type not valid."
+		end
+	end
+
+	def validate_IPV4DHCP_values(record_v)
+		valid_values = ["STATIC_ONLY", "DHCP_ONLY", "DHCP_THEN_STATIC", "UNKNOWN"]
+
+		if not valid_values.include? record_v.properties[:ipInterfaces[:IPv4DHCPmode]]
+			record_v.errors[:base] << "IPV4 DHCP Mode value is not valid"
+		end
 	end
 
 end

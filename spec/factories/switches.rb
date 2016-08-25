@@ -51,7 +51,8 @@ FactoryGirl.define do
 
   end
 
-  # => TODO: DEBUG 
+
+  # => TODO: DEBUG
   # factory :switches_put_request_settings, aliases: [:switch_put_settings_request], class: Hash do
   #
   #   hostname do
@@ -76,5 +77,18 @@ FactoryGirl.define do
   #   end
   #
   # end
+
+  SwitchesHelper::invalid_fields.each do |key|
+
+    factory :"invalid_#{key}_switch", class: Switch do
+      after :build do |switch|
+        switch._id = switch.properties[:uuid]
+        switch.properties[key] = "From lemonades to lemons."
+      end
+    end
+
+  end
+
+
 
 end

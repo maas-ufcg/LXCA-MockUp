@@ -52,7 +52,17 @@ RSpec.describe Switch, type: :model do
 
     end
 
+    #SwitchesHelper::invalid_fields.each do |key|
+    #  context "Factory invalid values for '#{key}'" do
+    #    before :each do
+    #      @switch = build :"invalid_#{key}_switch"
+    #    end
+    #  end
 
-  end
+    #  it ":invalid_#{key}_switch factory should build an invalid object" do
+    #    expect(@switch).to_not_be_valid(Switch)
+    #  end
+
+    end
 
 end
