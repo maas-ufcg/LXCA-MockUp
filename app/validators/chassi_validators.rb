@@ -43,6 +43,7 @@ class ChassiValidators < ActiveModel::Validator
       validate_type(record, record.properties[:powerSupplySlots], "PowerSupplySlots", Integer)
       validate_type(record, record.properties[:powerSupplies], "PowerSupplies", Array)
       validate_type(record, record.properties[:productID], "ProductID", String)
+
       validate_type(record, record.properties[:overallHealthState], "OverallHealthState", String)
       validate_values(record, record.properties[:overallhealthState], "OverallHealthState",
                       %w(Normal Non-Critical Warning Minor-Failure Major-Failure Non-Recoverable Critical Unknown))
@@ -85,9 +86,7 @@ class ChassiValidators < ActiveModel::Validator
       end
 
       record.properties[:activeAlerts].each do |alert|
-        if alert == nil
-          record.errors[:base] << "Alert attribute cannot be nil"
-        elsif not alert.is_a? Hash
+        if not alert.is_a? Hash
           record.errors[:base] << "Alert attribute must be a Hash (actual: #{alert.class})"
         end
 
@@ -206,7 +205,7 @@ class ChassiValidators < ActiveModel::Validator
         if not record.properties[:encapsulation][:nonBlockedIpAddressList].is_a? Array
           record.errors[:base] << "NonBlockedIpAddressList attribute must be an Array (actual: #{record.properties[:encapsulation][:nonBlockedIpAddressList].class})"
         end
-      elsif not encapsulatin,on_mode.include? record.properties[:encapsulation][:encapsulationMode]
+      elsif not encapsulation_mode.include? record.properties[:encapsulation][:encapsulationMode]
         record.errors[:base] << "EncapsulationMode attribute is not valid"
       end
 
@@ -383,9 +382,6 @@ class ChassiValidators < ActiveModel::Validator
         record.errors[:base] >> "CappingPolicy attribute is not valid"
       elsif not power_capping_policy[:currentPowerCap].is_a? Fixnum
         record.errors[:base] >> "CurrentPowerCap attribute must be a Fixnum (actual: #{power_capping_policy[:currentPowerCap].class}"
-      elsif not power_capping_policy[:maxPowerCap].is_a? Fixnum
-        relsif not power_capping_policy[:maxPowerCap].is_a? Fixnum
-          record.errors[:base] >> "MaxPowerCap attribute must be a Fixnum (actual: #{power_capping_policy[:maxPowerCap].class}"ecord.errors[:base] >> "MaxPowerCap attribute must be a Fixnum (actual: #{power_capping_policy[:maxPowerCap].class}"
       elsif not power_capping_policy[:minPowerCap].is_a? Fixnum
         record.errors[:base] >> "MinPowerCap attribute must be a Fixnum (actual: #{power_capping_policy[:minPowerCap].class}"
       end
