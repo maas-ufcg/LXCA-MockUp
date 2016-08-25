@@ -1,4 +1,5 @@
 require_relative "../validators/power_supply_validators"
+require_relative "../validators/PowerSupplyConsistencyValidator"
 
 class PowerSupply
   include Mongoid::Document
@@ -6,4 +7,5 @@ class PowerSupply
   field :properties, type: Hash
 
   validates_with PowerSuppliesValidators
+  validates_with PowerSupplyConsistencyValidator
 end

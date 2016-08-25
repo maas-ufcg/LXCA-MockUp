@@ -22,9 +22,9 @@ FactoryGirl.define do
     "Unknown"
   ]
 
-  uuids_values_parent = SecureRandom.hex(32).upcase
-  uuids_values = SecureRandom.hex(32).upcase
-  partNumber_value = SecureRandom.hex(10).upcase
+  uuids_values_parent = SecureRandom.hex.upcase
+  uuids_values = SecureRandom.hex.upcase
+  partNumber_value = SecureRandom.hex.upcase
 
   led_states = %w(Off On Blinking Unknown)
 
@@ -33,7 +33,7 @@ FactoryGirl.define do
   factory :power_supply_properties, class: Hash do
     cmmDisplayName { Faker::Hipster.word }
     cmmHealthState { health_states.sample }
-    dataHandle { Random.rand 0...2**64 }
+    dataHandle { Random.rand 0...2**61 }
     description { Faker::Company.catch_phrase }
     firmware do
       [{
@@ -49,8 +49,8 @@ FactoryGirl.define do
       fruSerialNumber SecureRandom.hex(10).upcase
       hardwareRevision (10 * SecureRandom.random_number).round(1)
       inputVoltageIsAC {[true,false].sample}
-      inputVoltageMax {Random.rand -1...2**64}
-      inputVoltageMin {Random.rand -1...2**64}
+      inputVoltageMax {Random.rand -1...2**61}
+      inputVoltageMin {Random.rand -1...2**61}
       leds do
         (0..5).map do |number|
           {
@@ -75,8 +75,8 @@ FactoryGirl.define do
       end
       powerAllocation do
         {
-          :totalInputPower => Random.rand(0...2**64),
-          :totalOutputPower => Random.rand(0...2**64)
+          :totalInputPower => Random.rand(0...2**61),
+          :totalOutputPower => Random.rand(0...2**61)
         }
       end
       partNumber { partNumber_value }

@@ -6,21 +6,25 @@ RSpec.describe PowerSupply, type: :model do
   describe "Model validations:" do
     context "The power supply" do
       before :each do
-        @power_supply = build :power_supply
+        @valid_power_supply = build :power_supply
       end
 
       it "is consistent." do
-        expect(@power_supply).to be_valid(PowerSupply)
+        expect(@valid_power_supply).to be_valid(PowerSupply)
       end
 
       it "can be save." do
-        expect{
-          @power_supply.save
-        }.to change {PowerSupply.count}.by 1
+        expect{ @valid_power_supply.save }.to change {PowerSupply.count}.by 1
       end
 
       it "power_supply._id show be equal to power_supply.properties[:uuid]" do
-        expect(@power_supply._id).to eq(@power_supply.properties[:uuid])
+        expect(@valid_power_supply._id).to eq(@valid_power_supply.properties[:uuid])
+      end
+      PowerSuppliesHelper::required_fields.each do |key|
+        it "expect field #{key} not not be nil or empty string" do
+          expect(@valid_power_supply.properties[key]).to_not eq(nil)
+          expect(@valid_power_supply.properties[key]).to_not eq("")
+        end
       end
     end
 
