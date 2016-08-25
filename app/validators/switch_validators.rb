@@ -51,9 +51,9 @@ class SwitchValidators < ActiveModel::Validator
 	def validate_display_name(record_v)
 		if record_v == nil
 			record_v.errors[:base] << "CMMDisplayName attribute can't be nil"
-		elsif not record_v.properties[:cmmHealthState].is_a? String
+		elsif not record_v.properties[:cmmDisplayName].is_a? String
 			record_v.errors[:base] << "CMMDisplayName attribute must be a String"
-		elsif record_v.properties[:cmmHealthState] == ""
+		elsif record_v.properties[:cmmDisplayName] == ""
 			record_v.errors[:base] << "CMMDisplayName attribute can't be empty"
 		end
 	end
