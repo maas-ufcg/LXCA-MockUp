@@ -11,19 +11,12 @@ class SwitchesController < ApplicationController
   # GET /switches/1
   # GET /switches/1.json
   def show
-    if @fan.nil?
-        head :not_found
+    if @switch.nil?
+      head :not_found
     else
-      render json: @fan.properties
+      render json: @switch.properties
     end
   end
-
-  # GET /switches/new
-  def new
-    @switch = Switch.new
-  end
-
-
 
 
   # PATCH/PUT /switches/1
@@ -47,7 +40,7 @@ class SwitchesController < ApplicationController
     def set_switch
       @switch = begin
                   Switch.find(params[:id])
-                rescue Mongoid::Erros::DocumentNotFound => ex
+                rescue Mongoid::Errors::DocumentNotFound => ex
                 end
 
     end

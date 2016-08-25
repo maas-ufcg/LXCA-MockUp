@@ -51,6 +51,30 @@ FactoryGirl.define do
 
   end
 
-
+  # => TODO: DEBUG 
+  # factory :switches_put_request_settings, aliases: [:switch_put_settings_request], class: Hash do
+  #
+  #   hostname do
+  #     Faker::Internet.domain_name
+  #   end
+  #   ipv4Address do
+  #     (0..1).map do |number|
+  #       Faker::Internet.ip_v4_address
+  #     end
+  #   end
+  #
+  #   location do
+  #     {
+  #       :location =>  Faker::Lorem.word ,
+  #       :contact =>  Faker::Company.name
+  #     }
+  #   end
+  #   ipv6Address do
+  #     (0..1).map do |number|
+  #       Faker::Internet.ip_v4_address
+  #     end
+  #   end
+  #
+  # end
 
 end

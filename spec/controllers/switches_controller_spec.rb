@@ -45,6 +45,22 @@ RSpec.describe SwitchesController, type: :controller do
 
     end
 
+    context "fetching unexisting switches" do
+      before :each do
+        @random_id = SecureRandom.hex.upcase
+        get :show, {id: @random_id}
+      end
+
+      it "returns HTTP 404(Not found) status code" do
+        expect(response).to have_http_status(:not_found)
+      end
+
+      it "expects to assign nil @switch in action" do
+        expect(assigns :switch).to be_nil
+      end
+
+    end
+
   end
 
 
