@@ -46,7 +46,7 @@ FactoryGirl.define do
     encapsulationLite
   )
 
-  errors_fileds = %w(
+  error_fields = %w(
     FETCH_SUCCESS
     FETCH_FAILED
     NO_CONNECTOR
@@ -129,7 +129,7 @@ FactoryGirl.define do
       (0..3).map do
         {
           :string => Faker::Hacker.say_something_smart,
-          :errorCode => errors_fileds.sample
+          :errorCode => error_fields.sample
         }
       end
     end

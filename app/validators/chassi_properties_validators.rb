@@ -1,25 +1,13 @@
-class ChassiPropertiesValidators < ActiveModel::Validator
+class ChassiValidators < ActiveModel::Validator
   def validate(record)
     if record == nil
       record.errors[:base] << "Record cannot be nil"
     end
 
-      validate_type(record, record.properties[:activationKeys], "activationKeys", Array)
-
+      validate_access_state(record)
       validate_activation_keys(record)
       validate_active_alerts(record)
-
-      validate_type(record, record.properties[:backedBy], "BackedBy", String)
-      validate_values(record, record.properties[:backedBy], "BackedBy", %w(real demo proxy))
-
-      validate_type(record, record.properties[:bladeSlots], "BladeSlots", Integer)
-      validate_type(record, record.properties[:cmmDisplayName], "CmmDisplayName", String)
-
-      validate_type(record, record.properties[:cmmHealthState], "cmmHealthState", String)
-      validate_values(record, record.properties[:cmmHealthState], "cmmHealthState", %w(Normal Non-Critical Warning Minor-Failure Major-Failure Non-Recoverable Critical Unknown))
-
-      validate_type(record, record.properties[:ledCardSlots], "ledCardSlots", Integer)
-
+      ### Include the others methods
       validate_type(record, record.properties[:cmms], "Cmms", Array)
       validate_type(record, record.properties[:cmmSlots], "CmmSlots", Integer)
       validate_type(record, record.properties[:complex], "Complex", Array)
@@ -28,29 +16,10 @@ class ChassiPropertiesValidators < ActiveModel::Validator
       validate_type(record, record.properties[:description], "Description", String)
       validate_type(record, record.properties[:domainName], "DomainName", String)
 
-      validate_encapsulation(record)
-      validate_energy_policies(record)
 
-      validate_type(record, record.properties[:errorFields], "ErrorFields", Array)
-      validate_type(record, record.properties[:errorFields][:string], "ErrorFields", String)
-      validate_type(record, record.properties[:errorFields][:errorCode], "ErrorCode", String)
-      validate_values(record, record.properties[:errorFields][:errorCode], "ErrorCode", %w(FETCH_SUCCESS FETCH_FAILED NO_CONNECTOR FATAL_EXCEPTION NETWORK_FAIL))
+      validate_security_policy(record)
 
-      validate_type(record, record.properties[:excludedHealthState], "ExcludedHealthState", String)
-      validate_values(record, record.properties[:excludedHealthState], "ExcludedHealthState", %w(Normal Non-Critical Warning Minor-Failure Major-Failure Non-Recoverable Critical Unknown))
 
-      validate_type(record, record.properties[:fanMuxes], "FanMuxes", Array)
-      validate_type(record, record.properties[:fanMuxSlots], "FanMuxSlots", Integer)
-      validate_type(record, record.properties[:fans], "Fans", Array)
-      validate_type(record, record.properties[:fanSlots], "FanSlots", Integer)
-      validate_type(record, record.properties[:height], "Height", Integer)
-      validate_type(record, record.properties[:hostname], "Hostname", String)
-
-      validate_is_connection_trusted(record)
-
-      validate_type(record, record.properties[:ledCardSlots], "ledCardSlots", Integer)
-
-      validate_leds(record)
       validate_location(record)
 
       validate_type(record, record.properties[:machineType], "MachineType", String)
@@ -79,17 +48,11 @@ class ChassiPropertiesValidators < ActiveModel::Validator
       validate_values(record, record.properties[:overallhealthState], "OverallHealthState",
                       %w(Normal Non-Critical Warning Minor-Failure Major-Failure Non-Recoverable Critical Unknown))
 
-      validate_security_policy(record)
-
       validate_type(record, record.properties[:serialNumber], "SerialNumber", String)
-
       validate_status(record)
-
       validate_type(record, record.properties[:switches], "Switches", Array)
       validate_type(record, record.properties[:switchSlots], "SwitchSlots", Integer)
-
       validate_tls_version(record)
-
       validate_type(record, record.properties[:type], "Type", Chassis)
       validate_type(record, record.properties[:userDescription], "userDescription", String)
       validate_type(record, record.properties[:uuid], "Uuid", String)
@@ -98,25 +61,88 @@ class ChassiPropertiesValidators < ActiveModel::Validator
   end
 
   private
-    def validate_access_state(record)
-      valid_values = %w(Online Offline Partial Pending Unknown)
+  def validate_access_state(record)
+    valid_values = %w(Online Offline Partial Pending Unknown)
 
-      validate_type(record, record.properties[:accessState], "accessState", String)
-      validate_values(record, record.properties[:accessState], "accessState", valid_values)
-
+    if not record.properties[:accessState].is_a? String
+      record.errors[:base] << "AccessState attribute must be a String (actual: #{record.properties[:accessState].class})"
+    elsif not valid_values.include? record.properties[:accessState]
+      record.errors[:base] << "AccessState attribute is not valid"
     end
+  end
+
+    def validate_activation_keys(record)
+      if not record.properties[:activationKeys].is_a? Array
+        record.errors[:base] << "ActivationKeys attribute must be an Array (actual: #{record.properties[:activationKeys].class})"
+      end
+  end
 
     def validate_active_alerts(record)
       sub_keys = %i(corrIDs id location msg msgID severity)
       severity = %w(FATAL CRITICAL MAJOR MINOR WARNING INFORMATIONAL UNKNOWN)
 
-      validate_type(record, record.properties[:activeAlerts], "activeAlerts", Hash)
+      if not record.properties[:activeAlerts].is_a? Array
+        record.errors[:base] << "ActiveAlerts attribute must be a Hash (actual: #{record.properties[:activeAlerts].class})"
+      end
 
       record.properties[:activeAlerts].each do |alert|
-        validate_type(record, alert, "Alert", Hash)
-        validate_hash_keys(record, alert, "Alert", sub_keys)
+        if not alert.is_a? Hash
+          record.errors[:base] << "Alert attribute must be a Hash (actual: #{alert.class})"
+        end
 
-        validate_values(record, alert[:severity], "Severity", severity)
+        sub_keys.each do |key|
+          if alert[key] == nil
+            record.errors[:base] << "ActiveAlerts hash must contain #{key} attribute"
+          elsif not alert[key].is_a? String
+            record.errors[:base] << "#{key.to_s} must be a String (actual: #{alert[key].class})"
+          end
+        end
+
+        if not severity.include? alert[:severity]
+          record.errors[:base] << "Severity attribute is not valid"
+        end
+
+      end
+    end
+
+    def validade_backed_by(record)
+      backed_by_values = %w(real demo proxy)
+
+      if not record.properties[:backedBy].is_a? String
+        record.errors[:base] << "BackedBy attribute must be a String"
+      elsif not backed_by_values.include? record.properties[:backedBy]
+        record.errors[:base] << "BackedBy attribute is not valid"
+      end
+    end
+
+    def validate_blade_slots(record)
+      if not record.properties[:bladeSlots].is_a? Integer
+        record.errors[:base] << "BladeSlots attribute must be an Integer"
+      end
+    end
+
+    def validate_cmm_display_name(record)
+      if not record.properties[:cmmDisplayName].is_a? String
+        record.errors[:base] << "CmmDisplayName attribute must be a String"
+      end
+    end
+
+    def validate_cmm_health_state(record)
+      cmm_health_states = %w(
+        Normal
+        Non-Critical
+        Warning
+        Minor-Failure
+        Major-Failure
+        Non-Recoverable
+        Critical
+        Unknown
+      )
+
+      if not record.properties[:cmmHealthState].is_a? String
+        record.errors[:base] << "CmmHealthState attribute must be a String"
+      elsif not cmm_health_states.include? record.properties[:cmmHealthState]
+        record.errors[:base] << "CmmHealthState attribute is not valid"
       end
     end
 
@@ -154,42 +180,39 @@ class ChassiPropertiesValidators < ActiveModel::Validator
         "Unknown"
       ]
 
-      validate_type(record, record.policies[:energyPolicies], "EnergyPolicies", Hash)
-      validate_type(record, record.properties[:energyPolicies][:accousticAttenuationMode], "AccousticAttenuationMode", String)
-      validate_values(record, record.properties[:energyPolicies][:accousticAttenuationMode], "AccousticAttenuationMode", accoustic_attenuation_mode_values)
+      if not record.properties[:energyPolicies].is_a? Hash
+        record.errors[:baseerrorFields] << "EnergyPolicies attribute must be a Hash (actual: #{record.properties[:energyPolicies].class})"
+      elsif not record.properties[:energyPolicies][:accousticAttenuationMode].is_a? String
+        record.errors[:base] << "AccousticAttenuationMode attribute must be a String (actual: #{record.properties[:energyPolicies][:accousticAttenuationMode].class})"
+      elsif not accoustic_attenuation_mode_values.include? record.properties[:energyPolicies][:accousticAttenuationMode]
+        record.errors[:base] << "AccousticAttenuationMode attribute is not valid"
+      end
 
       validate_inner_hot_air_recirculation(record.properties[:energyPolicies][:hotAirRecirculation], record)
       validate_inner_power_capping_policy(record.properties[:powerCappingPolicy], record)
 
-      validate_type(record, record.properties[:energyPolicies][:powerRedundancyMode], "powerRedundancyMode", Fixnum)
-    end
-
-    def validate_is_connection_trusted(record)
-      values = [true, false]
-
-      if record.properties[:isConnectionTrusted] == nil
-        record.errors[:base] << "isConnectionTrusted attribute cannot be nil"
-      elsif not values.include? record.properties[:isConnectionTrusted]
-        record.errors[:base] << "isConnectionTrusted attribute is invalid"
+      if not record.properties[:energyPolicies][:powerRedundancyMode].is_a? Fixnum
+        record.errors[:base] << "PowerRedundancyMode attribute must be a Fixnum (actual: #{record.properties[:energyPolicies][:powerRedundancyMode].class})"
       end
 
     end
 
-    def validate_leds(record)
-      sub_keys = %i(color location name state)
+    def validate_error_fields(record)
+      valid_values = %w(FETCH_SUCCESS FETCH_FAILED NO_CONNECTOR FATAL_EXCEPTION NETWORK_FAIL)
+      if not record.properties[:errorFields].is_a? Array
+        record.errors[:base] << "ErrorFields attribute must be a Array (actual: #{record.properties[:errorFields].class})"
+      elsif not valid_values.include? record.properties[:errorFields][:errorCode]
+        record.errors[:base] << "ErrorFields is invalid. (Cause: errorCode)"
+      end
+    end
 
-      validate_hash_keys(record, record.properties[:leds], "Leds", sub_keys)
+    def validate_excluded_health_state(record)
+      valid_values = %W(Normal Non-Critical Warning Minor-Failure Major-Failure Non-Recoverable Critical Unknown)
 
-      validate_type(record, record.properties[:leds][:color], "Color", String)
-      validate_values(record, record.properties[:leds][:color], "Color", %w(Red Amber Yellow Green Blue Unknown))
+      if not record.properties[:excludedHealthState].is_a? String
+        record.errors[:base] << "ExcludedHealthState must be a String (actual: #{record.properties[:excludedHealthState].class})"
+      end
 
-      validate_type(record, record.properties[:leds][:location], "Location", String)
-      validate_values(record, record.properties[:leds][:location], "Location", ["Front panel", "Lightpath Card", "Planar", "FRU", "Rear Panel", "Unknown"])
-
-      validate_type(record, record.properties[:leds][:name], "Name", String)
-
-      validate_type(record, record.properties[:leds][:state], "State", String)
-      validate_values(record, record.properties[:leds][:state], "State", %w(Off On Blinking Unknown))
 
     end
 
@@ -276,15 +299,23 @@ class ChassiPropertiesValidators < ActiveModel::Validator
 
     # these methods should not be included in the main validate method body because they are already called in other methods
     def validate_inner_chassis_bay(chassis_bay, record)
-      validate_type(record, chassis_bay, "ChassisBay", Hash)
-      validate_type(record, chassis_bay[:isExceeded], "isExceeded", String)
-      validate_type(record, chassis_bay[:sensorName], "sensorName", String)
-      validate_type(record, chassis_bay[:sensorValue], "sensorValue", Float)
-      validate_type(record, chassis_bay[:slot], "slot", Integer)
-      validate_type(record, chassis_bay[:subSlot], "subSlot", Integer)
+         if not chassis_bay.is_a? Hash
+           record.errors[:base] >> "ChassisBay attribute must be a Hash (actual: #{chassis_bay.class}"
+         elsif not chassis_bay[:isExceeded].is_a? String
+           record.errors[:base] << "IsExceeded attribute must be a String (actual: #{chassis_bay[:isExceeded].class})"
+         elsif not chassis_bay[:sensorName].is_a? String
+           record.errors[:base] << "SensorName attribute must be a String (actual: #{chassis_bay[:sensorName].class})"
+         elsif not chassis_bay[:sensorValue].is_a? Float
+           record.errors[:base] << "SensorValue attribute must be a Float (actual: #{chassis_bay[:sensorValue].class})"
+         elsif not chassis_bay[:slot].is_a? Integer
+           record.errors[:base] << "Slot attribute must be an Integer (actual: #{chassis_bay[:slot].class})"
+         elsif not chassis_bay[:subSlot].is_a? Integer
+           record.errors[:base] << "SubSlot attribute must be an Integer (actual: #{chassis_bay[:subSlot].class})"
+         end
 
-    end
+       end
 
+    # this method should not be included in the main validate method body
     def validate_inner_hot_air_recirculation(hot_air_recirculation)
       validate_inner_chassis_bay(hot_air_recirculation[:chassisBay])
 
@@ -300,12 +331,17 @@ class ChassiPropertiesValidators < ActiveModel::Validator
     def validate_inner_power_capping_policy(power_capping_policy, record)
       capping_policy_values = %w(OFF STATIC UNKNOWN)
 
-      validate_type(record, power_capping_policy, "PowerCappingPolicy", Hash)
-      validate_type(record, power_capping_policy[:cappingPolicy], "CappingPolicy", String)
-      validate_values(record, power_capping_policy[:cappingPolicy], "CappingPolicy", capping_policy_values)
-      validate_type(record, power_capping_policy[:currentPowerCap], "currentPowerCap", Fixnum)
-      validate_type(record, power_capping_policy[:minPowerCap], "minPowerCap", Fixnum)
-      
+      if not power_capping_policy.is_a? Hash
+        record.errors[:base] >> "PowerCappingPolicy attribute must be a Hash (actual: #{power_capping_policy.class}"
+      elsif not power_capping_policy[:cappingPolicy].is_a? String
+        record.errors[:base] >> "CappingPolicy attribute must be a String (actual: #{power_capping_policy[:cappingPolicy].class}"
+      elsif not capping_policy_values.include? power_capping_policy[:cappingPolicy]
+        record.errors[:base] >> "CappingPolicy attribute is not valid"
+      elsif not power_capping_policy[:currentPowerCap].is_a? Fixnum
+        record.errors[:base] >> "CurrentPowerCap attribute must be a Fixnum (actual: #{power_capping_policy[:currentPowerCap].class}"
+      elsif not power_capping_policy[:minPowerCap].is_a? Fixnum
+        record.errors[:base] >> "MinPowerCap attribute must be a Fixnum (actual: #{power_capping_policy[:minPowerCap].class}"
+      end
     end
 
 
