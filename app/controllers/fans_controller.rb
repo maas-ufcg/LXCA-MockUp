@@ -5,7 +5,7 @@ class FansController < ApplicationController
   # GET /fans.json
   def index
     @fans = Fan.all
-    render json: @fans
+    render json: @fans.map{|fan| fan.properties}
   end
 
   # GET /fans/1
@@ -14,7 +14,7 @@ class FansController < ApplicationController
     if @fan.nil?
       head :not_found
     else
-      render json: @fan
+      render json: @fan.properties
     end
   end
 
