@@ -22,10 +22,6 @@ FactoryGirl.define do
     "Unknown"
   ]
 
-  uuids_values_parent = SecureRandom.hex.upcase
-  uuids_values = SecureRandom.hex.upcase
-  partNumber_value = SecureRandom.hex.upcase
-
   led_states = %w(Off On Blinking Unknown)
 
   power_states = %w(Off On ShuttingDown Standby Hibernate Unknown)
@@ -45,7 +41,7 @@ FactoryGirl.define do
         :version => Faker::App.version
         }]
       end
-      FRU { partNumber_value }
+      FRU { SecureRandom.hex.upcase }
       fruSerialNumber SecureRandom.hex(10).upcase
       hardwareRevision (10 * SecureRandom.random_number).round(1)
       inputVoltageIsAC {[true,false].sample}
@@ -69,8 +65,8 @@ FactoryGirl.define do
       name { Faker::Hipster.word }
       parent do
         {
-          :uri =>  "chassis/" + uuids_values_parent,
-          :uuid =>  uuids_values_parent
+          :uri =>  "chassis/" + SecureRandom.hex.upcase,
+          :uuid =>  SecureRandom.hex.upcase
         }
       end
       powerAllocation do
@@ -79,7 +75,7 @@ FactoryGirl.define do
           :totalOutputPower => Random.rand(0...2**61)
         }
       end
-      partNumber { partNumber_value }
+      partNumber { SecureRandom.hex.upcase }
       posID { "#{Random.rand 1...1000}" }
       powerState { power_states.sample }
 
@@ -88,9 +84,9 @@ FactoryGirl.define do
       serialNumber { "US#{Random.rand 1000...100000}S" }
       slots 1 # Special attention
       type "PowerSupply"
-      uri { Faker::Internet.slug("chassis #{uuids_values}", '/') }
+      uri { "chassis/" + SecureRandom.hex.upcase }
       userDescription { Faker::Lorem.sentence }
-      uuid { uuids_values }
+      uuid { SecureRandom.hex.upcase }
       vpdID { "#{Random.rand 1...1000}" }
 
       initialize_with { attributes }
