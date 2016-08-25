@@ -1,5 +1,5 @@
 FactoryGirl.define do
-  factory :switch do
+  factory :switch, aliases: [:valid_switch]  do
     properties {FactoryGirl.build(:switch_properties)}
 
     after(:build) do |switch|

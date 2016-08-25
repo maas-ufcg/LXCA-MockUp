@@ -5,6 +5,7 @@ class SwitchesController < ApplicationController
   # GET /switches.json
   def index
     @switches = Switch.all
+    render json: @switches
   end
 
   # GET /switches/1
