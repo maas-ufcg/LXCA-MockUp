@@ -19,6 +19,34 @@ class ChassiValidators < ActiveModel::Validator
 
       validate_security_policy(record)
 
+
+      validate_location(record)
+
+      validate_type(record, record.properties[:machineType], "MachineType", String)
+      validate_type(record, record.properties[:managerName], "ManagerName", String)
+      validate_type(record, record.properties[:managerUuid], "ManagerUuid", String)
+      validate_type(record, record.properties[:manufacturer], "Manufacturer", String)
+      validate_type(record, record.properties[:manufacturerID], "ManufacturerID", String)
+      validate_type(record, record.properties[:mgmtProcIPaddress], "MgmtProcIPaddress", String)
+      validate_type(record, record.properties[:model], "Model", String)
+      validate_type(record, record.properties[:name], "Name", String)
+
+      validate_nist(record)
+
+      validate_type(record, record.properties[:nodes], "Nodes", Array)
+      validate_type(record, record.properties[:partNumber], "PartNumber", String)
+      validate_type(record, record.properties[:passThroughModules], "PassThroughModules", Array)
+      validate_type(record, record.properties[:posID], "PosID", String)
+
+      validate_power_allocation(record)
+
+      validate_type(record, record.properties[:powerSupplySlots], "PowerSupplySlots", Integer)
+      validate_type(record, record.properties[:powerSupplies], "PowerSupplies", Array)
+      validate_type(record, record.properties[:productID], "ProductID", String)
+      validate_type(record, record.properties[:overallHealthState], "OverallHealthState", String)
+      validate_values(record, record.properties[:overallhealthState], "OverallHealthState",
+                      %w(Normal Non-Critical Warning Minor-Failure Major-Failure Non-Recoverable Critical Unknown))
+
       validate_type(record, record.properties[:serialNumber], "SerialNumber", String)
       validate_status(record)
       validate_type(record, record.properties[:switches], "Switches", Array)
@@ -232,6 +260,65 @@ class ChassiValidators < ActiveModel::Validator
 
     end
 
+    def validate_location(record)
+      validate_hash_keys(record, record.properties[:location], "Location", %i(location lowestRackUnit rack room))
+
+      %i(location rack room).each do |key|
+        validate_type(record, record.properties[key], key, String)
+      end
+
+      validate_type(record, record.properties[:lowestRackUnit], "LowestRackUnit", Integer)
+    end
+
+    def validate_nist(record)
+      validate_type(record, record.properties[:nist], "Nist", Hash)
+
+      validate_type(record, record.properties[:nist][:currentValue], "CurrentValue", String)
+      validate_values(record, record.properties[:nist][:currentValue], "CurrentValue", %w(Unknown Compatibility Nist_800_131A_Strict Nist_800_131A_Custom))
+
+      validate_type(record, record.properties[:nist][:possibleValues], "PossibleValues", Array)
+
+    end
+
+    def validate_power_allocation(record)
+      valid_values = %w(Normal)
+      sub_keys = %i(allocatedOutputPower midPlaneCardMaximumAllocatedPower midPlaneCardMinimumAllocatedPower remainingOutputPower totalInputPower totalOutputPower)
+
+      validate_hash_keys(record, record.properties[:powerAllocation], "PowerAllocation", sub_keys)
+      sub_keys.each do |key|
+        verify_type(record, record.properties[:powerAllocation][key], "PowerAllocation", Fixnum)
+      end
+
+
+
+    end
+
+    def validate_security_policy(record)
+      sub_keys = %i(cmmPolicyLevel cmmPolicyState)
+      cmm_policy_level_values = %w(LEGACY SECURE)
+      cmm_policy_state_values = %w(ERROR UNKNOWN ACTIVE PENDING)
+
+      validate_hash_keys(record, record.properties[:SecurityPolicy], "SecurityPolicy", sub_keys)
+      validate_values(record, record.properties[:SecurityPolicy][:cmmPolicyLevel], "CmmPolicyLevel", cmm_policy_level_values)
+      validate_values(record, record.properties[:SecurityPolicy][:cmmPolicyState], "CmmPolicyState", cmm_policy_state_values)
+
+    end
+
+    def validate_status(record)
+      sub_keys = %(message name)
+
+      validate_type(record, record.properties[:status], Hash)
+
+      sub_keys.each do |key|
+        if record.properties[:status][key] == nil
+          record.errors[:base] << "Status attribute must contain #{key} attribute"
+        elsif not record.properties[:status][key].is_a? String
+          record.errors[:base] << "#{key} attribute must be a String (actual: #{record.properties[:status][key].class})"
+        end
+      end
+
+    end
+
     def validate_tls_version(record)
       sub_keys = %i(currentValue possibleValues)
       valid_values = %w(Unknown SSL_30 TLS_10 TLS_11 TLS_12 TLS_12_Server_Client TLS_12_Server)
@@ -251,32 +338,6 @@ class ChassiValidators < ActiveModel::Validator
       elsif not record.properties[:tlsVersion][:possibleValues].is_a? Array
         record.errors[:base] << "PossibleValues attribute must be a Array (actual: #{record.properties[:tlsVersion][:possibleValues].class})"
       end
-
-    end
-
-    def validate_status(record)
-      sub_keys = %(message name)
-
-      validate_type(record, record.properties[:status], Hash)
-
-      sub_keys.each do |key|
-        if record.properties[:status][key] == nil
-          record.errors[:base] << "Status attribute must contain #{key} attribute"
-        elsif not record.properties[:status][key].is_a? String
-          record.errors[:base] << "#{key} attribute must be a String (actual: #{record.properties[:status][key].class})"
-        end
-      end
-
-    end
-
-    def validate_security_policy(record)
-      sub_keys = %i(cmmPolicyLevel cmmPolicyState)
-      cmm_policy_level_values = %w(LEGACY SECURE)
-      cmm_policy_state_values = %w(ERROR UNKNOWN ACTIVE PENDING)
-
-      validate_hash_keys(record, record.properties[:SecurityPolicy], "SecurityPolicy", sub_keys)
-      validate_values(record, record.properties[:SecurityPolicy][:cmmPolicyLevel], "CmmPolicyLevel", cmm_policy_level_values)
-      validate_values(record, record.properties[:SecurityPolicy][:cmmPolicyState], "CmmPolicyState", cmm_policy_state_values)
 
     end
 
