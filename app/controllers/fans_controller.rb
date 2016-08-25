@@ -4,8 +4,11 @@ class FansController < ApplicationController
   # GET /fans
   # GET /fans.json
   def index
-    @fans = Fan.all
-    render json: @fans.map{|fan| fan.properties}
+    @fans = Fan.all.to_a
+    render(json: @fans.map do |fan| 
+      setup_fan_properties fan
+      fan.properties
+    end)
   end
 
   # GET /fans/1
@@ -25,6 +28,21 @@ class FansController < ApplicationController
                Fan.find(params[:id])
              rescue Mongoid::Errors::DocumentNotFound => ex
              end
+      setup_fan_properties @fan
+    end
+
+    def setup_fan_properties(fan)
+      return if fan.nil?
+      excludeAttributes = params[:excludeAttributes]
+      includeAttributes = params[:includeAttributes]
+      unless includeAttributes.nil?
+        excludeAttributes = FansHelper::required_fields - includeAttributes.map(&:to_sym)
+      end
+      unless excludeAttributes.nil?
+        excludeAttributes.map(&:to_sym).each do |attribute|
+          fan.properties.delete(attribute)
+        end
+      end
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.
