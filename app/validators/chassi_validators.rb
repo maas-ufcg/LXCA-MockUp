@@ -7,6 +7,14 @@ class ChassiValidators < ActiveModel::Validator
       validate_access_state(record)
       validate_activation_keys(record)
       validate_active_alerts(record)
+      ### Include the others methods
+      validate_type(record, :cmms, Array)
+      validate_type(record, :cmmSlots, Integer)
+      validate_type(record, :complex, Array)
+      validate_type(record, :contact, String)
+      validate_type(record, :dataHandle, Fixnum)
+      validate_type(record, :description, String)
+      validate_type(record, :domainName, String)
 
   end
 
@@ -98,47 +106,47 @@ class ChassiValidators < ActiveModel::Validator
       end
     end
 
-    def validate_cmms(record)
-      if not record.properties[:cmms].is_a? Array
-        record.errors[:base] << "Cmms attribute must be an array (actual: #{record.properties[:cmms].class})"
-      end
-    end
-
-    def validate_cmm_slots(record)
-      if not record.properties[:cmmSlots].is_a? Integer
-        record.errors[:base] << "CmmSlots attribute must be an Integer (actual: #{record.properties[:cmmSlots].class})"
-      end
-    end
-
-    def validate_complex(record)
-      if not record.properties[:complex].is_a? Array
-        record.errors[:base] << "Complex attribute must be an Array (actual: #{record.properties[:complex].class})"
-      end
-    end
-
-    def validate_contact(record)
-      if not record.properties[:contact].is_a? String
-        record.errors[:base] << "Contact attribute must be a String (actual: #{record.properties[:contact].class})"
-      end
-    end
-
-    def validate_data_handle(record)
-      if not record.properties[:dataHandle].is_a? Fixnum
-        record.errors[:base] << "DataHandle attribute must be a Fixnum (actual: #{record.properties[:dataHandle].class})"
-      end
-    end
-
-    def validate_description(record)
-      if not record.properties[:description].is_a? String
-        record.errors[:base] << "Description attribute must be a String (actual: #{record.properties[:description].class})"
-      end
-    end
-
-    def validate_domain_name(record)
-      if not record.properties[:domainName].is_a? String
-        record.errors[:base] << "DomainName attribute must be a String (actual: #{record.properties[:domainName].class})"
-      end
-    end
+    # def validate_cmms(record)
+    #   if not record.properties[:cmms].is_a? Array
+    #     record.errors[:base] << "Cmms attribute must be an array (actual: #{record.properties[:cmms].class})"
+    #   end
+    # end
+    #
+    # def validate_cmm_slots(record)
+    #   if not record.properties[:cmmSlots].is_a? Integer
+    #     record.errors[:base] << "CmmSlots attribute must be an Integer (actual: #{record.properties[:cmmSlots].class})"
+    #   end
+    # end
+    #
+    # def validate_complex(record)
+    #   if not record.properties[:complex].is_a? Array
+    #     record.errors[:base] << "Complex attribute must be an Array (actual: #{record.properties[:complex].class})"
+    #   end
+    # end
+    #
+    # def validate_contact(record)
+    #   if not record.properties[:contact].is_a? String
+    #     record.errors[:base] << "Contact attribute must be a String (actual: #{record.properties[:contact].class})"
+    #   end
+    # end
+    #
+    # def validate_data_handle(record)
+    #   if not record.properties[:dataHandle].is_a? Fixnum
+    #     record.errors[:base] << "DataHandle attribute must be a Fixnum (actual: #{record.properties[:dataHandle].class})"
+    #   end
+    # end
+    #
+    # def validate_description(record)
+    #   if not record.properties[:description].is_a? String
+    #     record.errors[:base] << "Description attribute must be a String (actual: #{record.properties[:description].class})"
+    #   end
+    # end
+    #
+    # def validate_domain_name(record)
+    #   if not record.properties[:domainName].is_a? String
+    #     record.errors[:base] << "DomainName attribute must be a String (actual: #{record.properties[:domainName].class})"
+    #   end
+    # end
 
     def validate_encapsulation(record)
       encapsulation_mode = %w(
@@ -157,7 +165,7 @@ class ChassiValidators < ActiveModel::Validator
         if not record.properties[:encapsulation][:nonBlockedIpAddressList].is_a? Array
           record.errors[:base] << "NonBlockedIpAddressList attribute must be an Array (actual: #{record.properties[:encapsulation][:nonBlockedIpAddressList].class})"
         end
-      elsif not encapsulation_mode.include? record.properties[:encapsulation][:encapsulationMode]
+      elsif not encapsulatin,on_mode.include? record.properties[:encapsulation][:encapsulationMode]
         record.errors[:base] << "EncapsulationMode attribute is not valid"
       end
 
@@ -175,7 +183,7 @@ class ChassiValidators < ActiveModel::Validator
       ]
 
       if not record.properties[:energyPolicies].is_a? Hash
-        record.errors[:base] << "EnergyPolicies attribute must be a Hash (actual: #{record.properties[:energyPolicies].class})"
+        record.errors[:baseerrorFields] << "EnergyPolicies attribute must be a Hash (actual: #{record.properties[:energyPolicies].class})"
       elsif not record.properties[:energyPolicies][:accousticAttenuationMode].is_a? String
         record.errors[:base] << "AccousticAttenuationMode attribute must be a String (actual: #{record.properties[:energyPolicies][:accousticAttenuationMode].class})"
       elsif not accoustic_attenuation_mode_values.include? record.properties[:energyPolicies][:accousticAttenuationMode]
@@ -184,27 +192,50 @@ class ChassiValidators < ActiveModel::Validator
 
       validate_inner_hot_air_recirculation(record.properties[:energyPolicies][:hotAirRecirculation])
       validate_inner_power_capping_policy(record.properties[:powerCappingPolicy])
+
+      if not record.properties[:energyPolicies][:powerRedundancyMode].is_a? Fixnum
+        record.errors[:base] << "PowerRedundancyMode attribute must be a Fixnum (actual: #{record.properties[:energyPolicies][:powerRedundancyMode].class})"
       end
+
+    end
+
+    def validate_error_fields(record)
+      valid_values = %w(FETCH_SUCCESS FETCH_FAILED NO_CONNECTOR FATAL_EXCEPTION NETWORK_FAIL)
+      if not record.properties[:errorFields].is_a? Array
+        recordo.errors[:base] << "ErrorFields attribute must be a Array (actual: #{record.properties[:errorFields].class})"
+      elsif not valid_values.included? record.properties[:errorFields][:errorCode]
+
+
+      end
+    end
+
+    def validate_excluded_health_state(record)
+      valid_values = %W(Normal Non-Critical Warning Minor-Failure Major-Failure Non-Recoverable Critical Unknown)
+
+      if not record.properties[:excludedHealthState].is_a? String
+        record.errors[:base] << "ExcludedHealthState must be a String (actual: #{record.properties[:excludedHealthState].class})"
+      end
+
 
     end
 
     # this method should not be included in the main validate method body
     def validate_inner_chassis_bay(chassis_bay)
-      if not chassis_bay.is_a? Hash
-        record.errors[:base] >> "ChassisBay attribute must be a Hash (actual: #{chassis_bay.class}"
-      elsif not chassis_bay[:isExceeded].is_a? String
-        record.errors[:base] << "IsExceeded attribute must be a String (actual: #{chassis_bay[:isExceeded].class})"
-      elsif not chassis_bay[:sensorName].is_a? String
-        record.errors[:base] << "SensorName attribute must be a String (actual: #{chassis_bay[:sensorName].class})"
-      elsif not chassis_bay[:sensorValue].is_a? Float
-        record.errors[:base] << "SensorValue attribute must be a Float (actual: #{chassis_bay[:sensorValue].class})"
-      elsif not chassis_bay[:slot].is_a? Integer
-        record.errors[:base] << "Slot attribute must be an Integer (actual: #{chassis_bay[:slot].class})"
-      elsif not chassis_bay[:subSlot].is_a? Integer
-        record.errors[:base] << "SubSlot attribute must be an Integer (actual: #{chassis_bay[:subSlot].class})"
-      end
+         if not chassis_bay.is_a? Hash
+           record.errors[:base] >> "ChassisBay attribute must be a Hash (actual: #{chassis_bay.class}"
+         elsif not chassis_bay[:isExceeded].is_a? String
+           record.errors[:base] << "IsExceeded attribute must be a String (actual: #{chassis_bay[:isExceeded].class})"
+         elsif not chassis_bay[:sensorName].is_a? String
+           record.errors[:base] << "SensorName attribute must be a String (actual: #{chassis_bay[:sensorName].class})"
+         elsif not chassis_bay[:sensorValue].is_a? Float
+           record.errors[:base] << "SensorValue attribute must be a Float (actual: #{chassis_bay[:sensorValue].class})"
+         elsif not chassis_bay[:slot].is_a? Integer
+           record.errors[:base] << "Slot attribute must be an Integer (actual: #{chassis_bay[:slot].class})"
+         elsif not chassis_bay[:subSlot].is_a? Integer
+           record.errors[:base] << "SubSlot attribute must be an Integer (actual: #{chassis_bay[:subSlot].class})"
+         end
 
-    end
+       end
 
     # this method should not be included in the main validate method body
     def validate_inner_hot_air_recirculation(hot_air_recirculation)
@@ -237,4 +268,13 @@ class ChassiValidators < ActiveModel::Validator
         record.errors[:base] >> "MinPowerCap attribute must be a Fixnum (actual: #{power_capping_policy[:minPowerCap].class}"
       end
     end
+
+
+
+    def validate_type(record, key, type_expected)
+      if not record.properties[key].is_a? type_expected
+        record.errors[:base] << "#{key} attribute must be a/an #{type_expected} (actual: #{record.properties[key].class})"
+      end
+    end
+
 end

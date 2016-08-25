@@ -125,7 +125,14 @@ FactoryGirl.define do
     # end
 
     energyPolicies { FactoryGirl.build :energy_policies }
-    errorFields { errors_fileds.sample }
+    errorFields do
+      (0..3).map do
+        {
+          :string => Faker::Hacker.say_something_smart,
+          :errorCode => errors_fileds.sample
+        }
+      end
+    end
     excludedHealthState { cmm_health_states.sample }
     fanMuxes [] #review_this_parameter: Will re-use the fanMuxes factory.
     fanMuxSlots { Faker::Number.number(2) }
