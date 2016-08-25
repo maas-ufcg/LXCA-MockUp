@@ -29,60 +29,27 @@ RSpec.describe SwitchesController, type: :controller do
   end
 
   describe "GET #show" do
-    it "assigns the requested switch as @switch" do
-      switch = Switch.create! valid_attributes
-      get :show, params: {id: switch.to_param}, session: valid_session
-      expect(assigns(:switch)).to eq(switch)
+    context "fething existing switches" do
+      before :each do
+        @switches = (0..4).map{|n| create :valid_switch}
+      end
+
+      it "all switches should be fetched individually" do
+
+        @switches.each do |switch|
+          get :show, {id: switch.id}
+          expect(assigns  :switch).to be_valid(Switch)
+        end
+
+      end
+
     end
+
   end
 
-  describe "GET #new" do
-    it "assigns a new switch as @switch" do
-      get :new, params: {}, session: valid_session
-      expect(assigns(:switch)).to be_a_new(Switch)
-    end
-  end
 
-  describe "GET #edit" do
-    it "assigns the requested switch as @switch" do
-      switch = Switch.create! valid_attributes
-      get :edit, params: {id: switch.to_param}, session: valid_session
-      expect(assigns(:switch)).to eq(switch)
-    end
-  end
 
-  describe "POST #create" do
-    context "with valid params" do
-      it "creates a new Switch" do
-        expect {
-          post :create, params: {switch: valid_attributes}, session: valid_session
-        }.to change(Switch, :count).by(1)
-      end
 
-      it "assigns a newly created switch as @switch" do
-        post :create, params: {switch: valid_attributes}, session: valid_session
-        expect(assigns(:switch)).to be_a(Switch)
-        expect(assigns(:switch)).to be_persisted
-      end
-
-      it "redirects to the created switch" do
-        post :create, params: {switch: valid_attributes}, session: valid_session
-        expect(response).to redirect_to(Switch.last)
-      end
-    end
-
-    context "with invalid params" do
-      it "assigns a newly created but unsaved switch as @switch" do
-        post :create, params: {switch: invalid_attributes}, session: valid_session
-        expect(assigns(:switch)).to be_a_new(Switch)
-      end
-
-      it "re-renders the 'new' template" do
-        post :create, params: {switch: invalid_attributes}, session: valid_session
-        expect(response).to render_template("new")
-      end
-    end
-  end
 
   describe "PUT #update" do
     context "with valid params" do
@@ -125,19 +92,6 @@ RSpec.describe SwitchesController, type: :controller do
     end
   end
 
-  describe "DELETE #destroy" do
-    it "destroys the requested switch" do
-      switch = Switch.create! valid_attributes
-      expect {
-        delete :destroy, params: {id: switch.to_param}, session: valid_session
-      }.to change(Switch, :count).by(-1)
-    end
 
-    it "redirects to the switches list" do
-      switch = Switch.create! valid_attributes
-      delete :destroy, params: {id: switch.to_param}, session: valid_session
-      expect(response).to redirect_to(switches_url)
-    end
-  end
 
 end
