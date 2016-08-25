@@ -1,3 +1,7 @@
+Dir.glob('app/validators/fan*.rb').each do |f| 
+  require_relative "../../#{f}"
+end
+
 class Fan
   include Mongoid::Document
   field :_id, type: String
