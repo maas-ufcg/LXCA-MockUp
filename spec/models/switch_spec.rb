@@ -2,7 +2,7 @@ RSpec.describe Switch, type: :model do
   #pending "add some examples to (or delete) #{__FILE__}"
 
   describe "Model validations:" do
-    context "The Switch" do
+    context "Factory :switch" do
         before :each do
           @switch = build :switch
 
@@ -20,6 +20,19 @@ RSpec.describe Switch, type: :model do
 
     end
 
+
+    context "Factory :inv_switch_different_id_and_uuid" do
+        before :each do
+              @switch = build :inv_switch_different_id_and_uuid
+        end
+        it "Factory :inv_switch_different_id_and_uuid should not build a valid object." do
+            expect(@switch).to_not be_valid(Switch)
+        end
+
+        it "Should not save a object with _id and properties.uuid different" do
+            expect{@switch.save}.to change{Switch.count}.by 0
+        end
+    end
 
     SwitchesHelper::required_fields.each do |key|
       context "Factory :no_#{key}_switch" do

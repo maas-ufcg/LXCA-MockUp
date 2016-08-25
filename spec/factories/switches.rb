@@ -9,12 +9,12 @@ FactoryGirl.define do
 
   end
 
-  factory :inv_switch_missing_uuid, class: Switch do
+  factory :inv_switch_different_id_and_uuid, class: Switch do
       properties {FactoryGirl.build(:switch_properties)}
 
        after(:build) do |switch|
-         switch._id =  switch.properties[:uuid]
-         switch.properties.delete(:uuid)
+         switch._id =  "alohomora"
+
        end
 
   end
