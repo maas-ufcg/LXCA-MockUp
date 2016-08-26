@@ -21,7 +21,7 @@ RSpec.describe Chassi, type: :model do
         expect(@valid_chassi._id).to eq(@valid_chassi.properties[:uuid])
       end
 
-      ChassiHelper::required_fields.each do |field|
+      ChassisHelper::required_fields.each do |field|
         it "expect field #{field} can't be nil or empty string" do
           expect(@valid_chassi.properties[field]).to_not eq(nil)
           expect(@valid_chassi.properties[field]).to_not eq("")
@@ -29,7 +29,7 @@ RSpec.describe Chassi, type: :model do
       end
     end
 
-    ChassiHelper::required_fields.each do |field|
+    ChassisHelper::required_fields.each do |field|
       context "Factory :no_#{field}_chassi" do
         before :each do
           @chassi = build :"no_#{field}_chassi"
@@ -40,7 +40,7 @@ RSpec.describe Chassi, type: :model do
         end
 
         it "saving fan without #{field} should not change the number of elements in DB" do
-          expect {@chassi.save}.to change {Chassi.count} by 0
+          expect {@chassi.save}.to change {Chassi.count}.by 0
         end
       end
 
@@ -54,7 +54,7 @@ RSpec.describe Chassi, type: :model do
         end
 
         it "saving fan without #{field} should not change the number of elements in DB" do
-          expect {@chassi.save}.to change {Chassi.count} by 0
+          expect {@chassi.save}.to change {Chassi.count}.by 0
         end
       end
 
