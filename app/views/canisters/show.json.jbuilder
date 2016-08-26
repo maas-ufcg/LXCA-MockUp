@@ -1,0 +1,1 @@
+json.partial! "canisters/canister", canister: @canister
