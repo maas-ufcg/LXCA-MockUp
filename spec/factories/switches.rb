@@ -19,6 +19,20 @@ FactoryGirl.define do
 
   end
 
+  SwitchesHelper::defined_fields.each do |key|
+
+   factory :"invalid_#{key}_switch", class: Switch do
+
+     properties {FactoryGirl.build(:switch_properties)}
+     after (:build) do |switch|
+       switch._id = switch.properties[:uuid]
+       switch.properties[key] = "From lemonades to lemons. Waaat?"
+     end
+
+   end
+
+  end
+
   SwitchesHelper::required_fields.each do |key|
 
      factory :"no_#{key}_switch", class: Switch do
@@ -50,8 +64,6 @@ FactoryGirl.define do
    end
 
   end
-
-
 
   factory :switches_valid_put_request_settings, class: Hash do
 
@@ -117,7 +129,5 @@ FactoryGirl.define do
     end
 
   end
-
-
 
 end
