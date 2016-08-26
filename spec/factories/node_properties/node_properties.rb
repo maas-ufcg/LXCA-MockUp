@@ -1,7 +1,18 @@
 require 'securerandom'
+require 'faker'
 
 FactoryGirl.define do
-  firmware_type = %w(UEFI MP DSA)
+  firmware_types = %w(UEFI MP DSA)
+  firmware_roles = %w(Primary Backup Temporary Permanent)
+  firmware_status = %w(Active Inactive)
+  port_types =  %w(ATM BLUETOOTH ETHERNET FC FDDI FRAMERELAY IB INFRARED OTHER TOKENRING UNKNOWN WIRELESSLAN)
+  port_few_types = %w(ATM ETHERNET FC FDDI FRAMERELAY IB OTHER TOKENRING UNKNOWN)
+  health_states = %w(Normal Non-Critical Warning Minor-Failure Major-Failure Non-Recoverable Critical Unknown)
+  ipv4_types = %w(INUSE CONFIGURED ALIAS UNKNOWN)
+  led_locations = ["Front panel", "Lightpath Card", "Planar", "FRU", "Rear Panel", "Unknown"]
+  led_states = %w(Off On Blinking Unknown)
+  nist_current_values = %w(Unknown Compatibility Nist_810_131A_Strict Nist_810_131A_Custom)
+  led_colors = %w(Red Amber Yellow Green Blue Unknown)
 
   factory :node_properties, class: Hash do
     accessState { %w(Online Offline Partial Pending Unknown).sample }
@@ -38,10 +49,10 @@ FactoryGirl.define do
               date: Faker::Date.between(5.year.ago, Date.today),
               name: Faker::Hacker.noun,
               revision: "#{Faker::Number.number(10)}",
-              role: %w(Primary Backup Temporary Permanent).sample,
+              role: firmware_roles.sample,
               softwareID: "#{Faker::Number.number(10)}",
-              status: %w(Active Inactive).sample,
-              type: firmware_type.sample,
+              status: firmware_status.sample,
+              type: firmware_types.sample,
               version: Faker::App.version
             }
           end,
@@ -59,11 +70,11 @@ FactoryGirl.define do
           pciSubID: "#{Faker::Number.number(5)}",
           pciSubVendorID: "#{Faker::Number.number(5)}",
           portInfo: {
-            portType: %w(ATM ETHERNET FC FDDI FRAMERELAY IB OTHER TOKENRING UNKNOWN).sample,
+            portType: port_few_types.sample,
             portNumber: "#{Faker::Number.number(5)}",
             logicalPorts: (1..Random.rand(1..10)).map do |type|
               {
-                portType: %w(ATM BLUETOOTH ETHERNET FC FDDI FRAMERELAY IB INFRARED OTHER TOKENRING UNKNOWN WIRELESSLAN).sample,
+                portType: port_types.sample,
                 portNumber: "#{Faker::Number.number(5)}",
                 addresses: Faker::Internet.ip_v4_address,
                 e: "#{Faker::Boolean.boolean}"
@@ -156,7 +167,7 @@ FactoryGirl.define do
         }
       end
     end
-    excludedHealthState {%w(Normal Non-Critical Warning Minor-Failure Major-Failure Non-Recoverable Critical Unknown).sample}
+    excludedHealthState {health_states.sample}
     expansionCardSlots {Faker::Number.number(5)}
     expansionCards do
       (1..Random.rand(1..10)).map do |card|
@@ -171,11 +182,11 @@ FactoryGirl.define do
           pciSubID: "#{Faker::Number.number(15)}",
           pciSubVendorID: "#{Faker::Number.number(15)}",
           portInfo: {
-              portType: %w(ATM ETHERNET FC FDDI FRAMERELAY IB OTHER TOKENRING UNKNOWN).sample,
+              portType: port_few_types.sample,
               portNumber: Faker::Number.number(4),
               logicalPorts: (1..Random.rand(1..10)).map do |port|
                 {
-                  portType: %w(ATM BLUETOOTH ETHERNET FC FDDI FRAMERELAY IB INFRARED OTHER TOKENRING UNKNOWN WIRELESSLAN).sample,
+                  portType: port_types.sample,
                   portNumber: Faker::Number.number(4),
                   addresses: Faker::Lorem.characters(10).upcase,
                   e: "#{Faker::Boolean.boolean}"
@@ -197,9 +208,9 @@ FactoryGirl.define do
           build: Faker::Lorem.characters(5).upcase,
           date: Faker::Date.between(2.years.ago, Date.today),
           name: Faker::Name.first_name,
-          role: %w(Primary Backup Temporary Permanent).sample,
-          status: %w(Active Inactive).sample,
-          type: firmware_type.sample,
+          role: firmware_roles.sample,
+          status: firmware_status.sample,
+          type: firmware_types.sample,
           version: Faker::App.version
         }
       end
@@ -217,10 +228,10 @@ FactoryGirl.define do
             end,
             date:Faker::Date.between(2.years.ago, Date.today),
             name: Faker::Name.first_name,
-            role: %w(Primary Backup Temporary Permanent).sample,
+            role: firmware_roles.sample,
             softwareID:Faker::Lorem.characters(5).upcase,
-            status: %w(Active Inactive).sample,
-            type: firmware_type.sample,
+            status: firmware_status.sample,
+            type: firmware_types.sample,
             version: Faker::App.version
           },
           manufacturer: "IBM",
@@ -248,7 +259,7 @@ FactoryGirl.define do
               gateway: Faker::Internet.ip_v4_address,
               id: Faker::Number.number(2),
               subnet: "255.255.241.1",
-              type: %w(INUSE CONFIGURED ALIAS UNKNOWN).sample
+              type: ipv4_types.sample
             }
           end,
           IPv4enabled: Faker::Boolean.boolean,
@@ -261,7 +272,7 @@ FactoryGirl.define do
               prefix: Faker::Number.number(2),
               scope: %w(Global LinkLocal Unknown).sample,
               source: %w(DHCP Statelesss Static Other Unknown).sample,
-              type: %w(INUSE CONFIGURED ALIAS UNKNOWN).sample
+              type: ipv4_types.sample
             }
           end,
           IPv6enabled: Faker::Boolean.boolean,
@@ -290,10 +301,10 @@ FactoryGirl.define do
     leds do
       (1..Random.rand(1..10)).map do |led|
         {
-          color: %w(Red Amber Yellow Green Blue Unknown).sample,
-          location: ["Front panel", "Lightpath Card", "Planar", "FRU", "Rear Panel", "Unknown"].sample,
+          color: led_colors.sample,
+          location: led_locations.sample,
           name: Faker::Lorem.word,
-          state: %w(Off On Blinking Unknown).sample
+          state: led_states.sample
         }
       end
     end
@@ -332,8 +343,8 @@ FactoryGirl.define do
     name {["Host name", "IP address", "Component name", "Serial number", "UUID"].sample}
     nist do
       {
-        currentValue: %w(Unknown Compatibility Nist_810_131A_Strict Nist_810_131A_Custom).sample,
-        possibleValues: %w(Unknown Compatibility Nist_810_131A_Strict Nist_810_131A_Custom)
+        currentValue: nist_current_values.sample,
+        possibleValues: nist_current_values
       }
     end
     onboardPciDevices do
@@ -348,10 +359,10 @@ FactoryGirl.define do
             date: "",
             name: Faker::Lorem.word,
             revision: "#{Faker::Number.number(2)}",
-            role: %w(Primary Backup Temporary Permanent).sample,
+            role: firmware_roles.sample,
             softwareID: Faker::Number.number(5),
-            status: %w(Active Inactive).sample,
-            type: firmware_type.sample,
+            status: firmware_status.sample,
+            type: firmware_types.sample,
             version: Faker::Number.number(2)
           }
         end,
@@ -366,11 +377,11 @@ FactoryGirl.define do
         pciSubID: Faker::Lorem.characters(3),
         pciSubVendorID: "#{Faker::Number.number(4)}",
         portInfo: {
-          portType: %w(ATM ETHERNET FC FDDI FRAMERELAY IB OTHER TOKENRING UNKNOWN).sample,
+          portType: port_few_types.sample,
           portNumber: Faker::Number.number(4),
           logicalPorts: (1..Random.rand(1..10)).map do |port|
             {
-              portType: %w(ATM BLUETOOTH ETHERNET FC FDDI FRAMERELAY IB INFRARED OTHER TOKENRING UNKNOWN WIRELESSLAN).sample,
+              portType: port_types.sample,
               portNumber: Faker::Number.number(4),
               addresses: Faker::Lorem.characters(8).upcase,
               e: Faker::Boolean.boolean
@@ -383,7 +394,7 @@ FactoryGirl.define do
       }
       end
     end
-    overallHealthState {%w(Normal Non-Critical Warning Minor-Failure Major-Failure Non-Recoverable Critical Unknown).sample}
+    overallHealthState {health_states.sample}
     parent do
       {
         uuid: SecureRandom.uuid,
@@ -413,10 +424,10 @@ FactoryGirl.define do
               date: Faker::Date.between(2.years.ago, Date.today),
               name: Faker::Lorem.word,
               revision: "#{Faker::Number.number(1)}",
-              role: %w(Primary Backup Temporary Permanent).sample,
+              role: firmware_roles.sample,
               softwareID: "#{Faker::Number.number(8)}",
-              status: %w(Active Inactive).sample,
-              type: firmware_type.sample,
+              status: firmware_status.sample,
+              type: firmware_types.sample,
               version: "#{Faker::Number.number(8)}"
             }
           end,
@@ -435,11 +446,11 @@ FactoryGirl.define do
           pciSubVendorID: "#{Faker::Number.number(4)}",
           portInfo:
             {
-              portType: %w(ATM ETHERNET FC FDDI FRAMERELAY IB OTHER TOKENRING UNKNOWN).sample,
+              portType: port_few_types.sample,
               portNumber: Faker::Number.number(4),
               logicalPorts: (1..Random.rand(1..10)).map do |port|
                 {
-                  portType: %w(ATM BLUETOOTH ETHERNET FC FDDI FRAMERELAY IB INFRARED OTHER TOKENRING UNKNOWN WIRELESSLAN).sample,
+                  portType: port_types.sample,
                   portNumber: Faker::Number.number(4),
                   addresses: Faker::Lorem.characters(Random.rand(8..10)).upcase,
                   vnicMode: Faker::Boolean.boolean
@@ -469,11 +480,11 @@ FactoryGirl.define do
           pciSubID: "#{Faker::Number.number(3)}",
           pciSubVendorID: "#{Faker::Number.number(4)}",
           portInfo: {
-            portType: %w(ATM ETHERNET FC FDDI FRAMERELAY IB OTHER TOKENRING UNKNOWN).sample,
+            portType: port_few_types.sample,
             portNumber: Faker::Number.number(4),
             logicalPorts: (1..Random.rand(1..10)).map do |port|
               {
-                portType: %w(ATM BLUETOOTH ETHERNET FC FDDI FRAMERELAY IB INFRARED OTHER TOKENRING UNKNOWN WIRELESSLAN).sample,
+                portType: port_types.sample,
                 portNumber: Faker::Number.number(4),
                 addresses: Faker::Lorem.characters(Random.rand(8..10)).upcase,
                 vnicMode: Faker::Boolean.boolean
@@ -528,25 +539,25 @@ FactoryGirl.define do
               build: Faker::Lorem.characters(Random.rand(8..10)).upcase,
               date: Faker::Date.between(2.years.ago, Date.today),
               name: Faker::Company.name,
-              role: %w(Primary Backup Temporary Permanent).sample,
-              status: %w(Active Inactive).sample,
-              type: firmware_type.sample,
+              role: firmware_roles.sample,
+              status: firmware_status.sample,
+              type: firmware_types.sample,
               version: Faker::App.version
             }
           end,
           FRU: Faker::Lorem.characters(5).upcase,
           fruSerialNumber: Faker::Lorem.characters(10),
           hardwareRevision: "",
-          healthState: %w(Normal Non-Critical Warning Minor-Failure Major-Failure Non-Recoverable Critical Unknown).sample,
+          healthState: health_states.sample,
           inputVoltageIsAC: Faker::Boolean.boolean,
           inputVoltageMax: Faker::Number.number(1),
           inputVoltageMin: Faker::Number.number(1),
           leds: (1..Random.rand(1..10)).map do |led|
             {
-              color: %w(Red Amber Yellow Green Blue Unknown).sample,
-              location: ["Front panel", "Lightpath Card", "Planar", "FRU", "Rear Panel", "Unknown"].sample,
+              color: led_colors.sample,
+              location: led_locations.sample,
               name: Faker::Lorem.word,
-              state: %w(Off On Blinking Unknown).sample
+              state: led_states.sample
             }
           end,
           machineType: "#{Faker::Number.number(4)}",
@@ -604,7 +615,7 @@ FactoryGirl.define do
               blockSize: Faker::Number.number(3),
               description: Faker::Lorem.sentence,
               diskState: "System",
-              healthState: %w(Normal Non-Critical Warning Minor-Failure Major-Failure Non-Recoverable Critical Unknown).sample,
+              healthState: health_states.sample,
               interfaceType: "SAS", # TODO: Not Documented
               manufacturer: "EMER", # TODO: Not Documented
               mediaType: "Rotational", # TODO: Not documented

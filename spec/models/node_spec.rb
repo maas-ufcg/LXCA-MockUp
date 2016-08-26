@@ -48,7 +48,7 @@ RSpec.describe Node, type: :model do
 
       context "Factory :nil_#{field}_node" do
         before :each do
-          @node = build :"no_#{field}_node"
+          @node = build :"nil_#{field}_node"
         end
 
         it ":no_#{field}_node factory should not build an invalid object" do
@@ -75,7 +75,7 @@ RSpec.describe Node, type: :model do
         end
 
       end
-      
+
     end
   end
 end
