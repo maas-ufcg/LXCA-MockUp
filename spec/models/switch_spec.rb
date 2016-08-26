@@ -55,14 +55,13 @@ RSpec.describe Switch, type: :model do
     SwitchesHelper::defined_fields.each do |key|
      context "Factory invalid values for '#{key}'" do
        before :each do
-         @switch = build :"invalid_#{key}_switch" 
+         @switch = build :"invalid_#{key}_switch"
        end
-     end
 
-     it ":invalid_#{key}_switch factory should build an invalid object" do
-       expect(@switch).to_not be_valid(Switch)
-     end
-
+       it ":invalid_#{key}_switch factory should build an invalid object" do
+         expect(@switch).to_not be_valid(Switch)
+       end
+      end
     end
   end
 

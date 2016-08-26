@@ -19,8 +19,6 @@ class SwitchValidators < ActiveModel::Validator
 				record_v.errors[:base] << "inconsistent object, missing propertie #{key}."
 				break
 			end
-
-
 		end
 
 	end
