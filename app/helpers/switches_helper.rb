@@ -4,7 +4,7 @@ module SwitchesHelper
      %i(accessState attachedNodes cmmHealthState firmware ipInterfaces macAddress productName serialNumber type uuid)
   end
 
-  def self.invalid_fields
+  def self.defined_fields
     %i(accessState cmmHealthState excludedHealthState)
   end
 

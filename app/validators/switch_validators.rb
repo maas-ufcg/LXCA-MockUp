@@ -4,6 +4,9 @@ class SwitchValidators < ActiveModel::Validator
 		validate_keys(record)
 		validate_uuid(record)
 		validate_uuid_and_id(record)
+		validate_AT_values(record)
+		validate_HS_values(record)
+		validate_EHS_vaalue(record)
 	end
 
 	private
@@ -69,7 +72,7 @@ def validate_uuid_and_id(record_v)
 		end
 	end
 
-	def validate_EHS_value(record_v)
+	def validate_EHS_vaalue(record_v)
 		valid_values = ["Normal", "Non-Critical", "Warning", "Minor-Failure", "Major-Failure", "Non-Recoverable", "Critical", "Unknown"]
 
 		if not valid_values.include? record_v.properties[:excludedHealthState]
