@@ -1,5 +1,5 @@
 require_relative "../validators/power_supply_validators"
-require_relative "../validators/PowerSupplyConsistencyValidator"
+require_relative "../validators/power_supply_consistency_validator"
 
 class PowerSupply
   include Mongoid::Document
