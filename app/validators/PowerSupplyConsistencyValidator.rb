@@ -11,4 +11,5 @@ class PowerSupplyConsistencyValidator < ActiveModel::Validator
       record.errors[:base] << "Object _id must be equal to properties[:_id]"
     end
   end
+
 end
