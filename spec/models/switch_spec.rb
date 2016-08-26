@@ -61,6 +61,9 @@ RSpec.describe Switch, type: :model do
        it ":invalid_#{key}_switch factory should build an invalid object" do
          expect(@switch).to_not be_valid(Switch)
        end
+       it "should not save switch with invalid #{key}, the number of elements in BD should not change." do
+         expect{@switch.save}.to change{Switch.count}.by 0
+       end
       end
     end
   end

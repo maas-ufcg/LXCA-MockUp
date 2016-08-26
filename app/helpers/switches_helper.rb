@@ -5,7 +5,7 @@ module SwitchesHelper
   end
 
   def self.defined_fields
-    %i(accessState cmmHealthState excludedHealthState)
+    %i(accessState cmmHealthState excludedHealthState overallHealthState panicDump powerState)
   end
 
 end

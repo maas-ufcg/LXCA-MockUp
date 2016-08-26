@@ -6,7 +6,13 @@ class SwitchValidators < ActiveModel::Validator
 		validate_uuid_and_id(record)
 		validate_AT_values(record)
 		validate_HS_values(record)
-		validate_EHS_vaalue(record)
+		validate_EHS_value(record)
+		validate_OHS_value(record)
+		validate_panicDump_values(record)
+		validate_powerState_values(record)
+		validate_protectedMode_values(record)
+		validate_savePending_values(record)
+		validate_stackedMode_values(record)
 	end
 
 	private
@@ -70,13 +76,61 @@ def validate_uuid_and_id(record_v)
 		end
 	end
 
-	def validate_EHS_vaalue(record_v)
+	def validate_EHS_value(record_v)
 		valid_values = ["Normal", "Non-Critical", "Warning", "Minor-Failure", "Major-Failure", "Non-Recoverable", "Critical", "Unknown"]
 
 		if not valid_values.include? record_v.properties[:excludedHealthState]
 			record_v.errors[:base] << "Excluded Health State value is not valid."
 		end
 	end
+
+	def validate_OHS_value(record_v)
+		valid_values = ["Normal", "Non-Critical", "Warning", "Minor-Failure", "Major-Failure", "Non-Recoverable", "Critical", "Unknown"]
+
+		if not valid_values.include? record_v.properties[:overallHealthState]
+			record_v.errors[:base] << "Overall Health State value is not valid."
+		end
+	end
+
+	def validate_panicDump_values(record_v)
+		valid_values = ["Yes", "No"]
+
+		if not valid_values.include? record_v.properties[:panicDump]
+			record_v.errors[:base] << "Panic Dump value is not valid."
+		end
+	end
+
+	def validate_powerState_values(record_v)
+		valid_values = ["Off",  "On", "ShuttingDown", "Standby", "Hibernate", "Unknown"]
+
+		if not valid_values.include? record_v.properties[:powerState]
+			record_v.errors[:base] << "Power State value is not valid"
+		end
+	end
+
+	def validate_protectedMode_values(record_v)
+		valid_values = [true, false]
+		if not valid_values.include? record_v.properties[:protectedMode]
+			record_v.errors[:base] << "Protected Mode value is not valid."
+		end
+	end
+
+	def validate_savePending_values(record_v)
+		valid_values = ["yes", "no"]
+		if not valid_values.include? record_v.properties[:savePending]
+			record_v.errors[:base] << "Save Pending value is not valid."
+		end
+	end
+
+	def validate_stackedMode_values(record_v)
+		valid_values = [true, false]
+		if not valid_values.include? record_v.properties[:stackMode]
+			record_v.errors[:base] << "Stacked Mode value is not valid."
+		end
+	end
+
+
+
 #TODO check validators for invalid values in an Array
 	def validate_IPV4Ass_values(record_v)
 		valid_values = ["INUSE", "CONFIGURED", "ALIAS", "UNKNOWN"]
