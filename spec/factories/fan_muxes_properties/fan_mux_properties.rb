@@ -48,11 +48,11 @@ FactoryGirl.define do
         }
       end
     end
-    machineType ""
+    machineType { Faker::Company.name }
     manufacturer { Faker::Company.name }
-    manufacturingDate { "#{Random.rand 10000}" }
+    manufactureDate { "#{Random.rand 10000}" }
     manufacturerID { Faker::Company.ein }
-    model ""
+    model { Faker::Company.name }
     name { "FanMux #{Random.rand 2**32}" }
     parent do
       {

@@ -1,1 +1,1 @@
-json.partial! "fan_muxes/fan_mux", fan_mux: @fan_mux
+json.partial! "fanMuxes/fan_mux", fan_mux: @fan_mux

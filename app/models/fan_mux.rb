@@ -1,5 +1,9 @@
-require 'fan_muxes_required_properties_validator'
+#Dir.glob('app/validators/fan*.rb').each do |f|
+#  require_relative "../../#{f}"
+#end
+
 require 'fan_muxes_consistency_validator'
+require 'fan_muxes_required_properties_validator'
 
 class FanMux
   include Mongoid::Document
