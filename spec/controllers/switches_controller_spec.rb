@@ -118,6 +118,7 @@ RSpec.describe SwitchesController, type: :controller do
           put :update, id: @switch._id, switch: {_id: @switch._id, properties: @new_attributes}
 
           expect(response).to have_http_status(:no_content)
+
           switch_updated_properties = Switch.find(@switch._id).properties.deep_symbolize_keys
 
           @new_attributes.keys.each do |key|

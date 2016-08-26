@@ -118,16 +118,16 @@ FactoryGirl.define do
     initialize_with { attributes }
   end
 
-
-  SwitchesHelper::invalid_fields.each do |key|
-
-    factory :"invalid_#{key}_switch", class: Switch do
-      after :build do |switch|
-        switch._id = switch.properties[:uuid]
-        switch.properties[key] = "From lemonades to lemons."
-      end
-    end
-
-  end
+  #TODO: TOFIX: invalid_fields doesn't exist in helper.
+  # SwitchesHelper::invalid_fields.each do |key|
+  #
+  #   factory :"invalid_#{key}_switch", class: Switch do
+  #     after :build do |switch|
+  #       switch._id = switch.properties[:uuid]
+  #       switch.properties[key] = "From lemonades to lemons."
+  #     end
+  #   end
+  #
+  # end
 
 end
