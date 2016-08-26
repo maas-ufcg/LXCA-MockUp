@@ -3,6 +3,11 @@ require 'securerandom'
 FactoryGirl.define do
 
   factory :node_properties, class: Hash do
+
+    after :build do |node_properties|
+      node_properties[:uri] = "nodes/#{node_properties[:uuid]}"
+    end
+
     accessState { %w(Online Offline Partial Pending Unknown).sample }
     activationKeys do
       (0..Random.rand(0..10)).map do |key|

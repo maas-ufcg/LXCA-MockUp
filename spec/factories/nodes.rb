@@ -1,5 +1,13 @@
 FactoryGirl.define do
 
+  factory :node do
+    properties { FactoryGirl.build :node_properties }
+
+    after(:build) do |node_properties|
+      node_properties = node_properties[:uuid]
+    end
+  end
+
   factory :invalid_access_state_node, class: Node do
     node_properties = FactoryGirl.build :node_properties
     _id {node_properties[:uuid]}
@@ -25,4 +33,43 @@ FactoryGirl.define do
     properties {activationKeys {keyIdentiferList {keyIdentifierType validValues.sample}}}
   end
 
+  #
+  # factory :inv_node_missing_uuid, class: Node do
+  #   properties {FactoryGirl.build(:node_properties)}
+  #
+  #   after(:build) do |node_properties|
+  #     node_properties._id =  node_properties[:uuid]
+  #     node_properties.properties.delete(:uuid)
+  #   end
+  # end
+
+  # NodesHelper::required_fields.each do |key|
+  #
+  #  factory :"no_#{key}_node", class: Node do
+  #    after :build do |node_properties|
+  #      node_properties._id = node_properties.properties[:uuid]
+  #      node_properties.properties.delete(key)
+  #    end
+  #
+  #    properties {FactoryGirl.build(:node_properties)}
+  #  end
+
+   #
+  #  factory :"nil_#{key}_node_properties", class: Node do
+  #    after :build do |node_properties|
+  #      node_properties._id = node_properties.properties[:uuid]
+  #      node_properties.properties[key] = nil
+  #    end
+   #
+  #    properties {FactoryGirl.build(:node_properties)}
+  #  end
+   #
+  #  factory :"empty_#{key}_node_properties", class: Node do
+  #    after :build do |node_properties|
+  #      node_properties._id = node_properties.properties[:uuid]
+  #      node_properties.properties[key] = ""
+  #    end
+   #
+  #    properties {FactoryGirl.build(:node_properties)}
+  #  end
 end
