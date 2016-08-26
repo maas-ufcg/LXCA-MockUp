@@ -69,28 +69,67 @@ RSpec.describe SwitchesController, type: :controller do
 
   describe "PUT #update" do
     context "with valid params" do
-      let(:new_attributes) {
-        skip("Add a hash of attributes valid for your model")
-      }
+      # let(:new_attributes) {
+      #   skip("Add a hash of attributes valid for your model")
+      # }
+      before :each do
+        @switch = create :valid_switch
 
-      it "updates the requested switch" do
-        switch = Switch.create! valid_attributes
-        put :update, params: {id: switch.to_param, switch: new_attributes}, session: valid_session
-        switch.reload
-        skip("Add assertions for updated state")
+        @new_attributes = build :switches_valid_put_request_settings
       end
 
-      it "assigns the requested switch as @switch" do
-        switch = Switch.create! valid_attributes
-        put :update, params: {id: switch.to_param, switch: valid_attributes}, session: valid_session
-        expect(assigns(:switch)).to eq(switch)
+      it "updates the requested switch(settings values)" do
+
+        put :update, id: @switch._id, switch: {_id: @switch._id, properties: @new_attributes}
+
+        expect(response).to have_http_status(:no_content)
+        switch_updated_properties = Switch.find(@switch._id).properties.deep_symbolize_keys
+
+        @new_attributes.keys.each do |key|
+          expect(switch_updated_properties[key]).to eq(@new_attributes[key])
+        end
+
+        expect(switch_updated_properties.size).to_not eq(@new_attributes.size)
+
       end
 
-      it "redirects to the switch" do
-        switch = Switch.create! valid_attributes
-        put :update, params: {id: switch.to_param, switch: valid_attributes}, session: valid_session
-        expect(response).to redirect_to(switch)
+      it "updates the requested switch(settings values) missing any param inside of properties" do
+        @new_attributes.delete(%i(hostname ipv4Address location ipv6Address).sample)
+
+        put :update, id: @switch._id, switch: {_id: @switch._id, properties: @new_attributes}
+
+        expect(response).to have_http_status(:no_content)
+        switch_updated_properties = Switch.find(@switch._id).properties.deep_symbolize_keys
+
+        @new_attributes.keys.each do |key|
+          expect(switch_updated_properties[key]).to eq(@new_attributes[key])
+        end
+
+        expect(switch_updated_properties.size).to_not eq(@new_attributes.size)
+
       end
+
+
+
+      SwitchesHelper::fields_put_params.each do |key|
+        it "updates the requested switch(#{key} values)" do
+          @new_attributes = build :"switches_valid_put_request_#{key}"
+
+          put :update, id: @switch._id, switch: {_id: @switch._id, properties: @new_attributes}
+
+          expect(response).to have_http_status(:no_content)
+          switch_updated_properties = Switch.find(@switch._id).properties.deep_symbolize_keys
+
+          @new_attributes.keys.each do |key|
+            expect(switch_updated_properties[key]).to eq(@new_attributes[key])
+          end
+
+          expect(switch_updated_properties.size).to_not eq(@new_attributes.size)
+        end
+
+
+      end
+
     end
 
     context "with invalid params" do

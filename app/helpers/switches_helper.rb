@@ -8,4 +8,12 @@ module SwitchesHelper
     %i(accessState cmmHealthState excludedHealthState)
   end
 
+  def self.params_white_list
+      %i(hostname  ipv4Address ipv6Address ipInterfaces)
+  end
+
+  def self.fields_put_params
+    %i(powerState refreshInventory leds)
+  end
+
 end

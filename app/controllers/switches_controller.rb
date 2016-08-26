@@ -22,15 +22,11 @@ class SwitchesController < ApplicationController
   # PATCH/PUT /switches/1
   # PATCH/PUT /switches/1.json
   def update
-    respond_to do |format|
-      if @switch.update(switch_params)
-        format.html { redirect_to @switch, notice: 'Switch was successfully updated.' }
-        format.json { render :show, status: :ok, location: @switch }
+        if update_switch (switch_params)
+        head :no_content
       else
-        format.html { render :edit }
-        format.json { render json: @switch.errors, status: :unprocessable_entity }
+        render json: @switch.errors, status: :unprocessable_entity
       end
-    end
   end
 
 
@@ -47,6 +43,37 @@ class SwitchesController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def switch_params
-      params.require(:switch).permit(:_id, :properties)
+      params.require(:switch).require(:properties).to_hash.deep_symbolize_keys
     end
+
+    def update_switch(switch_update_params)
+      # TODO: Verify a white list to only send valid params.
+      #  if not verify_params(switch_update_params.keys)
+      #    return false
+      #  end
+
+      switch_update_params.each do |key,value|
+
+        @switch.properties[key] = value
+
+      end
+
+      @switch.save
+    end
+
+    # TODO: Verify a white list to only send valid params.
+    # def verify_params(params_properties)
+    #   params_properties
+    #   params_properties.each do |k|
+    #     if(not k.is_a? Symbol )
+    #       k = k.to_sym
+    #     end
+    #     if not SwitchesHelper::params_white_list.include? k
+    #       return false
+    #     end
+    #   end
+    #
+    #   true
+    # end
+
 end

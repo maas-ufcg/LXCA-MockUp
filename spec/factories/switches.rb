@@ -52,31 +52,60 @@ FactoryGirl.define do
   end
 
 
-  # => TODO: DEBUG
-  # factory :switches_put_request_settings, aliases: [:switch_put_settings_request], class: Hash do
-  #
-  #   hostname do
-  #     Faker::Internet.domain_name
-  #   end
-  #   ipv4Address do
-  #     (0..1).map do |number|
-  #       Faker::Internet.ip_v4_address
-  #     end
-  #   end
-  #
-  #   location do
-  #     {
-  #       :location =>  Faker::Lorem.word ,
-  #       :contact =>  Faker::Company.name
-  #     }
-  #   end
-  #   ipv6Address do
-  #     (0..1).map do |number|
-  #       Faker::Internet.ip_v4_address
-  #     end
-  #   end
-  #
-  # end
+
+  factory :switches_valid_put_request_settings, class: Hash do
+
+    hostname { Faker::Internet.domain_name }
+
+
+    ipv4Address do
+      (0..1).map do |number|
+        Faker::Internet.ip_v4_address
+      end
+    end
+
+    location do
+      {
+        :location =>  Faker::Lorem.word ,
+        :contact =>  Faker::Company.name
+      }
+    end
+    ipv6Address do
+      (0..1).map do |number|
+        Faker::Internet.ip_v4_address
+      end
+    end
+
+    initialize_with { attributes }
+  end
+
+
+  factory :switches_valid_put_request_powerState, class: Hash do
+
+    powerState %w(powerOn powerOff powerCycleSoft virtualReseat).sample
+
+    initialize_with { attributes }
+  end
+
+  factory :switches_valid_put_request_refreshInventory, class: Hash do
+
+    refreshInventory {Faker::Lorem.word}
+
+    initialize_with { attributes }
+  end
+
+  factory :switches_valid_put_request_leds, class: Hash do
+
+    leds do
+      {
+        :name => Faker::Lorem.word,
+        :state => %w(off on blinking)
+      }
+    end
+
+    initialize_with { attributes }
+  end
+
 
   SwitchesHelper::invalid_fields.each do |key|
 
