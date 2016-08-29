@@ -82,10 +82,51 @@ def validate_isAddOnCard(record_v)
   end
 end
 
+#Verificar para caso o isAgentless ser falso, e algum atributo do inventário deve ser vazio
 def validate_isAgentless(record_v)
   validValues = [true, false]
 
   if not validValues.include? record_v.properties[:isAgentless]
     record_v.errors[:base] << "isAgentless attribute is not valid"
+  end
+end
+
+def validate_portType(record_v)
+  validValues = ["ATM","ETHERNET", "FC", "FDDI", "FRAMERELAY", "IB", "OTHER", "TOKENRING", "UNKNOWN"]
+
+  if not validValues.include? record_v.properties[:portType].to_s
+    record_v.errors[:base] << "portType attribute is not valid"
+  end
+end
+
+def validate_vnicMode(record_v)
+  validValues = [true, false]
+
+  if not validValues.include? record_v.properties[:vnicMode]
+    record_v.errors[:base] << "vnicMode attribute is not valid"
+  end
+end
+
+def validate_slotSupportsHotPlug(record_v)
+  validValues = [true, false]
+
+  if not validValues.include? record_v.properties[:slotSupportsHotPlug]
+    record_v.errors[:base] << "slotSupportsHotPlug attribute is not valid"
+  end
+end
+
+def validate_arch(record_v)
+  validValues = ["ia64", "ppc", "ppc64", "x86", "x86_64", "Unknown"]
+
+  if not validValues.include? record_v.properties[:arch]
+    record_v.errors[:base] << "arch attribute is not valid"
+  end
+end
+
+def validate_backedBy(record_v)
+  validValues = ["real", "demo", "proxy"]
+
+  if not validValues.include? record_v.properties[:backedBy]
+    record_v.errors[:base] << "backedBy attribute is not valid"
   end
 end
