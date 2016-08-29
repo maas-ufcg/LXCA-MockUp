@@ -1,0 +1,1 @@
+json.partial! "fanMuxes/fan_mux", fan_mux: @fan_mux
