@@ -2,7 +2,7 @@ module NodesHelper
   def self.required_fields
     %i(
       accessState activationKeys keyExpirationDate keyIdentifierType keyFeatureType keyStatus uuid addinCardSlots
-      keyUseCount keyUseLimit addinCards isAddOnCard isAgentless portInfo portType portNumber logicalPorts
+      keyUseCount keyUseLimit role addinCards isAddOnCard isAgentless portInfo portType portNumber logicalPorts
       addresses vnicMode productName slotName slotNumber slotSupportsHotPlug arch backedBy bladeState bootMode
       bootOrder canisters canisterSlots cmmDisplayName cmmHealthState complexID contact dataHandle dnsHostnames domainName
       driveBays drives embeddedHypervisorPresence encapsulationMode errorFields excludedHealthState expansionCardSlots expansionCards
