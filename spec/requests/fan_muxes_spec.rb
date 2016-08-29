@@ -4,12 +4,13 @@ require 'json'
 RSpec.describe "FanMuxes", type: :request do
   describe "GET /fanMuxes" do
     context "Without excludeAttributes or includeAttributes parameters" do
+
       before :each do
         @fan_muxes = (0...5).map do |fan_mux|
           create :fan_mux
         end
 
-        get fan_mux_path
+        get fan_muxes_path
       end
 
       it "HTTP response code is 200 (OK)" do
@@ -52,7 +53,7 @@ RSpec.describe "FanMuxes", type: :request do
           dataHandle
         )
 
-        get fan_mux_path, {includeAttributes: @includeAttributes.join(",")}
+        get fan_muxes_path, {includeAttributes: @includeAttributes.join(",")}
       end
 
       it "HTTP response code is 200 (OK)" do
@@ -106,7 +107,7 @@ RSpec.describe "FanMuxes", type: :request do
           dataHandle
         )
 
-        get fan_mux_path, {excludeAttributes: @excludeAttributes.join(",")}
+        get fan_muxes_path, {excludeAttributes: @excludeAttributes.join(",")}
       end
 
       it "HTTP response code is 200 (OK)" do
