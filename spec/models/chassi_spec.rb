@@ -39,7 +39,7 @@ RSpec.describe Chassi, type: :model do
           expect(@chassi).to_not be_valid(Chassi)
         end
 
-        it "saving fan without #{field} should not change the number of elements in DB" do
+        it "saving chassi without #{field} should not change the number of elements in DB" do
           expect {@chassi.save}.to change {Chassi.count}.by 0
         end
       end
@@ -53,7 +53,7 @@ RSpec.describe Chassi, type: :model do
           expect(@chassi).to_not be_valid(Chassi)
         end
 
-        it "saving fan without #{field} should not change the number of elements in DB" do
+        it "saving chassi without #{field} should not change the number of elements in DB" do
           expect {@chassi.save}.to change {Chassi.count}.by 0
         end
       end
