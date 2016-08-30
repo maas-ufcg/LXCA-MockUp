@@ -1,29 +1,30 @@
 FactoryGirl.define do
   factory :node, aliases: [:valid_node] do
-    after :build do |node|
+    properties {FactoryGirl.build(:node_properties)}
+
+    after (:build) do |node|
       node._id = node.properties[:uuid]
     end
-
-    properties {FactoryGirl.build :node_properties}
   end
 
   NodesHelper::required_fields.each do |field|
     factory :"no_#{field}_node", class: Node do
-      after :build do |node|
+
+      properties {FactoryGirl.build(:node_properties)}
+
+      after(:build) do |node|
         node._id = node.properties[:uuid]
         node.properties.delete(field)
       end
-
-      properties {FactoryGirl.build :node_properties}
     end
 
     factory :"nil_#{field}_node", class: Node do
-      after :build do |node|
+      after (:build) do |node|
         node._id = node.properties[:uuid]
-        node.properties[field] = nil
+        node.properties[field] = "From lemonades to lemons. Waaat?"
       end
 
-      properties {FactoryGirl.build :node_properties}
+      properties {FactoryGirl.build(:node_properties)}
     end
 
     factory :"empty_string_#{field}_node", class: Node do
@@ -32,7 +33,7 @@ FactoryGirl.define do
         node.properties[field] = ""
       end
 
-      properties {FactoryGirl.build :node_properties}
+      properties {FactoryGirl.build(:node_properties)}
     end
 
   end

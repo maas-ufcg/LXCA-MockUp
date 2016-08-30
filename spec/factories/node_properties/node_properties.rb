@@ -690,6 +690,7 @@ FactoryGirl.define do
     vnicMode {%w(enabled disabled).sample}
     vpdID {"#{Faker::Number.number(10)}"}
 
+    initialize_with { attributes }
   end
-  initialize_with { attributes }
+
 end
