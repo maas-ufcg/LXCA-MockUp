@@ -691,6 +691,6 @@ FactoryGirl.define do
     vpdID {"#{Faker::Number.number(10)}"}
 
     initialize_with { attributes }
-  end
 
+  end
 end
