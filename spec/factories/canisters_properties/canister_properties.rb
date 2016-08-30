@@ -14,7 +14,7 @@ FactoryGirl.define do
     Unknown
   )
 
-  factory :cannister_properties, class: Hash do
+  factory :canister_properties, class: Hash do
 
     after :build do |canister_properties|
       fan_properties[:uri] = "/#{canister_properties[:uuid]}"
@@ -22,12 +22,12 @@ FactoryGirl.define do
 
     backedBy %w(real demo proxy).sample
     cmmDisplayName { Faker::Hipster.word }
-    cmmHealthState { health_states.sample } #Special attention
+    cmmHealthState { health_states.sample }
     contact "No Contact Configured"
     dataHandle { Random.rand 2**61 }
     description { Faker::Hipster.sentence }
-    domainName ""
-    driveBays {Random.rand 100} # Special attention
+    domainName { Faker::Internet.domain_name }
+    driveBays {Random.rand 100}
     drives []
     errorFields []
 
@@ -45,38 +45,38 @@ FactoryGirl.define do
       end
     end
 
-    fruSerialNumber {}
-    fru {}
+    FRU { Faker::Lorem.characters(7).upcase }
+    fruSerialNumber { Faker::Code.asin }
 
     ipInterfaces { FactoryGirl.build :ip_interfaces }
 
-
-
     machineType "#{Random.rand 1000}"
-    manufacturer {}
-    memoryModules {}
-    memorySlots {}
-    model {}
-    name {}
-    partNumber {}
+    manufacturer {"#{Random.rand 100000}"} #Special attention
+    memoryModules []
+    memorySlots {Random.rand 10}
+    model {"X#{Random.rand 99}"} #Special attention
+    name { Faker::Internet.domain_name }
+    partNumber { SecureRandom.hex.upcase } #Special attention
     powerStatus [0, 5, 8, 18].sample
     processors do
       (0..(Random.rand 10)).map do |number|
-        speed: Faker::Number.decimal(3),
-        family: "",
-        manufacturer: "",
-        slot: Random.rand 100, # Special attention
-        cores: led_colors.sample
+        {
+          speed: Faker::Number.decimal(3),
+          family: "",
+          manufacturer: "",
+          slot: Random.rand(100),
+          cores: led_colors.sample
+        }
       end
     end
 
-    processorSlots {}
+    processorSlots {Random.rand 10}
     productID { "#{Random.rand 1000}" }
     productName { Faker::App.name }
-    posId {Random.rand 1000} # Special attention
-    serviceHostName ""
-    slots { Random.rand 100 } # Special attention
-    subType []
+    posId { "#{Random.rand 1000}" }
+    serviceHostName { Faker::Internet.domain_name }
+    slots { Random.rand 100 }
+    subType { SecureRandom.hex.upcase } #Special attention
     subSlots []
     userDescription { Faker::Hipster.sentence }
     uuid { SecureRandom.hex.upcase }
