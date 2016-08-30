@@ -3,8 +3,6 @@ require 'date'
 
 FactoryGirl.define do
 
-  uuid = SecureRandom.hex(13)
-
   access_state = %w(
     Online
     Offline
@@ -12,6 +10,8 @@ FactoryGirl.define do
     Pending
     Unknown
   )
+
+  overall_health_state = %w(Normal Non-Critical Warning Minor-Failure Major-Failure Non-Recoverable Critical Unknown)
 
   severity_values = %W(
     FATAL
@@ -102,14 +102,14 @@ FactoryGirl.define do
     end
 
     backedBy { backed_by.sample }
-    bladeSlots { Faker::Number.number(2) }
+    bladeSlots { Faker::Number.number(2).to_i }
     cmmDisplayName { Faker::Hipster.sentence(1) }
     cmmHealthState { cmm_health_states.sample }
     cmms [] #review_this_parameters: Information about a other resource
-    cmmSlots { Faker::Number.number(2) }
+    cmmSlots { Faker::Number.number(2).to_i }
     complex [] #review_this_parameters: Information about a other resource
     contact { Faker::Hipster.sentence(4) }
-    dataHandle { DateTime.now.strftime('%Q') }
+    dataHandle { DateTime.now.strftime('%Q').to_i }
     description { Faker::Hipster.sentence(4) }
     domainName { "Lenovo-#{Faker::Number.number(7)}" }
     encapsulation do
@@ -135,20 +135,21 @@ FactoryGirl.define do
     end
     excludedHealthState { cmm_health_states.sample }
     fanMuxes [] #review_this_parameter: Will re-use the fanMuxes factory.
-    fanMuxSlots { Faker::Number.number(2) }
+    fanMuxSlots { Faker::Number.number(2).to_i }
     fans [] #review_this_parameter: Will re-use the fans factory
-    fanSlots { Faker::Number.number(2) }
-    height { Faker::Number.number(2) }
+    fanSlots { Faker::Number.number(2).to_i }
+    height { Faker::Number.number(2).to_i }
     hostname { Faker::Hipster.sentence(1) }
     isConnectionTrusted {  [true, false].sample }
-    ledCardSlots { Faker::Number.number(2) }
+    ledCardSlots { Faker::Number.number(2).to_i }
 
     leds do
       (0..10).map do
         {
           :color => led_colors.sample,
           :location => led_locations.sample,
-          :name => Faker::Hipster.sentence(1)
+          :name => Faker::Hipster.sentence(1),
+          :state => led_states.sample
         }
       end
     end
@@ -156,7 +157,7 @@ FactoryGirl.define do
     location do
       {
         :location => Faker::Address.state,
-        :lowestRackUnit => Faker::Number.number(1),
+        :lowestRackUnit => Faker::Number.number(1).to_i,
         :rack => Faker::Hipster.sentence(1),
         :room => Faker::Hipster.sentence(1)
       }
@@ -192,19 +193,19 @@ FactoryGirl.define do
     posID { Faker::Number.number(4) }
     powerAllocation do
       {
-        :allocatedOutputPower => Faker::Number.number(4),
-        :totalOutputPower => Faker::Number.number(4),
-        :totalInputPower => Faker::Number.number(5),
-        :remainingOutputPower => Faker::Number.number(4),
-        :midPlaneCardMinimumAllocatedPower => Faker::Number.number(2),
-        :midPlaneCardMaximumAllocatedPower => Faker::Number.number(2)
+        :allocatedOutputPower => Faker::Number.number(4).to_i,
+        :totalOutputPower => Faker::Number.number(4).to_i,
+        :totalInputPower => Faker::Number.number(5).to_i,
+        :remainingOutputPower => Faker::Number.number(4).to_i,
+        :midPlaneCardMinimumAllocatedPower => Faker::Number.number(2).to_i.to_i,
+        :midPlaneCardMaximumAllocatedPower => Faker::Number.number(2).to_i
       }
     end
 
-    poweSupplySlots { Faker::Number.number(1) }
+    powerSupplySlots { Faker::Number.number(1).to_i }
     powerSupplies [] #review_this_parameter: Will re-use powerSupplies Factory
     productID { Faker::Number.number(8).to_s }
-    overallHealthState { cmm_health_states.sample }
+    overallHealthState { overall_health_state.sample }
 
     SecurityPolicy do
       {
@@ -222,7 +223,7 @@ FactoryGirl.define do
     end
 
     switches [] #review_this_parameter: Will re-use Switches FactoryGirl
-    switchSlots { Faker::Number.hexadecimal(14) }
+    switchSlots { Faker::Number.hexadecimal(14).to_i }
 
     tlsVersion do
       {
@@ -234,7 +235,7 @@ FactoryGirl.define do
     type "Chassis" #This value is always "Chassis"
     userDescription { Faker::Hacker.say_something_smart }
     uri { "chassis/#{uuid}" }
-    uuid { uuid.to_s }
+    uuid { SecureRandom.hex.upcase }
     vpdID { Faker::Number.number(2) }
 
 
@@ -256,5 +257,6 @@ FactoryGirl.define do
 
     initialize_with { attributes }
   end
+
 
 end

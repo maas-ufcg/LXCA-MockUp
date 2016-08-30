@@ -6,7 +6,7 @@ module ChassisHelper
       encapsulation energyPolicies errorFields excludedHealthState fanMuxes fanMuxSlots
       fans fanSlots height hostname isConnectionTrusted ledCardSlots leds location machineType
       managerName managerUuid manufacturer manufacturerID mgmtProcIPaddress model nist nodes
-      partNumber passThroughModules posID powerAllocation PowerSupplySlots powerSupplies
+      partNumber passThroughModules posID powerAllocation powerSupplySlots powerSupplies
       productID overallHealthState SecurityPolicy serialNumber status switches switchSlots
       tlsVersion type userDescription uri uuid vpdID
     )

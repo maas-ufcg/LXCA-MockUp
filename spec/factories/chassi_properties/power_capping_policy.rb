@@ -7,9 +7,9 @@ FactoryGirl.define do
 
   factory :power_capping_policy, class: Hash do
     cappingPolicy { power_capping_policy.sample }
-    currentPowerCap { rand(2**32..2**64-1) }
-    maxPowerCap { rand(2**32..2**64-1) }
-    minPowerCap { rand(2**32..2**64-1) }
+    currentPowerCap { Faker::Number.number(5).to_i }
+    maxPowerCap { Faker::Number.number(5).to_i }
+    minPowerCap { Faker::Number.number(5).to_i  }
 
     initialize_with { attributes }
   end
