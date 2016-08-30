@@ -52,53 +52,53 @@ RSpec.describe ChassisController, type: :controller do
     end
   end
 
-  describe "GET #new" do
-    it "assigns a new chassi as @chassi" do
-      get :new, params: {}, session: valid_session
-      expect(assigns(:chassi)).to be_a_new(Chassi)
-    end
-  end
-
-  describe "GET #edit" do
-    it "assigns the requested chassi as @chassi" do
-      chassi = Chassi.create! valid_attributes
-      get :edit, params: {id: chassi.to_param}, session: valid_session
-      expect(assigns(:chassi)).to eq(chassi)
-    end
-  end
-
-  describe "POST #create" do
-    context "with valid params" do
-      it "creates a new Chassi" do
-        expect {
-          post :create, params: {chassi: valid_attributes}, session: valid_session
-        }.to change(Chassi, :count).by(1)
-      end
-
-      it "assigns a newly created chassi as @chassi" do
-        post :create, params: {chassi: valid_attributes}, session: valid_session
-        expect(assigns(:chassi)).to be_a(Chassi)
-        expect(assigns(:chassi)).to be_persisted
-      end
-
-      it "redirects to the created chassi" do
-        post :create, params: {chassi: valid_attributes}, session: valid_session
-        expect(response).to redirect_to(Chassi.last)
-      end
-    end
-
-    context "with invalid params" do
-      it "assigns a newly created but unsaved chassi as @chassi" do
-        post :create, params: {chassi: invalid_attributes}, session: valid_session
-        expect(assigns(:chassi)).to be_a_new(Chassi)
-      end
-
-      it "re-renders the 'new' template" do
-        post :create, params: {chassi: invalid_attributes}, session: valid_session
-        expect(response).to render_template("new")
-      end
-    end
-  end
+  # describe "GET #new" do
+  #   it "assigns a new chassi as @chassi" do
+  #     get :new, params: {}, session: valid_session
+  #     expect(assigns(:chassi)).to be_a_new(Chassi)
+  #   end
+  # end
+  #
+  # describe "GET #edit" do
+  #   it "assigns the requested chassi as @chassi" do
+  #     chassi = Chassi.create! valid_attributes
+  #     get :edit, params: {id: chassi.to_param}, session: valid_session
+  #     expect(assigns(:chassi)).to eq(chassi)
+  #   end
+  # end
+  #
+  # describe "POST #create" do
+  #   context "with valid params" do
+  #     it "creates a new Chassi" do
+  #       expect {
+  #         post :create, params: {chassi: valid_attributes}, session: valid_session
+  #       }.to change(Chassi, :count).by(1)
+  #     end
+  #
+  #     it "assigns a newly created chassi as @chassi" do
+  #       post :create, params: {chassi: valid_attributes}, session: valid_session
+  #       expect(assigns(:chassi)).to be_a(Chassi)
+  #       expect(assigns(:chassi)).to be_persisted
+  #     end
+  #
+  #     it "redirects to the created chassi" do
+  #       post :create, params: {chassi: valid_attributes}, session: valid_session
+  #       expect(response).to redirect_to(Chassi.last)
+  #     end
+  #   end
+  #
+  #   context "with invalid params" do
+  #     it "assigns a newly created but unsaved chassi as @chassi" do
+  #       post :create, params: {chassi: invalid_attributes}, session: valid_session
+  #       expect(assigns(:chassi)).to be_a_new(Chassi)
+  #     end
+  #
+  #     it "re-renders the 'new' template" do
+  #       post :create, params: {chassi: invalid_attributes}, session: valid_session
+  #       expect(response).to render_template("new")
+  #     end
+  #   end
+  # end
 
   describe "PUT #update" do
     context "with valid params" do
@@ -141,19 +141,19 @@ RSpec.describe ChassisController, type: :controller do
     end
   end
 
-  describe "DELETE #destroy" do
-    it "destroys the requested chassi" do
-      chassi = Chassi.create! valid_attributes
-      expect {
-        delete :destroy, params: {id: chassi.to_param}, session: valid_session
-      }.to change(Chassi, :count).by(-1)
-    end
-
-    it "redirects to the chassis list" do
-      chassi = Chassi.create! valid_attributes
-      delete :destroy, params: {id: chassi.to_param}, session: valid_session
-      expect(response).to redirect_to(chassis_url)
-    end
-  end
+  # describe "DELETE #destroy" do
+  #   it "destroys the requested chassi" do
+  #     chassi = Chassi.create! valid_attributes
+  #     expect {
+  #       delete :destroy, params: {id: chassi.to_param}, session: valid_session
+  #     }.to change(Chassi, :count).by(-1)
+  #   end
+  #
+  #   it "redirects to the chassis list" do
+  #     chassi = Chassi.create! valid_attributes
+  #     delete :destroy, params: {id: chassi.to_param}, session: valid_session
+  #     expect(response).to redirect_to(chassis_url)
+  #   end
+  # end
 
 end

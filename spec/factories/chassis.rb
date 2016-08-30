@@ -7,6 +7,6 @@ FactoryGirl.define do
     after(:build) do |chassi|
       chassi._id = chassi.properties['uuid']
     end
-
   end
+
 end

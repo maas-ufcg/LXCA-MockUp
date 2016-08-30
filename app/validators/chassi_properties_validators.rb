@@ -6,7 +6,9 @@ class ChassiPropertiesValidators < ActiveModel::Validator
 
       validate_type(record, record.properties[:activationKeys], "activationKeys", Array)
 
-      validate_activation_keys(record)
+      #Lucas get a look on this method, you know about this?
+      #validate_activation_keys(record)#
+
       validate_active_alerts(record)
 
       validate_type(record, record.properties[:backedBy], "BackedBy", String)
@@ -16,7 +18,8 @@ class ChassiPropertiesValidators < ActiveModel::Validator
       validate_type(record, record.properties[:cmmDisplayName], "CmmDisplayName", String)
 
       validate_type(record, record.properties[:cmmHealthState], "cmmHealthState", String)
-      validate_values(record, record.properties[:cmmHealthState], "cmmHealthState", %w(Normal Non-Critical Warning Minor-Failure Major-Failure Non-Recoverable Critical Unknown))
+      validate_values(record, record.properties[:cmmHealthState], "cmmHealthState",
+        %w(Normal Non-Critical Warning Minor-Failure Major-Failure Non-Recoverable Critical Unknown))
 
       validate_type(record, record.properties[:ledCardSlots], "ledCardSlots", Integer)
 
@@ -154,7 +157,7 @@ class ChassiPropertiesValidators < ActiveModel::Validator
         "Unknown"
       ]
 
-      validate_type(record, record.policies[:energyPolicies], "EnergyPolicies", Hash)
+      validate_type(record, record.properties[:energyPolicies], "EnergyPolicies", Hash)
       validate_type(record, record.properties[:energyPolicies][:accousticAttenuationMode], "AccousticAttenuationMode", String)
       validate_values(record, record.properties[:energyPolicies][:accousticAttenuationMode], "AccousticAttenuationMode", accoustic_attenuation_mode_values)
 
@@ -275,18 +278,20 @@ class ChassiPropertiesValidators < ActiveModel::Validator
     end
 
     # these methods should not be included in the main validate method body because they are already called in other methods
-    def validate_inner_chassis_bay(chassis_bay, record)
-      validate_type(record, chassis_bay, "ChassisBay", Hash)
-      validate_type(record, chassis_bay[:isExceeded], "isExceeded", String)
-      validate_type(record, chassis_bay[:sensorName], "sensorName", String)
-      validate_type(record, chassis_bay[:sensorValue], "sensorValue", Float)
-      validate_type(record, chassis_bay[:slot], "slot", Integer)
-      validate_type(record, chassis_bay[:subSlot], "subSlot", Integer)
+    def validate_inner_chassis_bay(chassis_bay_array, record)
 
+      chassis_bay_array.size.times do |i|
+        validate_type(record, chassis_bay_array[i], "ChassisBay", Hash)
+        validate_type(record, chassis_bay_array[i][:isExceeded], "isExceeded", String)
+        validate_type(record, chassis_bay_array[i][:sensorName], "sensorName", String)
+        validate_type(record, chassis_bay_array[i][:sensorValue], "sensorValue", Float)
+        validate_type(record, chassis_bay_array[i][:slot], "slot", Integer)
+        validate_type(record, chassis_bay_array[i][:subSlot], "subSlot", Integer)
+      end
     end
 
-    def validate_inner_hot_air_recirculation(hot_air_recirculation)
-      validate_inner_chassis_bay(hot_air_recirculation[:chassisBay])
+    def validate_inner_hot_air_recirculation(hot_air_recirculation, record)
+      validate_inner_chassis_bay(hot_air_recirculation[:chassisBay], record)
 
       isEnabled = [true, false]
 
