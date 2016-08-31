@@ -11,7 +11,7 @@ class Switch
     super params
 
     # self._id = self.properties[:uuid]
- 
+
   end
 
   validates_with SwitchValidators

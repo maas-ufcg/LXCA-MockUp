@@ -15,7 +15,7 @@ class SwitchValidators < ActiveModel::Validator
 		validate_stackedMode_values(record)
 		validate_IPV4Ass_values(record)
 	end
- 
+
 	private
 
 

@@ -23,6 +23,8 @@ FactoryGirl.define do
     label { Faker::Lorem.word }
     name { Faker::Hipster.word }
 
+
 		initialize_with { attributes }
+
   end
 end
