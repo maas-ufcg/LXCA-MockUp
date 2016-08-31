@@ -1,6 +1,5 @@
 Rails.application.routes.draw do
 
-  resources :switches, only: [:index, :show, :update]
   resources :fans, only: [:index, :show]
   resources :fan_muxes, only: [:index, :show]
   resources :power_supplies, only: [:index, :show]
