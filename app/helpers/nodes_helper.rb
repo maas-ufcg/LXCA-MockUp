@@ -9,7 +9,7 @@ module NodesHelper
       expansionProductType expansionProducts expansionProductSlots firmware flashStorage fruSerialNumber hostMacAddresses hostname ipInterfaces
       ipv4Addresses ipv6Addresses isConnectionTrusted isITME hasOS IPv4DHCPmode IPv4enabled IPv6enabled isRemotePresenceEnabled isScalable lanOverUsb
       currentValue machineType manufacturer manufacturerID memoryModules memorySlots mgmtProcIPaddress model nist onboardPciDevices
-      overallHealthState partitionEnabled cappingACorDCMode cappingPolicy powerStatus pciExpressCards pciExpressCardSlots physicalID ports posID powerAllocation powerCappingPolicy
+      overallHealthState partitionEnabled cappingACorDCMode cappingPolicy powerStatus healthState pciExpressCards pciExpressCardSlots physicalID ports posID powerAllocation powerCappingPolicy
       powerSupplies primary processorSlots processors productID raidSettings secureBootMode serialNumber slots status subSlots
       subType thinkServerFru tlsVersion type uri userDescription vpdID
     )
@@ -24,7 +24,6 @@ module NodesHelper
       isAddOnCard: [true, false],
       isAgentless: [true, false],
       portType: ["ATM","ETHERNET", "FC", "FDDI", "FRAMERELAY", "IB", "OTHER", "TOKENRING", "UNKNOWN"],
-      vnicMode: [true, false],
       slotSupportsHotPlug: [true, false],
       arch: ["ia64", "ppc", "ppc64", "x86", "x86_64", "Unknown"],
       backedBy: ["real", "demo", "proxy"],
@@ -53,7 +52,10 @@ module NodesHelper
       partitionEnabled: [true, false],
       cappingACorDCMode: ["AC", "DC", "Unknown"],
       cappingPolicy: ["OFF", "STATIC", "UNKNOWN"],
-      powerStatus: [0, 5, 8, 18]
+      powerStatus: [0, 5, 8, 18],
+      healthState: ["Normal", "Non-Critical", "Warning", "Minor-Failure", "Major-Failure", "Non-Recoverable", "Critical", "Unknown"],
+      primary: [true, false],
+      type: ["ITE", "Rack-Tower Server", "Lenovo ThinkServer", "SCU"]
     }
   end
 end
