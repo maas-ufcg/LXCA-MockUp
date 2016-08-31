@@ -4,71 +4,54 @@ class CanistersController < ApplicationController
   # GET /canisters
   # GET /canisters.json
   def index
-    @canisters = Canister.all
+    @canisters = Canister.all.to_a
+    render(json: @canisters.map do |canister|
+      setup_canister_properties canister
+      canister.properties
+    end)
   end
 
   # GET /canisters/1
   # GET /canisters/1.json
   def show
-  end
-
-  # GET /canisters/new
-  def new
-    @canister = Canister.new
-  end
-
-  # GET /canisters/1/edit
-  def edit
-  end
-
-  # POST /canisters
-  # POST /canisters.json
-  def create
-    @canister = Canister.new(canister_params)
-
-    respond_to do |format|
-      if @canister.save
-        format.html { redirect_to @canister, notice: 'Canister was successfully created.' }
-        format.json { render :show, status: :created, location: @canister }
-      else
-        format.html { render :new }
-        format.json { render json: @canister.errors, status: :unprocessable_entity }
-      end
-    end
-  end
-
-  # PATCH/PUT /canisters/1
-  # PATCH/PUT /canisters/1.json
-  def update
-    respond_to do |format|
-      if @canister.update(canister_params)
-        format.html { redirect_to @canister, notice: 'Canister was successfully updated.' }
-        format.json { render :show, status: :ok, location: @canister }
-      else
-        format.html { render :edit }
-        format.json { render json: @canister.errors, status: :unprocessable_entity }
-      end
-    end
-  end
-
-  # DELETE /canisters/1
-  # DELETE /canisters/1.json
-  def destroy
-    @canister.destroy
-    respond_to do |format|
-      format.html { redirect_to canisters_url, notice: 'Canister was successfully destroyed.' }
-      format.json { head :no_content }
+    if @canister.nil?
+      head :not_found
+    else
+      render json: @canister.properties
     end
   end
 
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_canister
-      @canister = Canister.find(params[:id])
+      @canister = begin
+               Canister.find(params[:id])
+             rescue Mongoid::Errors::DocumentNotFound => ex
+             end
+      setup_canister_properties @canister
+    end
+
+    def setup_canister_properties(canister)
+      return if canister.nil?
+      excludeAttributes = split_to_sym params[:excludeAttributes]
+      includeAttributes = split_to_sym params[:includeAttributes]
+      unless includeAttributes.nil?
+        excludeAttributes = CanistersHelper::required_fields-includeAttributes
+      end
+      unless excludeAttributes.nil?
+        excludeAttributes.each do |attribute|
+          canister.properties.delete(attribute)
+        end
+      end
+    end
+
+    def split_to_sym(string)
+      string.split(",").map(&:to_sym) if string.is_a?(String)
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def canister_params
       params.require(:canister).permit(:_id, :properties)
     end
+
 end

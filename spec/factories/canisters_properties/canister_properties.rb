@@ -17,7 +17,7 @@ FactoryGirl.define do
   factory :canister_properties, class: Hash do
 
     after :build do |canister_properties|
-      fan_properties[:uri] = "/#{canister_properties[:uuid]}"
+      canister_properties[:uri] = "/#{canister_properties[:uuid]}"
     end
 
     backedBy %w(real demo proxy).sample
@@ -80,7 +80,9 @@ FactoryGirl.define do
     subSlots []
     userDescription { Faker::Hipster.sentence }
     uuid { SecureRandom.hex.upcase }
-    vnicMode [anable, disable].sample
+    vnicMode %w(anable disable).sample
     vpdID { "#{Random.rand 1000}" }
+
+    initialize_with { attributes }
   end
 end

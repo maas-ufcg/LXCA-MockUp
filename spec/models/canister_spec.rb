@@ -66,7 +66,7 @@ RSpec.describe Canister, type: :model do
           expect(@canister).to_not be_valid(Canister)
         end
 
-        it "saving canister without #{field} should not change the number of elements in DB" do
+        it "saving fan without #{field} should not change the number of elements in DB" do
           expect {@canister.save}.to change {Canister.count}.by 0
         end
       end
