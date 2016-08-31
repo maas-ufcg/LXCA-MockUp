@@ -1,0 +1,1 @@
+json.array! @cmms, partial: 'cmms/cmm', as: :cmm
