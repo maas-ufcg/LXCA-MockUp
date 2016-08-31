@@ -53,7 +53,7 @@ module NodesHelper
       cappingACorDCMode: ["AC", "DC", "Unknown"],
       cappingPolicy: ["OFF", "STATIC", "UNKNOWN"],
       powerStatus: [0, 5, 8, 18],
-      healthState:["Normal", "Non-Critical", "Warning", "Minor-Failure", "Major-Failure", "Non-Recoverable", "Critical", "Unknown"],
+      healthState: ["Normal", "Non-Critical", "Warning", "Minor-Failure", "Major-Failure", "Non-Recoverable", "Critical", "Unknown"],
       primary: [true, false],
       type: ["ITE", "Rack-Tower Server", "Lenovo ThinkServer", "SCU"]
     }
