@@ -1,5 +1,10 @@
 Rails.application.routes.draw do
+
   resources :switches, only: [:index, :show, :update]
+  resources :fans, only: [:index, :show]
+  resources :fan_muxes, only: [:index, :show]
+  resources :power_supplies, only: [:index, :show]
+
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
