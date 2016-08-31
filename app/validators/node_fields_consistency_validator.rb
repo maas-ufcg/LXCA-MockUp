@@ -5,7 +5,7 @@ class NodeFieldsConsistencyValidator < ActiveModel::Validator
     validate_id_and_uuid(record)
     validate_fields_presence(record)
     validate_fields_value(record)
- end
+  end
 
   private
 
@@ -14,18 +14,18 @@ class NodeFieldsConsistencyValidator < ActiveModel::Validator
       record_v.error[:base] << "The object should not be nill"
     elsif record_v.properties.nil?
       record_v.error[:base] << "properties attribute should not be nil"
-    elsif not record_v.properties.is_a?(:Hash)
+    elsif not record_v.properties.is_a? Hash
       record_v.error[:base] << "properties must be a Hash"
     end
   end
 
   def validate_id_and_uuid(record_v)
     if record_v.nil?
-      record_v.error[:base] << "The UUID attribute should not be nill"
-    elsif record_v._id != record.properties[:uuid]
-      record_v.error[:base] << "Object _id must be equal to properties[:_id]"
+      record_v.errors[:base] << "The UUID attribute should not be nill"
+    elsif record_v._id != record_v.properties[:uuid]
+      record_v.errors[:base] << "Object _id must be equal to properties[:_id]"
     elsif record_v.properties[:uuid].nil? or record_v.properties[:uuid] == ""
-      record_v.error[:base] << "The UUID atribute should neither be nil nor empty"
+      record_v.errors[:base] << "The UUID atribute should neither be nil nor empty"
       endvalidate_isAddOnCard
     end
   end
@@ -33,18 +33,21 @@ class NodeFieldsConsistencyValidator < ActiveModel::Validator
   def validate_fields_presence(record_v)
     NodesHelper::required_fields.each do |field|
       if not record_v.properties.has_key? field
-        record_v.error[:base] << "missing #{field} property object"
+        record_v.errors[:base] << "missing #{field} property object"
+      elsif record_v.properties[field].nil?
+        record_v.errors[:base] << "field #{field} can't be nil"
+      elsif record_v.properties[field] == ""
+        record_v.errors[:base] << "field #{field} can't be an empty string"
       end
     end
   end
 
   def validate_fields_value(record_v)
     values_per_field = NodesHelper::possible_values_per_field
-    values_per_field.keys.each do |field|
+    values_per_field.keys.take(10).each do |field|
       if not values_per_field[field].include? record_v.properties[field]
-        record_v.error[:base] << "field #{field} can't have value #{record_v.properties[field]})"
+        record_v.errors[:base] << "field #{field} can't have value #{record_v.properties[field]})"
       end
     end
   end
-
 end

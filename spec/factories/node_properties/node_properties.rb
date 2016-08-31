@@ -2,12 +2,6 @@ require 'securerandom'
 require 'faker'
 
 FactoryGirl.define do
-  firmware_types = %w(UEFI MP DSA)
-  firmware_roles = %w(Primary Backup Temporary Permanent)
-  firmware_status = %w(Active Inactive)
-  port_types =  %w(ATM BLUETOOTH ETHERNET FC FDDI FRAMERELAY IB INFRARED OTHER TOKENRING UNKNOWN WIRELESSLAN)
-  port_few_types = %w(ATM ETHERNET FC FDDI FRAMERELAY IB OTHER TOKENRING UNKNOWN)
-  health_states = %w(Normal Non-Critical Warning Minor-Failure Major-Failure Non-Recoverable Critical Unknown)
   ipv4_types = %w(INUSE CONFIGURED ALIAS UNKNOWN)
   led_locations = ["Front panel", "Lightpath Card", "Planar", "FRU", "Rear Panel", "Unknown"]
   led_states = %w(Off On Blinking Unknown)
@@ -15,7 +9,7 @@ FactoryGirl.define do
   led_colors = %w(Red Amber Yellow Green Blue Unknown)
 
   factory :node_properties, class: Hash do
-    accessState { %w(Online Offline Partial Pending Unknown).sample }
+    accessState { NodesHelper::possible_values_per_field[:accessState].sample }
     activationKeys do
       (1..Random.rand(1..10)).map do |key|
         {
@@ -25,10 +19,10 @@ FactoryGirl.define do
           keyIdentiferList: (1..Random.rand(1..10)).map do |identifier|
             {
               keyIdentifier: Faker::Lorem.characters(15),
-              keyIdentifierType: %w(ASIC MAC MT UNKNOWN).sample
+              keyIdentifierType: NodesHelper::possible_values_per_sub_field[:keyIdentifierType].sample
             }
           end,
-          keyStatus: %w(UNKNOWN OTHER VALID INVALID INPROCESS EXPIRED LIMIT_REACHED NEED_VALID_ELSEWHERE KEY_NOT_FOUND).sample,
+          keyStatus: NodesHelper::possible_values_per_sub_field[:keyStatus].sample,
           keyUseCount: Faker::Number.number(10),
           keyUseLimit: Faker::Number.number(20),
           uuid: SecureRandom.uuid
@@ -43,16 +37,16 @@ FactoryGirl.define do
           firmware: (1..Random.rand(1..10)).map do |firm|
             {
               build: Faker::Lorem.characters(15),
-              classifications: (1..Random.rand(1..51)).map do |type|
-                Faker::Number.number(200)
+              classifications: (1..Random.rand(1..5)).map do |type|
+                Faker::Number.number(5)
               end,
               date: Faker::Date.between(5.year.ago, Date.today),
               name: Faker::Hacker.noun,
               revision: "#{Faker::Number.number(10)}",
-              role: firmware_roles.sample,
+              role: NodesHelper::possible_values_per_sub_field[:role].sample,
               softwareID: "#{Faker::Number.number(10)}",
-              status: firmware_status.sample,
-              type: firmware_types.sample,
+              status: NodesHelper::possible_values_per_sub_field[:firmware_status].sample,
+              type: NodesHelper::possible_values_per_sub_field[:firmware_types].sample,
               version: Faker::App.version
             }
           end,
@@ -70,11 +64,11 @@ FactoryGirl.define do
           pciSubID: "#{Faker::Number.number(5)}",
           pciSubVendorID: "#{Faker::Number.number(5)}",
           portInfo: {
-            portType: port_few_types.sample,
+            portType: NodesHelper::possible_values_per_sub_field[:port_few_types].sample,
             portNumber: "#{Faker::Number.number(5)}",
             logicalPorts: (1..Random.rand(1..10)).map do |type|
               {
-                portType: port_types.sample,
+                portType: NodesHelper::possible_values_per_sub_field[:port_types].sample,
                 portNumber: "#{Faker::Number.number(5)}",
                 addresses: Faker::Internet.ip_v4_address,
                 e: "#{Faker::Boolean.boolean}"
@@ -91,8 +85,8 @@ FactoryGirl.define do
         }
       end
     end
-    arch { %w(ia64 ppc ppc64 x86 x86_64 Unknown).sample }
-    backedBy { %w(real demo proxy).sample }
+    arch { NodesHelper::possible_values_per_field[:arch].sample }
+    backedBy { NodesHelper::possible_values_per_field[:backedBy].sample }
     bladeState { "#{Random.rand(1..17)}" }
     bootMode do
       {
@@ -107,7 +101,7 @@ FactoryGirl.define do
         uri: Faker::Internet.url,
         bootOrderList: (1..Random.rand(1..5)).map do |attribute|
           {
-            bootType: %w(Permanent SingleUse WakeOnLan Unknown).sample,
+            bootType: NodesHelper::possible_values_per_sub_field[:bootType].sample,
             currentBootOrderDevices: (1..Random.rand(1..5)).map do |device|
               Faker::Lorem.word
             end,
@@ -118,14 +112,14 @@ FactoryGirl.define do
         end
       }
     end
-    canisters {
+    canisters do
       (1..Random.rand(1..5)).map do |device|
         "#{Faker::Number.number(5)}"
       end
-    }
+    end
     canisterSlots {Faker::Number.number(5)}
     cmmDisplayName {Faker::Lorem.word}
-    cmmHealthState {%w(Normal Non-Critical Warning Minor-Failure Major-Failure Non-Recoverable Critical Unknown Informational Warning Minor Major Critical Fatal Unknown).sample}
+    cmmHealthState { NodesHelper::possible_values_per_field[:cmmHealthState].sample}
     complexID {Faker::Number.number(5)}
     contact ""# TODO: Not documented
     dataHandle {Faker::Number.number(8)}
@@ -144,8 +138,8 @@ FactoryGirl.define do
           capacity: Faker::Number.number(8),
           interfaceType: Faker::Lorem.word,
           mediaType: Faker::Lorem.word,
-          raidPresence: %w(Regular Non-RAID drive).sample,
-          speed:Faker::Lorem.characters(10),
+          raidPresence: NodesHelper::possible_values_per_sub_field[:raidPresence].sample,
+          speed: Faker::Lorem.characters(10),
           state: %w(active stopped transitioning).sample
         }
       end
@@ -153,7 +147,7 @@ FactoryGirl.define do
     embeddedHypervisorPresence {"#{Faker::Boolean.boolean}"}
     encapsulation do
       {
-        encapsulationMode: %w(notSupported normal encapsulationLite).sample,
+        encapsulationMode: NodesHelper::possible_values_per_sub_field[:encapsulationMode].sample,
         nonBlockedIpAddressList: (1..Random.rand(1..10)).map do |ip|
           Faker::Internet.ip_v4_address
         end
@@ -163,11 +157,11 @@ FactoryGirl.define do
       (1..Random.rand(1..10)).map do |error|
         {
           label: "", # TODO: Not documented,
-          errorCode: %w(FETCH_SUCCESS FETCH_FAILED NO_CONNECTOR FATAL_EXCEPTION NETWORK_FAIL).sample
+          errorCode: NodesHelper::possible_values_per_sub_field[:errorCode].sample
         }
       end
     end
-    excludedHealthState {health_states.sample}
+    excludedHealthState {NodesHelper::possible_values_per_sub_field[:health_states].sample}
     expansionCardSlots {Faker::Number.number(5)}
     expansionCards do
       (1..Random.rand(1..10)).map do |card|
@@ -182,11 +176,11 @@ FactoryGirl.define do
           pciSubID: "#{Faker::Number.number(15)}",
           pciSubVendorID: "#{Faker::Number.number(15)}",
           portInfo: {
-              portType: port_few_types.sample,
+              portType: NodesHelper::possible_values_per_sub_field[:port_few_types].sample,
               portNumber: Faker::Number.number(4),
               logicalPorts: (1..Random.rand(1..10)).map do |port|
                 {
-                  portType: port_types.sample,
+                  portType: NodesHelper::possible_values_per_sub_field[:port_types].sample,
                   portNumber: Faker::Number.number(4),
                   addresses: Faker::Lorem.characters(10).upcase,
                   e: "#{Faker::Boolean.boolean}"
@@ -199,8 +193,8 @@ FactoryGirl.define do
         }
       end
     end
-    expansionProductType {["SEN" "PEN" "Expansion card" "Addin Card" "PCI Express Card" "Unknown"].sample}
-    expansionProducts {[]}
+    expansionProductType { NodesHelper::possible_values_per_field[:expansionProductType].sample }
+    expansionProducts { NodesHelper::possible_values_per_field[:expansionProducts].sample }
     expansionProductSlots {Faker::Number.number(4)}
     firmware do
       (1..Random.rand(1..10)).map do |firmware|
@@ -208,9 +202,9 @@ FactoryGirl.define do
           build: Faker::Lorem.characters(5).upcase,
           date: Faker::Date.between(2.years.ago, Date.today),
           name: Faker::Name.first_name,
-          role: firmware_roles.sample,
-          status: firmware_status.sample,
-          type: firmware_types.sample,
+          role: NodesHelper::possible_values_per_sub_field[:firmware_roles].sample,
+          status: NodesHelper::possible_values_per_sub_field[:firmware_status].sample,
+          type: NodesHelper::possible_values_per_sub_field[:firmware_types].sample,
           version: Faker::App.version
         }
       end
@@ -226,12 +220,12 @@ FactoryGirl.define do
             classifications: (1..Random.rand(1..10)).map do |code|
               Faker::Number.number(Random.rand(1..10))
             end,
-            date:Faker::Date.between(2.years.ago, Date.today),
+            date: Faker::Date.between(2.years.ago, Date.today),
             name: Faker::Name.first_name,
-            role: firmware_roles.sample,
-            softwareID:Faker::Lorem.characters(5).upcase,
-            status: firmware_status.sample,
-            type: firmware_types.sample,
+            role: NodesHelper::possible_values_per_sub_field[:firmware_roles].sample,
+            softwareID: Faker::Lorem.characters(5).upcase,
+            status: NodesHelper::possible_values_per_sub_field[:firmware_status].sample,
+            type: NodesHelper::possible_values_per_sub_field[:firmware_types].sample,
             version: Faker::App.version
           },
           manufacturer: "IBM",
@@ -252,7 +246,7 @@ FactoryGirl.define do
     ipInterfaces do
       (1..Random.rand(1..10)).map do |address|
         {
-          IPv4DHCPmode: %w(STATIC_ONLY DHCP_ONLY DHCP_THEN_STATIC UNKNOWN).sample,
+          IPv4DHCPmode: NodesHelper::possible_values_per_sub_field[:IPv4DHCPmode].sample,
           IPv4assignments: (1..Random.rand(1..10)).map do |ipv4|
             {
               address: Faker::Internet.ip_v4_address,
@@ -283,16 +277,16 @@ FactoryGirl.define do
         }
       end
     end
-    ipv4Addresses {
+    ipv4Addresses do
       (1..Random.rand(1..10)).map do |addr|
         Faker::Internet.ip_v4_address
       end
-    }
-    ipv6Addresses {
+    end
+    ipv6Addresses do
       (1..Random.rand(1..10)).map do |addr|
         Faker::Internet.ip_v6_address
       end
-    }
+    end
     isConnectionTrusted {Faker::Boolean.boolean}
     isITME {Faker::Boolean.boolean}
     isRemotePresenceEnabled {Faker::Boolean.boolean}
@@ -359,10 +353,10 @@ FactoryGirl.define do
             date: "",
             name: Faker::Lorem.word,
             revision: "#{Faker::Number.number(2)}",
-            role: firmware_roles.sample,
+            role: NodesHelper::possible_values_per_sub_field[:firmware_roles].sample,
             softwareID: Faker::Number.number(5),
-            status: firmware_status.sample,
-            type: firmware_types.sample,
+            status: NodesHelper::possible_values_per_sub_field[:firmware_status].sample,
+            type: NodesHelper::possible_values_per_sub_field[:firmware_types].sample,
             version: Faker::Number.number(2)
           }
         end,
@@ -377,11 +371,11 @@ FactoryGirl.define do
         pciSubID: Faker::Lorem.characters(3),
         pciSubVendorID: "#{Faker::Number.number(4)}",
         portInfo: {
-          portType: port_few_types.sample,
+          portType: NodesHelper::possible_values_per_sub_field[:port_few_types].sample,
           portNumber: Faker::Number.number(4),
           logicalPorts: (1..Random.rand(1..10)).map do |port|
             {
-              portType: port_types.sample,
+              portType: NodesHelper::possible_values_per_sub_field[:port_types].sample,
               portNumber: Faker::Number.number(4),
               addresses: Faker::Lorem.characters(8).upcase,
               e: Faker::Boolean.boolean
@@ -394,7 +388,7 @@ FactoryGirl.define do
       }
       end
     end
-    overallHealthState {health_states.sample}
+    overallHealthState {NodesHelper::possible_values_per_sub_field[:health_states].sample}
     parent do
       {
         uuid: SecureRandom.uuid,
@@ -424,10 +418,10 @@ FactoryGirl.define do
               date: Faker::Date.between(2.years.ago, Date.today),
               name: Faker::Lorem.word,
               revision: "#{Faker::Number.number(1)}",
-              role: firmware_roles.sample,
+              role: NodesHelper::possible_values_per_sub_field[:firmware_roles].sample,
               softwareID: "#{Faker::Number.number(8)}",
-              status: firmware_status.sample,
-              type: firmware_types.sample,
+              status: NodesHelper::possible_values_per_sub_field[:firmware_status].sample,
+              type: NodesHelper::possible_values_per_sub_field[:firmware_types].sample,
               version: "#{Faker::Number.number(8)}"
             }
           end,
@@ -446,11 +440,11 @@ FactoryGirl.define do
           pciSubVendorID: "#{Faker::Number.number(4)}",
           portInfo:
             {
-              portType: port_few_types.sample,
+              portType: NodesHelper::possible_values_per_sub_field[:port_few_types].sample,
               portNumber: Faker::Number.number(4),
               logicalPorts: (1..Random.rand(1..10)).map do |port|
                 {
-                  portType: port_types.sample,
+                  portType: NodesHelper::possible_values_per_sub_field[:port_types].sample,
                   portNumber: Faker::Number.number(4),
                   addresses: Faker::Lorem.characters(Random.rand(8..10)).upcase,
                   vnicMode: Faker::Boolean.boolean
@@ -480,11 +474,11 @@ FactoryGirl.define do
           pciSubID: "#{Faker::Number.number(3)}",
           pciSubVendorID: "#{Faker::Number.number(4)}",
           portInfo: {
-            portType: port_few_types.sample,
+            portType: NodesHelper::possible_values_per_sub_field[:port_few_types].sample,
             portNumber: Faker::Number.number(4),
             logicalPorts: (1..Random.rand(1..10)).map do |port|
               {
-                portType: port_types.sample,
+                portType: NodesHelper::possible_values_per_sub_field[:port_types].sample,
                 portNumber: Faker::Number.number(4),
                 addresses: Faker::Lorem.characters(Random.rand(8..10)).upcase,
                 vnicMode: Faker::Boolean.boolean
@@ -539,16 +533,16 @@ FactoryGirl.define do
               build: Faker::Lorem.characters(Random.rand(8..10)).upcase,
               date: Faker::Date.between(2.years.ago, Date.today),
               name: Faker::Company.name,
-              role: firmware_roles.sample,
-              status: firmware_status.sample,
-              type: firmware_types.sample,
+              role: NodesHelper::possible_values_per_sub_field[:firmware_roles].sample,
+              status: NodesHelper::possible_values_per_sub_field[:firmware_status].sample,
+              type: NodesHelper::possible_values_per_sub_field[:firmware_types].sample,
               version: Faker::App.version
             }
           end,
           FRU: Faker::Lorem.characters(5).upcase,
           fruSerialNumber: Faker::Lorem.characters(10),
           hardwareRevision: "",
-          healthState: health_states.sample,
+          healthState: NodesHelper::possible_values_per_sub_field[:health_states].sample,
           inputVoltageIsAC: Faker::Boolean.boolean,
           inputVoltageMax: Faker::Number.number(1),
           inputVoltageMin: Faker::Number.number(1),
@@ -615,7 +609,7 @@ FactoryGirl.define do
               blockSize: Faker::Number.number(3),
               description: Faker::Lorem.sentence,
               diskState: "System",
-              healthState: health_states.sample,
+              healthState: NodesHelper::possible_values_per_sub_field[:health_states].sample,
               interfaceType: "SAS", # TODO: Not Documented
               manufacturer: "EMER", # TODO: Not Documented
               mediaType: "Rotational", # TODO: Not documented
@@ -683,11 +677,11 @@ FactoryGirl.define do
         end
       }
     end
-    type {["ITE", "Rack-Tower Server", "Lenovo ThinkServer", "SCU"].sample}
+    type { NodesHelper::possible_values_per_field[:type].sample }
     uri {Faker::Internet.url}
     userDescription {Faker::Lorem.sentence}
     uuid {"#{SecureRandom.uuid}"}
-    vnicMode {%w(enabled disabled).sample}
+    vnicMode { NodesHelper::possible_values_per_field[:vnicMode].sample }
     vpdID {"#{Faker::Number.number(10)}"}
 
     initialize_with { attributes }
