@@ -22,10 +22,14 @@ class SwitchesController < ApplicationController
   # PATCH/PUT /switches/1
   # PATCH/PUT /switches/1.json
   def update
+      begin
         if update_switch (switch_params)
-        head :no_content
-      else
-        render json: @switch.errors, status: :unprocessable_entity
+          head :no_content
+        else
+          render json: @switch.errors, status: :unprocessable_entity
+        end
+      rescue ActionController::ParameterMissing => e
+        head :unprocessable_entity
       end
   end
 
@@ -44,6 +48,12 @@ class SwitchesController < ApplicationController
     # Never trust parameters from the scary internet, only allow the white list through.
     def switch_params
       params.require(:switch).require(:properties).to_hash.deep_symbolize_keys
+      # begin
+      #   params.require(:switch).require(:properties).to_hash.deep_symbolize_keys
+      # rescue ActionController::ParameterMissing => e
+      #     render :nothing => true, :status => :unprocessable_entity
+      #     head :unprocessable_entity
+      # end
     end
 
     def update_switch(switch_update_params)

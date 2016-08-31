@@ -1,7 +1,7 @@
 module SwitchesHelper
 
   def self.required_fields
-     %i(accessState attachedNodes cmmHealthState firmware ipInterfaces macAddress productName serialNumber type uuid)
+     %i(accessState attachedNodes cmmHealthState firmware hostname ipInterfaces leds macAddress productName protectedMode serialNumber type uuid)
   end
 
   def self.defined_fields
@@ -9,11 +9,11 @@ module SwitchesHelper
   end
 
   def self.params_white_list
-      %i(hostname  ipv4Address ipv6Address ipInterfaces)
+      %i(contact hostname  ipv4Address ipv6Address ipInterfaces)
   end
 
   def self.fields_put_params
-    %i(powerState refreshInventory leds)
+    %i(refreshInventory leds)
   end
 
 end

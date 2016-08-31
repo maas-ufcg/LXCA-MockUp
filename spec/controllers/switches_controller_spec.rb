@@ -2,6 +2,10 @@ require 'rails_helper'
 
 RSpec.describe SwitchesController, type: :controller do
 
+  let(:valid_attributes) {
+    skip("Add a hash of attributes valid for your model")
+  }
+
   describe "GET #index" do
     context "for 5 existing valid switches" do
         before :each do
@@ -29,7 +33,7 @@ RSpec.describe SwitchesController, type: :controller do
   end
 
   describe "GET #show" do
-    context "fething existing switches" do
+    context "fetching existing switches" do
       before :each do
         @switches = (0..4).map{|n| create :valid_switch}
       end
@@ -112,20 +116,20 @@ RSpec.describe SwitchesController, type: :controller do
 
 
       SwitchesHelper::fields_put_params.each do |key|
-        it "updates the requested switch(#{key} values)" do
-          @new_attributes = build :"switches_valid_put_request_#{key}"
+        it "updates the requested switch (#{key} values)" do
+          @requested_attributes = build :"switches_valid_put_request_#{key}"
 
-          put :update, id: @switch._id, switch: {_id: @switch._id, properties: @new_attributes}
+          put :update, id: @switch._id, switch: {_id: @switch._id, properties: @requested_attributes}
 
           expect(response).to have_http_status(:no_content)
 
           switch_updated_properties = Switch.find(@switch._id).properties.deep_symbolize_keys
 
-          @new_attributes.keys.each do |key|
-            expect(switch_updated_properties[key]).to eq(@new_attributes[key])
+          @requested_attributes.keys.each do |key|
+            expect(switch_updated_properties[key]).to eq(@requested_attributes[key])
           end
 
-          expect(switch_updated_properties.size).to_not eq(@new_attributes.size)
+          expect(switch_updated_properties.size).to_not eq(@requested_attributes.size)
         end
 
 
@@ -134,17 +138,18 @@ RSpec.describe SwitchesController, type: :controller do
     end
 
     context "with invalid params" do
-      it "assigns the switch as @switch" do
-        switch = Switch.create! valid_attributes
-        put :update, params: {id: switch.to_param, switch: invalid_attributes}, session: valid_session
-        expect(assigns(:switch)).to eq(switch)
+
+      before :each do
+        @switch_request = build :switches_valid_put_request_settings
+        @switch_valid = create :valid_switch
       end
 
-      it "re-renders the 'edit' template" do
-        switch = Switch.create! valid_attributes
-        put :update, params: {id: switch.to_param, switch: invalid_attributes}, session: valid_session
-        expect(response).to render_template("edit")
+      it "assigns the switch as @switch" do
+        put :update, id: @switch_valid._id, switch:{id:@switch_valid._id}
+        expect(response).to have_http_status(:unprocessable_entity)
       end
+
+    
     end
   end
 

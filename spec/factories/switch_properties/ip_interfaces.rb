@@ -12,7 +12,7 @@ FactoryGirl.define do
       end
 		end
 
-    IPv4DHCPmode { %w(STATIC_ONLY DHCP_ONLY DHCP_THEN_STATIC UNKNOWN).sample } 
+    IPv4DHCPmode { %w(STATIC_ONLY DHCP_ONLY DHCP_THEN_STATIC UNKNOWN).sample }
 
     IPv4enabled { [true, false].sample }
     IPv6DHCPenabled { [true, false].sample }

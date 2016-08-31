@@ -13,6 +13,7 @@ class SwitchValidators < ActiveModel::Validator
 		validate_protectedMode_values(record)
 		validate_savePending_values(record)
 		validate_stackedMode_values(record)
+		validate_IPV4Ass_values(record)
 	end
 
 	private
@@ -40,7 +41,7 @@ class SwitchValidators < ActiveModel::Validator
 	end
 
 
-def validate_uuid_and_id(record_v)
+	def validate_uuid_and_id(record_v)
 		if record_v.nil?
 			record_v.errors[:base] << "UUID attribute can't be nil"
 		elsif  record_v.properties[:uuid].nil? or record_v.properties[:uuid] == ""
@@ -134,10 +135,9 @@ def validate_uuid_and_id(record_v)
 #TODO check validators for invalid values in an Array
 	def validate_IPV4Ass_values(record_v)
 		valid_values = ["INUSE", "CONFIGURED", "ALIAS", "UNKNOWN"]
-
-		if not valid_values.include? record_v.properties[:ipInterfaces[:ipv4_assignment]] [3]
-			record_v.errors[:base] << "IPV4 Assingment type not valid."
-		end
+		# if not valid_values.include? record_v.properties[:ipInterfaces[:ipv4_assignment]]
+		# 	record_v.errors[:base] << "IPV4 Assingment type not valid."
+		# end
 	end
 
 	def validate_IPV4DHCP_values(record_v)

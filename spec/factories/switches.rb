@@ -91,7 +91,7 @@ FactoryGirl.define do
     initialize_with { attributes }
   end
 
-
+  #TODO: API inconsistency when update powerState values.[CHECK]
   factory :switches_valid_put_request_powerState, class: Hash do
 
     powerState %w(powerOn powerOff powerCycleSoft virtualReseat).sample
