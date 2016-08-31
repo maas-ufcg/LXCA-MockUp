@@ -105,7 +105,7 @@ RSpec.describe NodesController, type: :controller do
           expect(@nodes).to be_a(Array)
         end
 
-        it "must store all six power_supplies assigned to @nodes" do
+        it "must store all six nodes assigned to @nodes" do
           expect(@nodes.count).to eq(6)
         end
 
@@ -123,50 +123,172 @@ RSpec.describe NodesController, type: :controller do
       end
 
       context "With status parameter"do
-        before :each do
-          @nodes = (0..5).map {|n| create :valid_node}
-          get :index, status: 'managed'
-        end
-
-        it "All nodes have the status managed" do
-          assigns(:nodes).each do |node|
-              expect(node.properties.deep_symbolize_keys[:status][:message]).to eq('managed')
-          end
-        end
+      before :each do
+        @nodes = (0..5).map {|n| create :valid_node}
+        get :index, status: 'managed'
       end
 
-      context "With status parameter "do
-        before :each do
-          @nodes = (0..5).map {|n| create :valid_node}
-          get :index, status: 'unmanaged'
-        end
-
-        it "All nodes have the status unmanaged" do
-          assigns(:nodes).each do |node|
-              expect(node.properties.deep_symbolize_keys[:status][:message]).to eq('unmanaged')
-          end
+      it "All nodes have the status managed" do
+        assigns(:nodes).each do |node|
+          expect(node.properties.deep_symbolize_keys[:status][:message]).to eq('managed')
         end
       end
-
     end
 
+    context "With status parameter "do
+    before :each do
+      @nodes = (0..5).map {|n| create :valid_node}
+      get :index, status: 'unmanaged'
+    end
+
+    it "All nodes have the status unmanaged" do
+      assigns(:nodes).each do |node|
+        expect(node.properties.deep_symbolize_keys[:status][:message]).to eq('unmanaged')
+      end
+    end
   end
-  # describe "GET #show" do
-  #   context "Fetching existing nodes" do
-  #     context "Without excludeAttributes or includeAttributes parameters" do
-  #
-  #     end
-  #     context "With includeAttributes parameters" do
-  #
-  #     end
-  #
-  #     context "With excludeAttributes parameters" do
-  #
-  #     end
+
+  # context "with format type parameter" do
+  #   before :each do
+  #     @nodes = (0..5).map {|n| create :valid_node}
+  #     get :index, formatType: 'json'
   #   end
-  #   context "Fetching unexisting nodes" do
+  #
+  #   it "Nodes returned with format json" do
+  #
+  #   parsed_response = JSON.parse(response.body)
+  #   expect(parsed_response['node'].count).to eq(6)
+  #
   #   end
   #
   # end
+
+end
+
+end
+
+describe "GET #show" do
+
+  context "Fetching existing nodes" do
+    context "Without excludeAttributes or includeAttributes parameters" do
+      before :each do
+        @nodes = (0..5).map {|n| create :valid_node}
+      end
+
+      it "All nodes can be fetched individually" do
+        @nodes.each do |node|
+          get :show, {id: node._id}
+          expect(response).to have_http_status(:success)
+        end
+      end
+
+      it "All nodes are valid" do
+        @nodes.each do |node|
+          get :show, {id: node._id}
+          expect(node).to be_valid(Node)
+        end
+      end
+    end
+
+    context "With excludeAttributes parameters" do
+      before :each do
+        @excludeAttributes = %i(
+        description
+        hardwareRevision
+        dataHandle
+        )
+        @nodes = (0..5).map {|n| create :valid_node}
+      end
+
+      it "All nodes can be fetched individually" do
+        @nodes.each do |node|
+          get :show, {
+            id: node._id,
+            excludeAttributes: @excludeAttributes.join(",")
+          }
+          expect(response).to have_http_status(:success)
+        end
+      end
+
+      it "All nodes doesn't have the attributes excluded" do
+        @nodes.each do |node|
+          get :show, {
+            id: node._id,
+            excludeAttributes: @excludeAttributes.join(",")
+          }
+          @excludeAttributes.each do |attribute|
+            node_properties = assigns(:node).properties
+            expect(node_properties.has_key? attribute).to eq(false)
+          end
+        end
+      end
+    end
+
+    context "With includeAttributes parameters" do
+      before :each do
+        @includeAttributes = %i(
+        description
+        hardwareRevision
+        dataHandle
+        )
+        @nodes = (0..5).map {|n| create :valid_node}
+      end
+
+      it "All nodehod `valid?' s can be fetched individually" do
+        @nodes.each do |node|
+          get :show, {
+            id: node._id,
+            includeAttributes: @includeAttributes.join(",")
+          }
+          expect(response).to have_http_status(:success)
+        end
+      end
+
+      it "All nodes have the attributes included" do
+        @nodes.each do |node|
+          get :show, {
+            id: node._id,
+            includeAttributes: @includeAttributes.join(",")
+          }
+          @includeAttributes.each do |attribute|
+            node_properties = node.properties
+            expect(node_properties.has_key? attribute).to eq(true)
+          end
+        end
+      end
+
+      it "All nodes doesn't have other attributes" do
+        @nodes.each do |node|
+          get :show, {
+            id: node._id,
+            includeAttributes: @includeAttributes.join(",")
+          }
+          absent = NodesHelper::required_fields - @includeAttributes
+          absent.each do |attribute|
+            node_properties = assigns(:node).properties
+            expect(node_properties.has_key? attribute).to eq(false)
+          end
+        end
+      end
+    end
+  end
+
+  context "Fetching unexisting nodes" do
+    before :each do
+      @random_id = SecureRandom.hex.upcase
+      get :show, {id: @random_id}
+    end
+
+    it "Returns HTTP Status Code 404 (Not Found)" do
+      expect(response).to have_http_status(:not_found)
+    end
+
+    it "Expects to assign nil to @node in action" do
+      expect(@node).to be_nil
+    end
+  end
+
+
+end
 
 end

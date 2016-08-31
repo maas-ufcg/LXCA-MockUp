@@ -6,6 +6,7 @@ class NodesController < ApplicationController
   def index
 
     param = params[:status]
+    formatType = params[:formatType]
     if param.nil?
       @nodes = Node.all.to_a
     else
@@ -21,13 +22,13 @@ class NodesController < ApplicationController
 
   # GET /nodes/1
   # GET /nodes/1.json
-#   def show
-#     if @node.nil?
-#       head :not_found
-#     else
-#       render json: @node.properties
-#     end
-# end
+  def show
+    if @node.nil?
+      head :not_found
+    else
+      render json: @node.properties
+    end
+end
 
 
   # PATCH/PUT /nodes/1
