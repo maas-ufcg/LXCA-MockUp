@@ -263,7 +263,7 @@ class ChassiPropertiesValidators < ActiveModel::Validator
     end
 
     def validate_security_policy(record)
-      validate_type(record, record.properties[:SecurityPolicy], "SecurityPolicy", Hash)
+      validate_type(record, record.properties[:securityPolicy], "securityPolicy", Hash)
 
       if record.properties[:SecurityPolicy].is_a? Hash
         sub_keys = %i(cmmPolicyLevel cmmPolicyState)

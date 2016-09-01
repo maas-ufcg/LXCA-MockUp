@@ -207,7 +207,7 @@ FactoryGirl.define do
     productID { Faker::Number.number(8).to_s }
     overallHealthState { overall_health_state.sample }
 
-    SecurityPolicy do
+    securityPolicy do
       {
         :cmmPolicyLevel => %W(LEGACY SECURE).sample,
         :cmmPolicyState => %W(ERROR UNKNOWN ACTIVE PENDING).sample,
