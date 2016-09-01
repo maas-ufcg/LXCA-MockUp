@@ -4,7 +4,7 @@ class CmmsController < ApplicationController
   # GET /cmms
   # GET /cmms.json
   def index
-    @cmms = Cmm.all.to_all
+    @cmms = Cmm.all.to_a
     render(json: @cmms.map do |cmm|
       setup_cmm_properties cmm
       cmm.properties
@@ -26,11 +26,11 @@ class CmmsController < ApplicationController
 # Use callbacks to share common setup or constraints between actions.
   def set_cmm
     @cmm = begin
-      Cmm.find(params[:id])
-    rescue Mongoid::Errors::DocumentNotFound => ex
-    end
+            Cmm.find(params[:id])
+            rescue Mongoid::Errors::DocumentNotFound => ex
+            end
     setup_cmm_properties @cmm
-  end
+    end
 
   def setup_cmm_properties(cmm)
     return id cmm.nil?
@@ -38,23 +38,9 @@ class CmmsController < ApplicationController
     includeAttributes = split_to_sym params[:includeAttributes]
     unless includeAttributes.nil?
       excludeAttributes = CmmHelper::required_fields-includeAttibutes
-  excludeAttributes.each do |attribute|
-        cmm.properties.delete(attribute)
-      end
     end
-  end
-
-  def sprit_to_sym(string)
-    string.split(", ").map(&:to_sym) if string.is_a?(String)
-  end
-
-# Never trust parameters from the scary internet, only allow the white list through.
-  def fan_params
-    params.require(:fan).permit(:_id, :properties)
-  end
-end    end
     unless excludeAttributes.nil?
-      excludeAttributes.each do |attribute|
+     excludeAttributes.each do |attribute|
         cmm.properties.delete(attribute)
       end
     end
