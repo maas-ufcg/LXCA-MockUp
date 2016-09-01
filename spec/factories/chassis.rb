@@ -1,7 +1,7 @@
 FactoryGirl.define do
 
   factory :chassi do
-    properties FactoryGirl.build :chassi_properties
+    properties { FactoryGirl.build :chassi_properties }
 
     after(:build) do |chassi|
       chassi._id = chassi.properties[:uuid]
@@ -20,16 +20,16 @@ FactoryGirl.define do
    end
 
    factory :chassi_valid_put_request_properties, class: Hash do
-     cmmDisplayName { Faker::Hipster.words(1) }
+     cmmDisplayName { Faker::Hipster.sentence }
      contact { Faker::Hipster.sentence(4) }
-     domainName { Faker::Hipster.words(1) }
-     hostname { Fake::Hipster.words(1) }
+     domainName { Faker::Hipster.sentence(1) }
+     hostname { Faker::Hipster.sentence(1) }
      location do
        {
          :location => "#{Faker::Number.number(8)}",
          :lowestRackUnit => Faker::Number.number(2),
-         :rack => "#{Faker::Hipster.words(2)}",
-         :room => "#{Faker::Hipster.words(3)}"
+         :rack => "#{Faker::Hipster.sentence(2)}",
+         :room => "#{Faker::Hipster.sentence(3)}"
        }
      end
      userDescription { Faker::Hacker.say_something_smart }
@@ -40,7 +40,8 @@ FactoryGirl.define do
    factory :chassi_valid_put_request_policy, class: Hash do
      securityPolicy do
        {
-         :cmmPolicyLevel => %W(LEGACY SECURE).sample
+         :cmmPolicyLevel => %W(LEGACY SECURE).sample,
+         :cmmPolicyState =>  %W(ERROR UNKNOWN ACTIVE PENDING).sample
        }
      end
 
@@ -48,14 +49,16 @@ FactoryGirl.define do
    end
 
    factory :chassi_valid_put_request_led, class: Hash do
-     leds do
-       {
-         :name => Faker::Hipster.sentence(1),
-         :state => %w(off on blinking).sample
-       }
+     leds {
+       (0..3).map do
+         {
+           :name => Faker::Hipster.sentence(1),
+           :state => %w(Off On Blinking Unknown).sample,
+           :color => %w(Red Amber Yellow Green Blue Unknown).sample,
+           :location => ["Red", "Amber", "Yellow", "Green", "Blue", "Unknown"].sample
+         }
      end
-
-     initialize_with { attributes }
+     }
    end
 
    factory :chassi_valid_put_request_cmm, class: Hash do
@@ -72,7 +75,13 @@ FactoryGirl.define do
                             Compatibility
                             Nist_800_131A_Strict
                             Nist_800_131A_Custom
-                            )
+                            ).sample,
+        :possibleValues => %w(
+          Unknown
+          Compatibility
+          Nist_800_131A_Strict
+          Nist_800_131A_Custom
+        )
        }
      end
 
@@ -100,6 +109,7 @@ FactoryGirl.define do
                            encapsulationLite
                            ).sample
                       }
+                      initialize_with { attributes }
    end
 
 end

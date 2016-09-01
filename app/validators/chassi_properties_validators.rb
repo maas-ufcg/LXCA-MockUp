@@ -58,6 +58,7 @@ class ChassiPropertiesValidators < ActiveModel::Validator
       validate_type(record, record.properties[:ledCardSlots], "ledCardSlots", Integer)
 
       validate_leds(record)
+
       validate_location(record)
 
       validate_type(record, record.properties[:machineType], "MachineType", String)
@@ -194,24 +195,25 @@ class ChassiPropertiesValidators < ActiveModel::Validator
     end
 
     def validate_leds(record)
-      sub_keys = %i(color location name state)
-      validate_type(record, record.properties[:leds], "leds", Array)
 
-      if record.properties[:leds].is_a? Array
+        sub_keys = %i(color location name state)
+        validate_type(record, record.properties[:leds], "leds", Array)
 
-        validate_hash_keys(record, record.properties[:leds][0], "Leds", sub_keys)
+        if record.properties[:leds].is_a? Array
 
-        validate_type(record, record.properties[:leds][0][:color], "Color", String)
-        validate_values(record, record.properties[:leds][0][:color], "Color", %w(Red Amber Yellow Green Blue Unknown))
+          #validate_hash_keys(record, record.properties[:leds][0], "Leds", sub_keys)
 
-        validate_type(record, record.properties[:leds][0][:location], "Location", String)
-        validate_values(record, record.properties[:leds][0][:location], "Location", ["Front panel", "Lightpath Card", "Planar", "FRU", "Rear Panel", "Unknown"])
+          validate_type(record, record.properties[:leds][0][:color], "Color", String)
+          validate_values(record, record.properties[:leds][0][:color], "Color", %w(Red Amber Yellow Green Blue Unknown))
 
-        validate_type(record, record.properties[:leds][0][:name], "Name", String)
+          validate_type(record, record.properties[:leds][0][:location], "Location", String)
+          validate_values(record, record.properties[:leds][0][:location], "Location", ["Front panel", "Lightpath Card", "Planar", "FRU", "Rear Panel", "Unknown"])
 
-        validate_type(record, record.properties[:leds][0][:state], "State", String)
-        validate_values(record, record.properties[:leds][0][:state], "State", %w(Off On Blinking Unknown))
-      end
+          validate_type(record, record.properties[:leds][0][:name], "Name", String)
+
+          validate_type(record, record.properties[:leds][0][:state], "State", String)
+          validate_values(record, record.properties[:leds][0][:state], "State", %w(Off On Blinking Unknown))
+        end
 
     end
 
@@ -220,7 +222,7 @@ class ChassiPropertiesValidators < ActiveModel::Validator
 
       if record.properties[:location].is_a? Hash
 
-        validate_hash_keys(record, record.properties[:location], "Location", %i(location lowestRackUnit rack room))
+        #validate_hash_keys(record, record.properties[:location], "Location", %i(location lowestRackUnit rack room))
 
         %i(location rack room).each do |key|
           validate_type(record, record.properties[:location][key], key, String)
@@ -252,7 +254,7 @@ class ChassiPropertiesValidators < ActiveModel::Validator
         valid_values = %w(Normal)
         sub_keys = %i(allocatedOutputPower midPlaneCardMaximumAllocatedPower midPlaneCardMinimumAllocatedPower remainingOutputPower totalInputPower totalOutputPower)
 
-        validate_hash_keys(record, record.properties[:powerAllocation], "PowerAllocation", sub_keys)
+        #validate_hash_keys(record, record.properties[:powerAllocation], "PowerAllocation", sub_keys)
         sub_keys.each do |key|
           validate_type(record, record.properties[:powerAllocation][key], key, Fixnum)
         end
@@ -265,14 +267,14 @@ class ChassiPropertiesValidators < ActiveModel::Validator
     def validate_security_policy(record)
       validate_type(record, record.properties[:securityPolicy], "securityPolicy", Hash)
 
-      if record.properties[:SecurityPolicy].is_a? Hash
+      if record.properties[:securityPolicy].is_a? Hash
         sub_keys = %i(cmmPolicyLevel cmmPolicyState)
         cmm_policy_level_values = %w(LEGACY SECURE)
         cmm_policy_state_values = %w(ERROR UNKNOWN ACTIVE PENDING)
 
-        validate_hash_keys(record, record.properties[:SecurityPolicy], "SecurityPolicy", sub_keys)
-        validate_values(record, record.properties[:SecurityPolicy][:cmmPolicyLevel], "CmmPolicyLevel", cmm_policy_level_values)
-        validate_values(record, record.properties[:SecurityPolicy][:cmmPolicyState], "CmmPolicyState", cmm_policy_state_values)
+        #validate_hash_keys(record, record.properties[:securityPolicy], "securityPolicy", sub_keys)
+        validate_values(record, record.properties[:securityPolicy][:cmmPolicyLevel], "CmmPolicyLevel", cmm_policy_level_values)
+        validate_values(record, record.properties[:securityPolicy][:cmmPolicyState], "CmmPolicyState", cmm_policy_state_values)
       end
 
     end

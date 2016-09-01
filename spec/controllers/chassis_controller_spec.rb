@@ -1,4 +1,5 @@
 require 'rails_helper'
+require 'pp'
 
 RSpec.describe ChassisController, type: :controller do
 
@@ -7,7 +8,7 @@ RSpec.describe ChassisController, type: :controller do
   }
 
   describe "GET #index" do
-    it "for 5 valid chassis" do
+    context "for 5 valid chassis" do
       before :each do
         @chassis = (0..4).map { |e| create :chassi }
         get :index
@@ -15,6 +16,7 @@ RSpec.describe ChassisController, type: :controller do
 
       it "must store all five chassis assigned to @chassis" do
         expect(assigns(:chassis).count).to eq(5)
+        puts assigns(:chassis).count
       end
 
       it "all must be valid" do
@@ -23,7 +25,7 @@ RSpec.describe ChassisController, type: :controller do
         end
       end
 
-      it "musto to respond HTTP 200 (OK)" do
+      it "must respond HTTP 200 (OK)" do
         expect(response).to have_http_status(:success)
       end
     end
@@ -40,7 +42,7 @@ RSpec.describe ChassisController, type: :controller do
       it "all chassis should be fetched individually" do
         @chassis.each do |chassi|
           get :show, {id: chassi.id}
-          expect(assigns :chassis).to be_valid(Chassis)
+          expect(assigns :chassis).to be_valid(Chassi)
         end
       end
 
@@ -72,7 +74,7 @@ RSpec.describe ChassisController, type: :controller do
       end
 
       it "update the requested chassi(properties values)" do
-        put :update, id: @chassi._id, chassi: {_id: chassi._id, properties: @new_attributes}
+        put :update, id: @chassi._id, chassi: {_id: @chassi._id, properties: @new_attributes}
         expect(response).to have_http_status(:no_content)
         chassi_updated_properties = Chassi.find(@chassi._id).properties.deep_symbolize_keys
 
@@ -99,17 +101,25 @@ RSpec.describe ChassisController, type: :controller do
 
       end
 
-      ChassisHelper::fields_put_params_properties.each do |key|
-        it "updates the requested switch (#{key} values)" do
+      ChassisHelper::field_put_params.each do |key|
+        it "updates the requested chassi (#{key} values)" do
           @requested_attributes = build :"chassi_valid_put_request_#{key}"
 
+          #pp @requested_attributes
           put :update, id: @chassi._id, chassi: {_id: @chassi._id, properties: @requested_attributes}
+
+          puts "Isso daqui é o que tá vindo:  #{@requested_attributes} "
+          puts ""
+          puts ""
+
+          puts response.body
 
           expect(response).to have_http_status(:no_content)
 
           chassi_updated_properties = Chassi.find(@chassi._id).properties.deep_symbolize_keys
 
           @requested_attributes.keys.each do |key|
+            puts "essa é a key móvei: #{key}"
             expect(chassi_updated_properties[key]).to eq(@requested_attributes[key])
           end
 
@@ -127,8 +137,8 @@ RSpec.describe ChassisController, type: :controller do
         @chassi_valid = create :chassi
       end
 
-      it "assigns the switch as @switch" do
-        put :update, id: @chassi_valid._id, switch:{id:@chassi_valid._id}
+      it "assigns the chassi as @chassi" do
+        put :update, id: @chassi_valid._id, chassi:{id:@chassi_valid._id}
         expect(response).to have_http_status(:unprocessable_entity)
       end
 

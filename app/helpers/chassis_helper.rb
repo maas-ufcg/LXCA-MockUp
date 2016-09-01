@@ -13,13 +13,13 @@ module ChassisHelper
   end
 
   def self.field_put_params
-    %i(
+    %w(
       properties policy led cmm tls encapsulation_mode
     )
   end
 
   def self.fields_put_params_properties
-    %w(
+    %i(
       cmmDisplayName
       contact
       domainName
@@ -30,32 +30,32 @@ module ChassisHelper
   end
 
   def self.field_put_params_policy
-    %w(
+    %i(
       securityPolicy
     )
   end
 
   def self.field_put_params_led
-    %w(
+    %i(
       leds
     )
   end
 
   def self.field_put_params_cmm
-    %w(
+    %i(
       cmmFailover
     )
   end
 
   def self.field_put_params_tls
-    %w(
+    %i(
       nist
       tlsVersion
     )
   end
 
   def self.field_put_params_encapsulation_mode
-    %w(
+    %i(
       encapsulationMode
     )
   end
