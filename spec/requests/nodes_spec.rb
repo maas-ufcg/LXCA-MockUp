@@ -35,12 +35,12 @@ RSpec.describe "Nodes", type: :request do
         end
       end
 
-      #TODO check tests of type return
-      # it "All items in the array should be of type Node" do
-      #   JSON.parse(response.body).each do |object|
-      #     expect(object["type"]).to eq("Node")
-      #   end
-      # end
+      it "All items in the array should be one of the Node types" do
+        valid_types = ["ITE", "Rack-Tower Server", "Lenovo ThinkServer", "SCU"]
+        JSON.parse(response.body).each do |object|
+          valid_types.should include(object["type"])
+        end
+      end
     end
 
     context "With includeAttributes parameters" do
@@ -142,10 +142,10 @@ RSpec.describe "Nodes", type: :request do
         expect(JSON.parse(response.body)).to be_a(Hash)
       end
 
-      #TODO check tests of type return
-      # it "Should have type: \"Node\" in properties" do
-      #   expect(JSON.parse(response.body)["type"]).to eq("Node")
-      # end
+      it "Should have one of the \"Node\" types in properties" do
+        valid_types = ["ITE", "Rack-Tower Server", "Lenovo ThinkServer", "SCU"]
+        valid_types.should include(JSON.parse(response.body)["type"])
+      end
     end
 
     context "With includeAttributes parameters" do
