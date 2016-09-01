@@ -52,9 +52,9 @@ RSpec.describe NodesController, type: :controller do
       context "With includeAttributes parameters" do
         before :each do
           @includeAttributes = %i(
-          description
-          hardwareRevision
-          dataHandle)
+          accessState
+          canisters
+          canisterSlots)
 
           @nodes = (0..5).map {|n| create :valid_node}
           get :index, {includeAttributes:  @includeAttributes.join(",")}
@@ -148,20 +148,17 @@ RSpec.describe NodesController, type: :controller do
     end
   end
 
-  # context "with format type parameter" do
-  #   before :each do
-  #     @nodes = (0..5).map {|n| create :valid_node}
-  #     get :index, formatType: 'json'
-  #   end
-  #
-  #   it "Nodes returned with format json" do
-  #
-  #   parsed_response = JSON.parse(response.body)
-  #   expect(parsed_response['node'].count).to eq(6)
-  #
-  #   end
-  #
-  # end
+  context "with format type parameter" do
+    before :each do
+      @nodes = (0..5).map {|n| create :valid_node}
+      get :index, formatType: 'json'
+    end
+
+    it "Nodes returned with format json" do
+      expect(response.content_type).to eq('application/json')
+    end
+
+  end
 
 end
 
@@ -227,9 +224,9 @@ describe "GET #show" do
     context "With includeAttributes parameters" do
       before :each do
         @includeAttributes = %i(
-        description
-        hardwareRevision
-        dataHandle
+        accessState
+        canisters
+        canisterSlots
         )
         @nodes = (0..5).map {|n| create :valid_node}
       end
