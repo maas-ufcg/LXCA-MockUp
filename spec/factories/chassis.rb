@@ -20,14 +20,14 @@ FactoryGirl.define do
    end
 
    factory :chassi_valid_put_request_properties, class: Hash do
-     cmmDisplayName { Faker::Hipster.sentence }
+     cmmDisplayName { Faker::Hipster.sentence(4) }
      contact { Faker::Hipster.sentence(4) }
      domainName { Faker::Hipster.sentence(1) }
      hostname { Faker::Hipster.sentence(1) }
      location do
        {
          :location => "#{Faker::Number.number(8)}",
-         :lowestRackUnit => Faker::Number.number(2).to_i,
+         :lowestRackUnit => Random.rand(20).to_i,
          :rack => "#{Faker::Hipster.sentence(2)}",
          :room => "#{Faker::Hipster.sentence(3)}"
        }

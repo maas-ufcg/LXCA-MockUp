@@ -157,7 +157,7 @@ FactoryGirl.define do
     location do
       {
         :location => Faker::Address.state,
-        :lowestRackUnit => Faker::Number.number(1).to_i,
+        :lowestRackUnit => Random.rand(20).to_i,
         :rack => Faker::Hipster.sentence(1),
         :room => Faker::Hipster.sentence(1)
       }

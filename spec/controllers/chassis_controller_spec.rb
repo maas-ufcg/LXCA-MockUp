@@ -72,18 +72,20 @@ RSpec.describe ChassisController, type: :controller do
         @new_attributes = build :chassi_valid_put_request_properties
       end
 
-      # it "update the requested chassi(properties values)" do
-      #   put :update, id: @chassi._id, chassi: {_id: @chassi._id, properties: @new_attributes}
-      #   expect(response).to have_http_status(:no_content)
-      #   chassi_updated_properties = Chassi.find(@chassi._id).properties.deep_symbolize_keys
-      #
-      #   @new_attributes.keys.each do |key|
-      #     expect(chassi_updated_properties[key]).to_not eq(@new_attributes[key])
-      #   end
-      #
-      #   expect(chassi_updated_properties.size).to_not eq(@new_attributes.size)
-      #
-      # end
+      it "update the requested chassi(properties values)" do
+
+
+        put :update, id: @chassi._id, chassi: {_id: @chassi._id, properties: @new_attributes}
+        expect(response).to have_http_status(:no_content)
+        chassi_updated_properties = Chassi.find(@chassi._id).properties.deep_symbolize_keys
+
+        @new_attributes.keys.each do |key|
+          expect(chassi_updated_properties[key]).to eq(@new_attributes[key])
+        end
+
+
+
+      end
 
       ChassisHelper::field_put_params.each do |key|
         it "updates the requested chassi (#{key} values)" do
