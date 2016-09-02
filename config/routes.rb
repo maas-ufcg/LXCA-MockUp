@@ -5,6 +5,8 @@ Rails.application.routes.draw do
   resources :power_supplies, only: [:index, :show]
   resources :switches, only: [:index, :show, :update]
   resources :nodes, only: [:index, :show, :update]
+  resources :chassis, only: [:index, :update, :show]
+
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
