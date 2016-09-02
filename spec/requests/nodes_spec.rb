@@ -38,7 +38,7 @@ RSpec.describe "Nodes", type: :request do
       it "All items in the array should be one of the Node types" do
         valid_types = ["ITE", "Rack-Tower Server", "Lenovo ThinkServer", "SCU"]
         JSON.parse(response.body).each do |object|
-          valid_types.should include(object["type"])
+          expect(valid_types.include? (object["type"])).to be_truthy
         end
       end
     end
@@ -144,7 +144,7 @@ RSpec.describe "Nodes", type: :request do
 
       it "Should have one of the \"Node\" types in properties" do
         valid_types = ["ITE", "Rack-Tower Server", "Lenovo ThinkServer", "SCU"]
-        valid_types.should include(JSON.parse(response.body)["type"])
+        expect(valid_types.include? (JSON.parse(response.body)["type"])).to be_truthy
       end
     end
 
