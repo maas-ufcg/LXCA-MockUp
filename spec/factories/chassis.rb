@@ -27,7 +27,7 @@ FactoryGirl.define do
      location do
        {
          :location => "#{Faker::Number.number(8)}",
-         :lowestRackUnit => Faker::Number.number(2),
+         :lowestRackUnit => Faker::Number.number(2).to_i,
          :rack => "#{Faker::Hipster.sentence(2)}",
          :room => "#{Faker::Hipster.sentence(3)}"
        }
@@ -59,6 +59,8 @@ FactoryGirl.define do
          }
      end
      }
+
+     initialize_with { attributes }
    end
 
    factory :chassi_valid_put_request_cmm, class: Hash do

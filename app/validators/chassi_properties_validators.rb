@@ -120,21 +120,9 @@ class ChassiPropertiesValidators < ActiveModel::Validator
 
     def validate_active_alerts(record)
 
-      sub_keys = %i(corrIDs id location msg msgID severity)
-      severity = %w(FATAL CRITICAL MAJOR MINOR WARNING INFORMATIONAL UNKNOWN)
-
       validate_type(record, record.properties[:activeAlerts], "activeAlerts", Array)
 
-      if record.properties[:activeAlerts].is_a? Array
-        record.properties[:activeAlerts].each do |alert|
-          validate_type(record, alert, "Alert", Hash)
 
-          # not working
-          # validate_hash_keys(record, alert, "Alert", sub_keys)
-
-          validate_values(record, alert[:severity], "Severity", severity)
-        end
-       end
     end
 
     def validate_encapsulation(record)
@@ -195,54 +183,21 @@ class ChassiPropertiesValidators < ActiveModel::Validator
     end
 
     def validate_leds(record)
-
-        sub_keys = %i(color location name state)
         validate_type(record, record.properties[:leds], "leds", Array)
 
-        if record.properties[:leds].is_a? Array
-
-          #validate_hash_keys(record, record.properties[:leds][0], "Leds", sub_keys)
-
-          validate_type(record, record.properties[:leds][0][:color], "Color", String)
-          validate_values(record, record.properties[:leds][0][:color], "Color", %w(Red Amber Yellow Green Blue Unknown))
-
-          validate_type(record, record.properties[:leds][0][:location], "Location", String)
-          validate_values(record, record.properties[:leds][0][:location], "Location", ["Front panel", "Lightpath Card", "Planar", "FRU", "Rear Panel", "Unknown"])
-
-          validate_type(record, record.properties[:leds][0][:name], "Name", String)
-
-          validate_type(record, record.properties[:leds][0][:state], "State", String)
-          validate_values(record, record.properties[:leds][0][:state], "State", %w(Off On Blinking Unknown))
-        end
 
     end
 
     def validate_location(record)
       validate_type(record, record.properties[:location], "location", Hash)
 
-      if record.properties[:location].is_a? Hash
-
-        #validate_hash_keys(record, record.properties[:location], "Location", %i(location lowestRackUnit rack room))
-
-        %i(location rack room).each do |key|
-          validate_type(record, record.properties[:location][key], key, String)
-        end
-
-        validate_type(record, record.properties[:location][:lowestRackUnit], "LowestRackUnit", Integer)
-      end
 
     end
 
     def validate_nist(record)
       validate_type(record, record.properties[:nist], "Nist", Hash)
 
-      if record.properties[:nist].is_a? Hash
 
-        validate_type(record, record.properties[:nist][:currentValue], "CurrentValue", String)
-        validate_values(record, record.properties[:nist][:currentValue], "CurrentValue", %w(Unknown Compatibility Nist_800_131A_Strict Nist_800_131A_Custom))
-
-        validate_type(record, record.properties[:nist][:possibleValues], "PossibleValues", Array)
-      end
 
     end
 
@@ -267,61 +222,16 @@ class ChassiPropertiesValidators < ActiveModel::Validator
     def validate_security_policy(record)
       validate_type(record, record.properties[:securityPolicy], "securityPolicy", Hash)
 
-      if record.properties[:securityPolicy].is_a? Hash
-        sub_keys = %i(cmmPolicyLevel cmmPolicyState)
-        cmm_policy_level_values = %w(LEGACY SECURE)
-        cmm_policy_state_values = %w(ERROR UNKNOWN ACTIVE PENDING)
-
-        #validate_hash_keys(record, record.properties[:securityPolicy], "securityPolicy", sub_keys)
-        validate_values(record, record.properties[:securityPolicy][:cmmPolicyLevel], "CmmPolicyLevel", cmm_policy_level_values)
-        validate_values(record, record.properties[:securityPolicy][:cmmPolicyState], "CmmPolicyState", cmm_policy_state_values)
-      end
 
     end
 
     def validate_status(record)
       validate_type(record, record.properties[:status], "status", Hash)
 
-      if record.properties[:status].is_a? Hash
-        sub_keys = %i(message name)
-
-        validate_type(record, record.properties[:status], "Status", Hash)
-
-        sub_keys.each do |key|
-
-          if record.properties[:status][key].nil?
-            record.errors[:base] << "Status attribute must contain #{key} attribute"
-          elsif not record.properties[:status][key].is_a? String
-            record.errors[:base] << "#{key} attribute must be a String (actual: #{record.properties[:status][key].class})"
-          end
-        end
-      end
-
     end
 
     def validate_tls_version(record)
       validate_type(record, record.properties[:tlsVersion], "tlsVersion", Hash)
-
-      if record.properties[:tlsVersion].is_a? Hash
-        sub_keys = %i(currentValue possibleValues)
-        valid_values = %w(Unknown SSL_30 TLS_10 TLS_11 TLS_12 TLS_12_Server_Client TLS_12_Server)
-
-        if not record.properties[:tlsVersion].is_a? Hash
-          record.errors[:base] << "TlsVersion attribute must be a Hash (actual: #{record.properties[:tlsVersion].class})"
-        end
-
-        sub_keys.each do |key|
-          if record.properties[:tlsVersion][key].nil?
-            record.errors[:base] << "TlsVersion attribute must contain #{key} attribute"
-          end
-        end
-
-        if not record.properties[:tlsVersion][:currentValue].is_a? String
-          record.errors[:base] << "CurrentValue attribute must be a String (actual: #{record.properties[:tlsVersion][:currentValue].class})"
-        elsif not record.properties[:tlsVersion][:possibleValues].is_a? Array
-          record.errors[:base] << "PossibleValues attribute must be a Array (actual: #{record.properties[:tlsVersion][:possibleValues].class})"
-        end
-      end
     end
 
     # these methods should not be included in the main validate method body because they are already called in other methods
