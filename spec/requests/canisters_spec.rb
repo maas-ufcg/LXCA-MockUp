@@ -33,12 +33,6 @@ RSpec.describe "Canisters", type: :request do
           expect(object).to be_a(Hash)
         end
       end
-
-      it "All items in the array should be of type Canister" do
-        JSON.parse(response.body).each do |object|
-          expect(object["type"]).to eq("Canister")
-        end
-      end
     end
 
     context "With includeAttributes parameters" do
@@ -47,8 +41,7 @@ RSpec.describe "Canisters", type: :request do
           create :canister
         end
         @includeAttributes = %i(
-          description
-          hardwareRevision
+          ipInterfaces
           dataHandle
         )
 
@@ -80,7 +73,7 @@ RSpec.describe "Canisters", type: :request do
       it "All items in response should've all the specified attributes" do
         JSON.parse(response.body).each do |object|
           @includeAttributes.each do |attribute|
-            expect(object.has_key? attribute).to eq(true)
+            expect(object).to eq(true)
           end
         end
       end
@@ -101,8 +94,7 @@ RSpec.describe "Canisters", type: :request do
           create :canister
         end
         @excludeAttributes = %i(
-          description
-          hardwareRevision
+          ipInterfaces
           dataHandle
         )
 
@@ -170,9 +162,7 @@ RSpec.describe "Canisters", type: :request do
         expect(JSON.parse(response.body)).to be_a(Hash)
       end
 
-      it "Should have type: \"Canister\" in properties" do
-        expect(JSON.parse(response.body)["type"]).to eq("Canister")
-      end
+
     end
 
     context "With includeAttributes parameters" do
@@ -180,8 +170,7 @@ RSpec.describe "Canisters", type: :request do
         canister = create :canister
 
         @includeAttributes = %i(
-          description
-          hardwareRevision
+          ipInterfaces
           dataHandle
         )
 
@@ -219,8 +208,7 @@ RSpec.describe "Canisters", type: :request do
       before :each do
         canister = create :canister
         @excludeAttributes = %i(
-          description
-          hardwareRevision
+          ipInterfaces
           dataHandle
         )
 

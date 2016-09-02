@@ -1,5 +1,5 @@
 Rails.application.routes.draw do
-  resources :canisters
+  resources :canisters, only: [:index, :show]
   resources :fans, only: [:index, :show]
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
