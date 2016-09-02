@@ -92,8 +92,6 @@ RSpec.describe ChassisController, type: :controller do
 
           put :update, id: @chassi._id, chassi: {_id: @chassi._id, properties: @requested_attributes}
 
-
-
           expect(response).to have_http_status(:no_content)
 
           chassi_updated_properties = Chassi.find(@chassi._id).properties.deep_symbolize_keys
@@ -115,12 +113,12 @@ RSpec.describe ChassisController, type: :controller do
     context "with invalid params" do
 
       before :each do
-        @chassi_request = build :chassi_valid_put_request_properties
+        @chassi_request = build :chassi_invalid_put_request_properties
         @chassi_valid = create :chassi
       end
 
       it "assigns the chassi as @chassi" do
-        put :update, id: @chassi_valid._id, chassi:{id:@chassi_valid._id}
+        put :update, id: @chassi_valid._id, chassi:{id:@chassi_valid._id, properties:@chassi_request}
         expect(response).to have_http_status(:unprocessable_entity)
       end
 

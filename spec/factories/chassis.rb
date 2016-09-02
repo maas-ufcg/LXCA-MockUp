@@ -104,14 +104,27 @@ FactoryGirl.define do
    end
 
    factory :chassi_valid_put_request_encapsulation_mode, class: Hash do
-     encapsulationMode {
-                         %w(
-                           notSupported
-                           normal
-                           encapsulationLite
-                           ).sample
-                      }
-                      initialize_with { attributes }
+     encapsulation do
+       {
+         :encapsulationMode => %w(
+           notSupported
+           normal
+           encapsulationLite
+           ).sample
+       }
+     end
+
+
+          initialize_with { attributes }
+   end
+
+   factory :chassi_invalid_put_request_properties, class: Hash do
+     encapsulation do
+       { :encapsulationMode =>Faker::Number.number(2) }
+     end
+
+
+      initialize_with { attributes }
    end
 
 end
