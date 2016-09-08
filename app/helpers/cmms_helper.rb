@@ -15,7 +15,6 @@ def self.possible_values_per_field
     cmmHealthState: ["Normal", "Non-Critical", "Warning", "Minor-Failure", "Major-Failure", "Non-Recoverable", "Critical", "Unknown"],
     errorCode: ["FETCH_SUCCESS", "FETCH_FAILED", "NO_CONNECTOR", "FATAL_EXCEPTION", "NETWORK_FAIL"],
     excludedHealthState: ["Normal", "Non-Critical", "Warning", "Minor-Failure", "Major-Failure", "Non-Recoverable", "Critical", "Unknown"],
-    name: ["Front panel", "Lightpath Card", "Planar", "FRU", "Rear Panel", "Unknown"],
     role: ["primary", "backup"],
     IPversionPriority: %w(IPv6ThenIPv4),
     ip_interfaces_ipv4assignments_type: %w(INUSE CONFIGURED ALIAS UNKNOWN),
@@ -29,8 +28,8 @@ def self.possible_values_per_field
     leds_state: ["Off", "On", "Blinking", "Unknown"],
 
     name: ["Front panel", "Lightpath Card", "Planar", "FRU", "Rear Panel", "Unknown"],
-    role: %w(primary backup),
-    
+
+
   }
 
 end

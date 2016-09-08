@@ -11,17 +11,17 @@ private
 
 def validate_properties(record_v)
   if record_v.nil?
-        record_v.error[:base] << "The object should not be nill"
-      elsif record_v.properties.nil?
-        record_v.error[:base] << "properties attribute should not be nil"
-      elsif not record_v.properties.is_a? Hash
-        record_v.error[:base] << "properties must be a Hash"
-      end
+        record_v.error[:base] << "The object should not be nil"
+    elsif record_v.properties.nil?
+      record_v.error[:base] << "properties attribute should not be nil"
+    elsif not record_v.properties.is_a? Hash
+      record_v.error[:base] << "properties must be a Hash"
+    end
 end
 
 def validate_id_and_uuid(record_v)
    if record_v.nil?
-     record_v.errors[:base] << "The UUID attribute should not be nill"
+     record_v.errors[:base] << "The UUID attribute should not be nil"
    elsif record_v._id != record_v.properties[:uuid]
      record_v.errors[:base] << "Object _id must be equal to properties[:_id]"
    elsif record_v.properties[:uuid].nil? or record_v.properties[:uuid] == ""
