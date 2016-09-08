@@ -1,9 +1,9 @@
 FactoryGirl.define do
-  factory :cmms do
-    properties { FactoryGirl.build :cmms_properties }
+  factory :cmm do
+    properties { FactoryGirl.build :cmm_properties }
 
-    after(:build) do |cmms|
-      cmms._id = cmms.properties[:uuid]
+    after(:build) do |cmm|
+      cmm._id = cmm.properties[:uuid]
     end
   end
 end
