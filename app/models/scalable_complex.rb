@@ -1,6 +1,6 @@
 require_relative "../validators/scalable_complex_validators"
 
-class ScalableComplex < ApplicationRecord
+class ScalableComplex
   include Mongoid::Document
   field :_id, type: String #complexID
   field :properties, type: Hash
@@ -8,8 +8,7 @@ class ScalableComplex < ApplicationRecord
   def initialize(params = {})
     super params
   end
-
-  #TODO build validators for scalable complex models
+  
   validates_with ScalableComplexValidators
 
 end

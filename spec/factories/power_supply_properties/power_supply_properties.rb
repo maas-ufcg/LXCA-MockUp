@@ -39,8 +39,8 @@ FactoryGirl.define do
         :status => "",
         :type => "",
         :version => Faker::App.version
-        }]
-      end
+      }]
+    end
       FRU { SecureRandom.hex.upcase }
       fruSerialNumber SecureRandom.hex(10).upcase
       hardwareRevision (10 * SecureRandom.random_number).round(1)

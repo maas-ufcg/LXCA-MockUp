@@ -2,8 +2,8 @@ class ScalableComplexController < ApplicationController
 
   before_action :set_scalableComplex, only: [:show]
 
-  #GET /scalableComplex
-  #GET /scalableComplex.json
+  #GET /scalable_complex
+  #GET /scalable_complex.json
   def index
     param = params[:status]
     formatType = params[:formatType]
@@ -20,8 +20,8 @@ class ScalableComplexController < ApplicationController
     end)
   end
 
-  #GET /scalableComplex/1
-  #GET /scalableComplex/1.json
+  #GET /scalable_complex/1
+  #GET /scalable_complex/1.json
   def show
     if @scalableComplex.nil?
       head :not_found
