@@ -1,0 +1,1 @@
+json.array! @canisters, partial: 'canisters/canister', as: :canister

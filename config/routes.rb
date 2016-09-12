@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
 
+  resources :canisters, only: [:index, :show]
   resources :fans, only: [:index, :show]
   resources :fan_muxes, only: [:index, :show]
   resources :power_supplies, only: [:index, :show]
