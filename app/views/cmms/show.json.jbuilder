@@ -1,0 +1,1 @@
+json.partial! "cmms/cmm", cmm: @cmm

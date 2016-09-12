@@ -40,6 +40,7 @@ gem 'require_all'
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug'
+  gem 'faker'
 
   gem 'rspec-rails'
   gem 'mongoid-rspec', '3.0.0'
@@ -53,6 +54,7 @@ end
 
 group :test do
   gem 'database_cleaner'
+  gem 'faker'
 end
 
 group :development do

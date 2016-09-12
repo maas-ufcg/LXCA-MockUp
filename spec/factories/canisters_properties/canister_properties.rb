@@ -63,7 +63,7 @@ FactoryGirl.define do
     FRU { Faker::Lorem.characters(7).upcase }
     fruSerialNumber { Faker::Code.asin }
     hostname Faker::Internet.domain_name
-    ipInterfaces { FactoryGirl.build :ip_interfaces_canister }
+    ipInterfaces { FactoryGirl.build :ip_interfaces }
 
     ipv4Addresses []
     ipv4ServiceAddress ""
