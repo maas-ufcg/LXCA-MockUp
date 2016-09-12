@@ -86,18 +86,18 @@ FactoryGirl.define do
             }
           end,
 
-          :IPv6DHCPenabled => possible_values[:boolean],
-          :IPv6enabled => possible_values[:boolean],
-          :IPv6statelessEnabled => possible_values[:boolean],
-          :IPv6staticEnabled => possible_values[:boolean],
+          :IPv6DHCPenabled => possible_values[:boolean].sample,
+          :IPv6enabled => possible_values[:boolean].sample,
+          :IPv6statelessEnabled => possible_values[:boolean].sample,
+          :IPv6staticEnabled => possible_values[:boolean].sample,
           :label => Faker::Lorem.word,
           :name => Faker::Lorem.word
       }
       end
     end
 
-    ipv4Addresses { Faker::Internet.ip_v4_address }
-    ipv6Addresses { Faker::Internet.ip_v6_address }
+    ipv4Addresses { [Faker::Internet.ip_v4_address, Faker::Internet.ip_v4_address] }
+    ipv6Addresses { [Faker::Internet.ip_v6_address, Faker::Internet.ip_v6_address] }
 
     leds do
       (0..2).map do

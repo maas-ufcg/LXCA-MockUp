@@ -1,14 +1,11 @@
 class CmmsController < ApplicationController
-  before_action :set_cmm, only: [:show]
+  before_action :set_cmm, only: [:show, :update]
 
   # GET /cmms
   # GET /cmms.json
   def index
-    @cmms = Cmm.all.to_a
-    render(json: @cmms.map do |cmm|
-      setup_cmm_properties cmm
-      cmm.properties
-    end)
+    @cmms = Cmm.all
+    render json: @cmms
   end
 
   # GET /cmms/1
@@ -21,37 +18,48 @@ class CmmsController < ApplicationController
     end
   end
 
-  private
 
-# Use callbacks to share common setup or constraints between actions.
-  def set_cmm
-    @cmm = begin
-            Cmm.find(params[:id])
-            rescue Mongoid::Errors::DocumentNotFound => ex
-            end
-    setup_cmm_properties @cmm
-    end
+  # PATCH/PUT /cmms/1
+  # PATCH/PUT /cmms/1.json
+  def update
+      begin
+        if update_cmm(cmm_params)
+          head :no_content
+        else
+          render json: @cmm.errors, status: :unprocessable_entity
+        end
 
-  def setup_cmm_properties(cmm)
-    return id cmm.nil?
-    excludeAttributes = split_to_sym params[:excludeAttributes]
-    includeAttributes = split_to_sym params[:includeAttributes]
-    unless includeAttributes.nil?
-      excludeAttributes = CmmHelper::required_fields-includeAttibutes
-    end
-    unless excludeAttributes.nil?
-     excludeAttributes.each do |attribute|
-        cmm.properties.delete(attribute)
+      rescue ActionController::ParameterMissing => e
+        head :unprocessable_entity
       end
+  end
+
+
+
+  private
+    def set_cmm
+      @cmm = begin
+                  Cmm.find(params[:id])
+                rescue Mongoid::Errors::DocumentNotFound => ex
+                end
+
     end
-  end
 
-  def sprit_to_sym(string)
-    string.split(", ").map(&:to_sym) if string.is_a?(String)
-  end
+    def cmm_params
+      params.require(:cmm).require(:properties).to_hash.deep_symbolize_keys
 
-# Never trust parameters from the scary internet, only allow the white list through.
-  def fan_params
-    params.require(:fan).permit(:_id, :properties)
-  end
+    end
+
+    def update_cmm(cmm_update_params)
+
+      cmm_update_params.each do |key,value|
+
+        @cmm.properties[key] = value
+
+      end
+
+      @cmm.save
+    end
+
+
 end

@@ -21,7 +21,7 @@ class CmmPropertiesValidator < ActiveModel::Validator
 
     validate_type(:dataHandle, Fixnum)
     validate_type(:description, String)
-    validate_type(:dnsHostName, Array)
+    validate_type(:dnsHostNames, Array)
     validate_type(:domainName, String)
 
     validate_type(:errorFields, Array)
@@ -54,7 +54,7 @@ class CmmPropertiesValidator < ActiveModel::Validator
     validate_type(:powerAllocation, Hash)
     validate_type(:productID, String)
 
-    validate_type(:role, Array)
+    validate_type(:role, String)
     validate_values(:role, @valid_values[:role])
 
     validate_type(:serialNumber, String)
@@ -70,7 +70,7 @@ class CmmPropertiesValidator < ActiveModel::Validator
 
   def validate_type(attribute_key, type)
     if not @record.properties[attribute_key].is_a? type
-      @record.errors[:base] << "#{attribute_key} attribute should be a #{type} (actual:#{@record.properties[attribute_key].class})"
+      @record.errors[:base] << "#{attribute_key} attribute should be a/an #{type} (actual:#{@record.properties[attribute_key].class})"
     end
   end
 

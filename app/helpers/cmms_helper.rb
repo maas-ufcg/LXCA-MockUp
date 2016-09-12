@@ -3,7 +3,7 @@ module CmmsHelper
     %i(accessState backedBy cmmDisplayName cmmHealthState dataHandle dnsHostNames domainName errorFields excludedHealthState
     firmware FRU fruSerialNumber hostConfig hostname ipInterfaces ipv4Addresses ipv6Addresses
     macAddresses machineType mgmtProcIPaddress model name overallHealthState parent
-    partNumber powerAllocation productID roleserialNumber slots type userDescription uri uuid
+    partNumber powerAllocation productID role serialNumber slots type userDescription uri uuid
     )
   end
 
@@ -33,5 +33,10 @@ def self.possible_values_per_field
   }
 
 end
+
+def self.field_put_params
+    %i(domainName hostConfig hostname ipInterfaces)
+end
+
 
 end
