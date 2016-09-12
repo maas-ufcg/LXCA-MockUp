@@ -5,7 +5,7 @@ RSpec.describe ScalableComplex, type: :model do
 	describe "Model validations:" do
 		context "Factory :scalableComplex" do
 			before :each do
-				@scalableComplex = build :scalableComplex
+				@scalableComplex = build :scalable_complex
 			end
 
 			it "is consistent." do
@@ -50,10 +50,10 @@ RSpec.describe ScalableComplex, type: :model do
 
     end
 
-    ScalableComplexHelper::defined_fields.each do |key|
-     context "Factory invalid values for '#{key}'" do
+    ScalableComplexHelper::required_fields.each do |key|
+     context "Factory nil values for '#{key}'" do
        before :each do
-         @scalableComplex = build :"invalid_#{key}_scalableComplex"
+         @scalableComplex = build :"nil_#{key}_scalableComplex"
        end
 
        it ":invalid_#{key}_scalableComplex factory should build an invalid object" do
@@ -64,5 +64,21 @@ RSpec.describe ScalableComplex, type: :model do
        end
       end
     end
+
+		ScalableComplexHelper::required_fields.each do |key|
+     context "Factory empty values for '#{key}'" do
+       before :each do
+         @scalableComplex = build :"empty_#{key}_scalableComplex"
+       end
+
+       it ":invalid_#{key}_scalableComplex factory should build an invalid object" do
+         expect(@scalableComplex).to_not be_valid(ScalableComplex)
+       end
+       it "should not save scalable Complex with invalid #{key}, the number of elements in BD should not change." do
+         expect{@scalableComplex.save}.to change{ScalableComplex.count}.by 0
+       end
+      end
+    end
+
 	end
 end

@@ -8,15 +8,15 @@ RSpec.describe ScalableComplexController, type: :contoller do
         get :index
       end
 
-      it "must assign an Array to @power_supplies" do
+      it "must assign an Array to @scalableComplexes" do
         expect(@scalableComplexes).to be_a(Array)
       end
 
-      it "must store all six power_supplies assigned to @power_supplies" do
+      it "must store all six power_supplies assigned to @scalableComplexes" do
         expect(@scalableComplexes.count).to eq(6)
       end
 
-      it "all power_supplies in @power_supplies must be valid" do
+      it "all scalableComplexes in @scalableComplexes must be valid" do
         @scalableComplexes.each do |scalableComplex|
           expect(scalableComplex).to be_valid(PowerSupply)
         end
