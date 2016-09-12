@@ -3,6 +3,19 @@ require 'securerandom'
 FactoryGirl.define do
   led_colors = %w(Red Amber Yellow Green Blue Unknown)
 
+  led_locations = [
+    "Front panel",
+    "Lightpath Card",
+    "Planar",
+    "FRU",
+    "Rear Panel",
+    "Unknown"
+  ]
+
+  led_states = %w(Off On Blinking Unknown)
+
+  power_states = %w(Off On ShuttingDown Standby Hibernate Unknown)
+
   health_states = %w(
     Normal
     Non-Critical
@@ -20,7 +33,9 @@ FactoryGirl.define do
       canister_properties[:uri] = "/#{canister_properties[:uuid]}"
     end
 
+    activationKeys []
     backedBy %w(real demo proxy).sample
+    bladeState {Random.rand 17}
     cmmDisplayName { Faker::Hipster.word }
     cmmHealthState { health_states.sample }
     contact "No Contact Configured"
@@ -47,16 +62,37 @@ FactoryGirl.define do
 
     FRU { Faker::Lorem.characters(7).upcase }
     fruSerialNumber { Faker::Code.asin }
+    hostname Faker::Internet.domain_name
+    ipInterfaces { FactoryGirl.build :ip_interfaces_canister }
 
-    ipInterfaces { FactoryGirl.build :ip_interfaces }
+    ipv4Addresses []
+    ipv4ServiceAddress ""
+    ipv6Addresses []
+    ipv6ServiceAddress ""
+    lanOverUsb %w(anable disable).sample
+    leds do
+      (0..5).map do |number|
+        {
+          "color" => led_colors.sample,
+          "location" => led_locations.sample,
+          "name" => Faker::Lorem.word,
+          "state" => led_states.sample
+        }
+      end
+    end
+    location []
+    macAddress ""
 
     machineType "#{Random.rand 1000}"
     manufacturer {"#{Random.rand 100000}"} #Special attention
+    manufacturerID {"#{Random.rand 100000}"} #Special attention
     memoryModules []
     memorySlots {Random.rand 10}
     model {"X#{Random.rand 99}"} #Special attention
     name { Faker::Internet.domain_name }
+    parent []
     partNumber { SecureRandom.hex.upcase } #Special attention
+    posID  {"#{Random.rand 100000}"}
     powerStatus [0, 5, 8, 18].sample
     processors do
       (0..(Random.rand 10)).map do |number|
@@ -71,10 +107,13 @@ FactoryGirl.define do
     end
 
     processorSlots {Random.rand 10}
-    productID { "#{Random.rand 1000}" }
+    productId { "#{Random.rand 1000}" }
     productName { Faker::App.name }
     posId { "#{Random.rand 1000}" }
     serviceHostName { Faker::Internet.domain_name }
+
+    serialNumber { Faker::Code.ean }
+
     slots { Random.rand 100 }
     subType { SecureRandom.hex.upcase } #Special attention
     subSlots []

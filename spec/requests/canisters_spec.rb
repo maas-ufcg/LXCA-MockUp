@@ -41,7 +41,7 @@ RSpec.describe "Canisters", type: :request do
           create :canister
         end
         @includeAttributes = %i(
-          ipInterfaces
+          backedBy
           dataHandle
         )
 
@@ -73,7 +73,7 @@ RSpec.describe "Canisters", type: :request do
       it "All items in response should've all the specified attributes" do
         JSON.parse(response.body).each do |object|
           @includeAttributes.each do |attribute|
-            expect(object).to eq(true)
+            expect(object.has_key? attribute.to_s).to eq(true)
           end
         end
       end
@@ -94,7 +94,7 @@ RSpec.describe "Canisters", type: :request do
           create :canister
         end
         @excludeAttributes = %i(
-          ipInterfaces
+          backedBy
           dataHandle
         )
 
@@ -135,7 +135,7 @@ RSpec.describe "Canisters", type: :request do
         JSON.parse(response.body).each do |object|
           absent = CanistersHelper::required_fields - @excludeAttributes
           absent.each do |attribute|
-            expect(object.has_key? attribute).to eq(true)
+            expect(object.has_key? attribute.to_s).to eq(true)
           end
         end
       end
@@ -170,7 +170,7 @@ RSpec.describe "Canisters", type: :request do
         canister = create :canister
 
         @includeAttributes = %i(
-          ipInterfaces
+          backedBy
           dataHandle
         )
 
@@ -208,7 +208,7 @@ RSpec.describe "Canisters", type: :request do
       before :each do
         canister = create :canister
         @excludeAttributes = %i(
-          ipInterfaces
+          backedBy
           dataHandle
         )
 

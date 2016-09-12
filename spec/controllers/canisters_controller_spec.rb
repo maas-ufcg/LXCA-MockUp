@@ -34,7 +34,7 @@ RSpec.describe CanistersController, type: :controller do
       context "With includeAttributes parameters" do
         before :each do
           @includeAttributes = %i(
-            ipInterfaces
+            backedBy
             dataHandle
           )
           @canisters = (0..5).map {|n| create :valid_canister}
@@ -74,7 +74,7 @@ RSpec.describe CanistersController, type: :controller do
       context "With excludeAttributes parameters" do
         before :each do
           @excludeAttributes = %i(
-            ipInterfaces
+            backedBy
             dataHandle
           )
           @canisters = (0..5).map {|n| create :valid_canister}
@@ -129,7 +129,7 @@ RSpec.describe CanistersController, type: :controller do
       context "With excludeAttributes parameters" do
         before :each do
           @excludeAttributes = %i(
-            ipInterfaces
+            backedBy
             dataHandle
           )
           @canisters = (0..5).map {|n| create :valid_canister}
