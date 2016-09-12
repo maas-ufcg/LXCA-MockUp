@@ -1,5 +1,5 @@
 Rails.application.routes.draw do
-
+  resources :cmms
   resources :fans, only: [:index, :show]
   resources :fan_muxes, only: [:index, :show]
   resources :power_supplies, only: [:index, :show]
