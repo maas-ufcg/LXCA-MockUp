@@ -70,7 +70,7 @@ class CmmPropertiesValidator < ActiveModel::Validator
 
   def validate_type(attribute_key, type)
     if not @record.properties[attribute_key].is_a? type
-      @record.errors[:base] << "#{attribute_key} attribute should be a #{type} (actual:#{object.class})"
+      @record.errors[:base] << "#{attribute_key} attribute should be a #{type} (actual:#{@record.properties[attribute_key].class})"
     end
   end
 

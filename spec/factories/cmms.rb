@@ -9,12 +9,14 @@ FactoryGirl.define do
 
   CmmsHelper::required_fields.each do |key|
      factory :"no_#{key}_cmm", class: Cmm do
+       properties { FactoryGirl.build(:cmm_properties) }
+
+       
         after :build do |cmm|
            cmm._id = cmm.properties[:uuid]
            cmm.properties.delete(key)
          end
 
-          properties { FactoryGirl.build(:cmm_properties) }
      end
    end
 end

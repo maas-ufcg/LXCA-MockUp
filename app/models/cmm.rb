@@ -7,4 +7,5 @@ class Cmm
   field :properties, type: Hash
 
   validates_with CmmFieldsConsistencyValidator
+  validates_with CmmPropertiesValidator
 end
