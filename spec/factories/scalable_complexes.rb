@@ -1,5 +1,5 @@
 FactoryGirl.define do
-	factory :scalableComplex, aliases: [:valid_scalableComplex] do
+	factory :scalable_complex, aliases: [:valid_scalableComplex] do
 		properties {FactoryGirl.build(:scalable_complex_properties)}
 
 		after :build do |scalableComplex|

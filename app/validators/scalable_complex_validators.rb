@@ -7,6 +7,8 @@ class ScalableComplexValidators < ActiveModel::Validator
     validate_uuid_and_id(record)
   end
 
+  private #methods to validate values
+
   def validate_properties(record_v)
 		if record_v.nil?
 			record_v.errors[:base] << "nil object is not valid."
@@ -16,8 +18,6 @@ class ScalableComplexValidators < ActiveModel::Validator
 				record_v.errors[:base] << "properties only should be a Hash."
 		end
 	end
-
-  private #methods to validate values
 
   def validate_properties(record_v)
   		if record_v.nil?

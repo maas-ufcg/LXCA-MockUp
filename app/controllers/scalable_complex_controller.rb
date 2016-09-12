@@ -1,5 +1,5 @@
 class ScalableComplexController < ApplicationController
-<<<<<<< HEAD
+
   before_action :set_scalableComplex, only: [:show]
 
   #GET /scalableComplex

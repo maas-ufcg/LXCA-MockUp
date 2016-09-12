@@ -1,3 +1,5 @@
+require_relative "../validators/scalable_complex_validators"
+
 class ScalableComplex < ApplicationRecord
   include Mongoid::Document
   field :_id, type: String #complexID
