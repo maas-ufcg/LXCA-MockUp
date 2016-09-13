@@ -6,7 +6,7 @@ Rails.application.routes.draw do
   resources :switches, only: [:index, :show, :update]
   resources :nodes, only: [:index, :show, :update]
   resources :chassis, only: [:index, :update, :show]
-  resources :scalable_complex, only: [:index, :show]
+  resources :scalable_complexes, only: [:index, :show]
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".

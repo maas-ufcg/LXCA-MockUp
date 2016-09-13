@@ -13,7 +13,7 @@ FactoryGirl.define do
         partitionID: 1,
         uuid: "C29379AA380E11E39DF3000AF7256714"
     }
-    partitionCount = 1
-    uuid = "C29379AA380E11E39DF3000AF7256714"
+    partitionCount = partition[:partitionID]
+    uuid = partition[:uuid]
   end
 end

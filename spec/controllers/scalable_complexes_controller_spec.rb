@@ -1,96 +1,101 @@
 require 'rails_helper'
 
-RSpec.describe ScalableComplexController, type: :contoller do
+RSpec.describe ScalableComplexesController, type: :contoller do
   describe "GET #index" do
     context "for 6 existing valid scalable complexes" do
-      before :each do
-        @scalableComplexes = (0..5).map{|n| create :valid_scalableComplex}
-        get :index
-      end
-
-      it "must assign an Array to @scalableComplexes" do
-        expect(@scalableComplexes).to be_a(Array)
-      end
-
-      it "must store all six power_supplies assigned to @scalableComplexes" do
-        expect(@scalableComplexes.count).to eq(6)
-      end
-
-      it "all scalableComplexes in @scalableComplexes must be valid" do
-        @scalableComplexes.each do |scalableComplex|
-          expect(scalableComplex).to be_valid(PowerSupply)
+      context "Without excludeAttributes or includeAttributes parameters" do
+        before :each do
+          @scalableComplexes = (0..5).map{|n| create :valid_scalableComplex}
+          get :index
         end
-      end
 
-      it "must render have HTTP Status 200 (OK)" do
-        expect(response).to have_http_status(:success)
-      end
-    end
+        it "must assign an Array to @scalableComplexes" do
+          expect(@scalableComplexes).to be_a(Array)
+        end
 
-    context "With includeAttributes parameters" do
-      before :each do
-        @includeAttributes = %i{
-          nodeCount
-        }
-        @scalableComplexes = (0..5).map{|n| create :valid_scalableComplex}
-        get :index, {includeAttributes: @includeAttributes.join(",")}
-      end
+        it "must store all six power_supplies assigned to @scalableComplexes" do
+          expect(@scalableComplexes.count).to eq(6)
+        end
 
-      it "must assign an array to @scalableComplexes" do
-        expect(@scalableComplexes).to be_a(Array)
-      end
-
-      it "must store all six scalable complexes assigned at @scalableComplexes" do
-        expect(@scalableComplexes).to eq(6)
-      end
-
-      it "All scalable complexes have the attributes included" do
-        assigns(:scalableComplexes).each do |scalable_complex|
-          @includeAttributes.each do |attribute|
-            expect(scalable_complex.properties.has_key? attribute).to eq(true)
+        it "all scalableComplexes in @scalableComplexes must be valid" do
+          @scalableComplexes.each do |scalableComplex|
+            expect(scalableComplex).to be_valid(PowerSupply)
           end
         end
-      end
 
-      it "All scalable complexes doesn't have all other attributes" do
-        assigns(:scalableComplexes).each do |scalable_complex|
-          absent = ScalableComplexHelper::required_fields - @includeAttributes
-          absent.each do |attribute|
-            expect(scalable_complex.properties.has_key? attribute).to eq(false)
-          end
+        it "must render have HTTP Status 200 (OK)" do
+          expect(response).to have_http_status(:success)
         end
       end
 
-      it "must render have HTTP Status 200 (OK) response" do
-        expect(response).to have_http_status(:success)
-      end
-    end
+      context "With includeAttributes parameters" do
+        before :each do
+          @includeAttributes = %i{
+            nodeCount
+          }
+          @scalableComplexes = (0..5).map{|n| create :valid_scalableComplex}
+          get :index, {includeAttributes: @includeAttributes.join(",")}
+        end
 
-    context "With excludeAttributes parameters" do
-      before :each do
-        @excludeAttributes = %i{
-          nodeCount
-        }
-        @scalableComplexes = (0..5).map{|n| create :valid_scalableComplex}
-        get :index, {includeAttributes: @includeAttributes.join(",")}
-      end
+        it "must assign an array to @scalableComplexes" do
+          expect(@scalableComplexes).to be_a(Array)
+        end
 
-      it "must assigns an Array to @scalableComplexes" do
-        expect(@scalableComplexes).to be_a(Array)
-      end
+        it "must store all six scalable complexes assigned at @scalableComplexes" do
+          expect(@scalableComplexes).to eq(6)
+        end
 
-      it "All scalableComplexes doesn't have the attributes excluded" do
-        assigns(:scalableComplexes).each do |scalable_complex|
-          @excludeAttributes.each do |attribute|
-            expect(scalable_complex.properties.has_key? attribute).to eq(false)
+        it "All scalable complexes have the attributes included" do
+          assigns(:scalableComplexes).each do |scalable_complex|
+            @includeAttributes.each do |attribute|
+              expect(scalable_complex.properties.has_key? attribute).to eq(true)
+            end
           end
+        end
+
+        it "All scalable complexes doesn't have all other attributes" do
+          assigns(:scalableComplexes).each do |scalable_complex|
+            absent = ScalableComplexHelper::required_fields - @includeAttributes
+            absent.each do |attribute|
+              expect(scalable_complex.properties.has_key? attribute).to eq(false)
+            end
+          end
+        end
+
+        it "must render have HTTP Status 200 (OK) response" do
+          expect(response).to have_http_status(:success)
         end
       end
 
-      it "must render have HTTP Status 200 (OK) response" do
-        expect(response).to have_http_status(:success)
+      context "With excludeAttributes parameters" do
+        before :each do
+          @excludeAttributes = %i{
+            nodeCount
+          }
+          @scalableComplexes = (0..5).map{|n| create :valid_scalableComplex}
+          get :index, {includeAttributes: @includeAttributes.join(",")}
+        end
+
+        it "must assigns an Array to @scalableComplexes" do
+          expect(@scalableComplexes).to be_a(Array)
+        end
+
+        it "All scalableComplexes doesn't have the attributes excluded" do
+          assigns(:scalableComplexes).each do |scalable_complex|
+            @excludeAttributes.each do |attribute|
+              expect(scalable_complex.properties.has_key? attribute).to eq(false)
+            end
+          end
+        end
+
+        it "must render have HTTP Status 200 (OK) response" do
+          expect(response).to have_http_status(:success)
+        end
       end
+
+
     end
+
 
   end
 

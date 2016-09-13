@@ -1,4 +1,4 @@
-class ScalableComplexController < ApplicationController
+class ScalableComplexesController < ApplicationController
 
   before_action :set_scalableComplex, only: [:show]
 

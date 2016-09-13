@@ -11,7 +11,7 @@ RSpec.describe "ScalableComplex", type: :request do
           create :scalable_complex
         end
 
-        get scalable_complexes_path
+          get scalable_complexes_path
 
       end
 
