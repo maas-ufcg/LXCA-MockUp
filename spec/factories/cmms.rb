@@ -48,7 +48,7 @@ FactoryGirl.define do
            {
              :address => Faker::Internet.ip_v4_address,
              :gateway => Faker::Lorem.word,
-             :id => Random.rand(100).to_i,
+             :id => Faker::Number.number(2),
              :subnet => Faker::Internet.ip_v4_address,
              :type => possible_values[:ip_interfaces_ipv4assignments_type].sample
            }
@@ -61,8 +61,8 @@ FactoryGirl.define do
              {
                :address => Faker::Internet.ip_v6_address,
                :gateway => Faker::Internet.ip_v4_address,
-               :id => Random.rand(100).to_i,
-               :prefix => Random.rand(100).to_i,
+               :id => Faker::Number.number(2),
+               :prefix => Faker::Number.number(2),
                :scope => possible_values[:ip_interfaces_ipv6assignments_scope].sample,
                :source => possible_values[:ip_interfaces_ipv6assignments_source].sample,
                :type => possible_values[:ip_interfaces_ipv6assignments_type].sample

@@ -8,7 +8,7 @@ FactoryGirl.define do
     backedBy { possible_values[:backedBy].sample }
     cmmDisplayName { Faker::Lorem.word }
     cmmHealthState { possible_values[:cmmHealthState].sample }
-    dataHandle { DateTime.now.strftime('%Q').to_i }
+    dataHandle { DateTime.now.strftime('%Q') }
     description { Faker::Lorem.sentence }
     dnsHostNames { [Faker::Lorem.word] }
     domainName { Faker::Internet.domain_name }
@@ -65,7 +65,7 @@ FactoryGirl.define do
           {
             :address => Faker::Internet.ip_v4_address,
             :gateway => Faker::Lorem.word,
-            :id => Random.rand(100).to_i,
+            :id => Faker::Number.number(2),
             :subnet => Faker::Internet.ip_v4_address,
             :type => possible_values[:ip_interfaces_ipv4assignments_type].sample
           }
@@ -78,8 +78,8 @@ FactoryGirl.define do
             {
               :address => Faker::Internet.ip_v6_address,
               :gateway => Faker::Internet.ip_v4_address,
-              :id => Random.rand(100).to_i,
-              :prefix => Random.rand(100).to_i,
+              :id => Faker::Number.number(2),
+              :prefix => Faker::Number.number(2),
               :scope => possible_values[:ip_interfaces_ipv6assignments_scope].sample,
               :source => possible_values[:ip_interfaces_ipv6assignments_source].sample,
               :type => possible_values[:ip_interfaces_ipv6assignments_type].sample
@@ -127,15 +127,15 @@ FactoryGirl.define do
 
     powerAllocation do
       {
-        :maximumAllocatedPower => DateTime.now.strftime('%Q').to_i,
-        :minimumAllocatedPower => DateTime.now.strftime('%Q').to_i
+        :maximumAllocatedPower => DateTime.now.strftime('%Q'),
+        :minimumAllocatedPower => DateTime.now.strftime('%Q')
       }
     end
 
     productID { Faker::Number.number(3) }
     role { possible_values[:role].sample }
     serialNumber { Faker::Lorem.word }
-    slots { Random.rand(20).to_i }
+    slots { Faker::Number.number(2) }
     type { "CMM" }
     userDescription { Faker::Lorem.sentence }
     uri { Faker::Lorem.word }
