@@ -1,5 +1,5 @@
 class PowerSuppliesController < ApplicationController
-  before_action :set_power_supply, only: [:show, :edit, :update, :destroy]
+  before_action :set_power_supply, only: [:show]
 
   # GET /power_supplies
   # GET /power_supplies.json
@@ -76,7 +76,7 @@ end
   #     else
   #       format.html { render :new }
   #       format.json { render json: @power_supply.errors, status: :unprocessable_entity }
-  #     end
+  #     endscalableComplex
   #   end
   # end
   #

@@ -30,6 +30,7 @@ class ScalableComplexesController < ApplicationController
                 ScalableComplex.find(params[:id])
                 rescue Mongoid::Errors::DocumentNotFound => ex
               end
+    setup_scalableComplex_properties @scalableComplex
   end
 
   def setup_scalableComplex_properties(scalableComplex)
@@ -51,6 +52,10 @@ class ScalableComplexesController < ApplicationController
 
   def split_to_sym(string)
     string.split(",").map(&:to_sym) if string.is_a?(String)
+  end
+
+  def scalableComplex_params
+    params.require(:fan).permit(:_id, :properties)
   end
 
 end

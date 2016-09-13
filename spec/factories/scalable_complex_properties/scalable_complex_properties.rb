@@ -5,7 +5,14 @@ FactoryGirl.define do
     after :build do |scalable_complex_properties|
       scalable_complex_properties[:uri] = "/#{scalable_complex_properties[:uuid]}"
     end
-    #location []
+
+    location do
+      [{
+        :lowestRackUnit => "#{Faker::Number.number(10)}",
+        :rack => "#{Faker::Number.number(10)}",
+        :room => Faker::Lorem.word,
+      }]
+    end
     nodeCount { Random.rand 2**61 }
     partition do
       (0..(Random.rand 10)).map do |node|

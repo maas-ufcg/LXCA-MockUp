@@ -92,11 +92,7 @@ RSpec.describe ScalableComplexesController, type: :contoller do
           expect(response).to have_http_status(:success)
         end
       end
-
-
     end
-
-
   end
 
   describe "GET #show" do
@@ -151,6 +147,23 @@ RSpec.describe ScalableComplexesController, type: :contoller do
             end
           end
         end
+
+
+        context "Fetching unexisting scalableComplexes" do
+          before :each do
+            @random_id = SecureRandom.hex.upcase
+            get :show, {id: @random_id}
+          end
+
+          it "Returns HTTP Status Code 404 (Not Found)" do
+            expect(response).to have_http_status(:not_found)
+          end
+
+          it "Expects to assign nil to @fan_mux in action" do
+            expect(assigns :scalable_complex).to be_nil
+          end
+        end
+
       end
     end
   end
