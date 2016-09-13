@@ -28,7 +28,7 @@ RSpec.describe "ScalableComplex", type: :request do
       end
 
       it "The body array should contain five items" do
-        expect(JSON.parse(response.body).size).to eq(5)
+        expect(JSON.parse(response.body).size).to eq(6)
       end
 
       it "All items in the array should be a json object" do

@@ -5,17 +5,9 @@ class ScalableComplexesController < ApplicationController
   #GET /scalable_complex
   #GET /scalable_complex.json
   def index
-    param = params[:status]
-    formatType = params[:formatType]
-    if param.nil?
-      @scalableComplexes = ScalableComplex.all.to_a
-    else
-      @scalableComplexes = ScalableComplex.all.to_a.select do |scalableComplex|
-        scalableComplex.properties.to_hash.deep_symbolize_keys[:status][:message] == param
-      end
-    end
+    @scalableComplexes = ScalableComplex.all.to_a
     render(json: @scalableComplexes.map do |scalableComplex|
-      setup_scalableComplex_properties node
+      setup_scalableComplex_properties scalableComplex
       scalableComplex.properties
     end)
   end
@@ -56,4 +48,9 @@ class ScalableComplexesController < ApplicationController
       end
     end
   end
+
+  def split_to_sym(string)
+    string.split(",").map(&:to_sym) if string.is_a?(String)
+  end
+
 end
