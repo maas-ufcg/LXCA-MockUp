@@ -1,19 +1,24 @@
+require 'securerandom'
+
 FactoryGirl.define do
   factory :scalable_complex_properties, class: Hash do
-    location = ""
-    nodeCount = 4
-    # orphanNodes do
-    #   (1..2).map do |key|
-    #     build :node
-    #   end
-    # end
-    partition = {
-        nodes: (1..2).map do |node| :node
-        end,
-        partitionID: 1,
-        uuid: "C29379AA380E11E39DF3000AF7256714"
-    }
-    partitionCount = 1
-    uuid = "C29379AA380E11E39DF3000AF7256714"
+    after :build do |scalable_complex_properties|
+      scalable_complex_properties[:uri] = "/#{scalable_complex_properties[:uuid]}"
+    end
+    #location []
+    nodeCount { Random.rand 2**61 }
+    partition do
+      (0..(Random.rand 10)).map do |node|
+        {
+          nodes: "",
+          partitionID: "#{Random.rand 1...1000}" ,
+          uuid:  SecureRandom.uuid
+        }
+      end
+    end
+    partitionCount { Random.rand 2**61 }
+    uuid { SecureRandom.uuid }
+
+    initialize_with { attributes }
   end
 end
