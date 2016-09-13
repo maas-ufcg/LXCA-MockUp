@@ -7,7 +7,7 @@ RSpec.describe "ScalableComplex", type: :request do
     context "Without excludeAttributes or includeAttributes parameters" do
 
       before :each do
-        @scalable_complexes = (0...5).map do |scalable_complex|
+        @scalable_complexes = (0...6).map do |scalable_complex|
           create :scalable_complex
         end
 

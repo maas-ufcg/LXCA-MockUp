@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe ScalableComplexesController, type: :contoller do
+RSpec.describe ScalableComplexesController, type: :controller do
   describe "GET #index" do
     context "for 6 existing valid scalable complexes" do
       context "Without excludeAttributes or includeAttributes parameters" do
@@ -19,7 +19,7 @@ RSpec.describe ScalableComplexesController, type: :contoller do
 
         it "all scalableComplexes in @scalableComplexes must be valid" do
           @scalableComplexes.each do |scalableComplex|
-            expect(scalableComplex).to be_valid(PowerSupply)
+            expect(scalableComplex).to be_valid(ScalableComplex)
           end
         end
 
@@ -30,9 +30,9 @@ RSpec.describe ScalableComplexesController, type: :contoller do
 
       context "With includeAttributes parameters" do
         before :each do
-          @includeAttributes = %i{
+          @includeAttributes = %i(
             nodeCount
-          }
+          )
           @scalableComplexes = (0..5).map{|n| create :valid_scalableComplex}
           get :index, {includeAttributes: @includeAttributes.join(",")}
         end
@@ -42,7 +42,7 @@ RSpec.describe ScalableComplexesController, type: :contoller do
         end
 
         it "must store all six scalable complexes assigned at @scalableComplexes" do
-          expect(@scalableComplexes).to eq(6)
+          expect(@scalableComplexes.count).to eq(6)
         end
 
         it "All scalable complexes have the attributes included" do
@@ -69,11 +69,11 @@ RSpec.describe ScalableComplexesController, type: :contoller do
 
       context "With excludeAttributes parameters" do
         before :each do
-          @excludeAttributes = %i{
+          @excludeAttributes = %i(
             nodeCount
-          }
+          )
           @scalableComplexes = (0..5).map{|n| create :valid_scalableComplex}
-          get :index, {includeAttributes: @includeAttributes.join(",")}
+          get :index, {excludeAttributes: @excludeAttributes.join(",")}
         end
 
         it "must assigns an Array to @scalableComplexes" do
@@ -92,7 +92,11 @@ RSpec.describe ScalableComplexesController, type: :contoller do
           expect(response).to have_http_status(:success)
         end
       end
+
+
     end
+
+
   end
 
   describe "GET #show" do
@@ -112,7 +116,7 @@ RSpec.describe ScalableComplexesController, type: :contoller do
         it "All scalableComplexes are valid" do
           @scalableComplexes.each do |scalable_complex|
             get :show, {id: scalable_complex._id}
-            expect(power_supply).to be_valid(ScalableComplex)
+            expect(scalable_complex).to be_valid(ScalableComplex)
           end
         end
       end
@@ -120,7 +124,7 @@ RSpec.describe ScalableComplexesController, type: :contoller do
       context "With excludeAttributes parameters" do
         before :each do
           @excludeAttributes = %i(
-          nodeCount
+
           )
           @scalableComplexes = (0..5).map {|n| create :valid_scalableComplex}
         end
@@ -142,29 +146,47 @@ RSpec.describe ScalableComplexesController, type: :contoller do
               excludeAttributes: @excludeAttributes.join(",")
             }
             @excludeAttributes.each do |attribute|
-              scalable_complex_properties = assigns(:scalable_complex).properties
+              scalable_complex_properties = scalable_complex.properties
               expect(scalable_complex_properties.has_key? attribute).to eq(false)
             end
           end
         end
+      end
 
+      context "With includeAttributes parameters" do
+        before :each do
+          @includeAttributes = %i(
+          nodeCount
+          )
+          @scalableComplexes = (0..5).map {|n| create :valid_scalableComplex}
+        end
 
-        context "Fetching unexisting scalableComplexes" do
-          before :each do
-            @random_id = SecureRandom.hex.upcase
-            get :show, {id: @random_id}
+        it "All @scalableComplexes can be fetched individually" do
+          @scalableComplexes.each do |scalable_complex|
+            get :show, {
+              id: scalable_complex._id,
+              includeAttributes: @includeAttributes.join(",")
+            }
+            expect(response).to have_http_status(:success)
           end
+        end
 
-          it "Returns HTTP Status Code 404 (Not Found)" do
-            expect(response).to have_http_status(:not_found)
-          end
-
-          it "Expects to assign nil to @fan_mux in action" do
-            expect(assigns :scalable_complex).to be_nil
+        it "All scalable Complexes have the attributes included" do
+          @scalableComplexes.each do |scalable_complex|
+            get :show, {
+              id: scalable_complex._id,
+              includeAttributes: @includeAttributes.join(",")
+            }
+            @includeAttributes.each do |attribute|
+              scalable_complex_properties = scalable_complex.properties
+              expect(scalable_complex_properties.has_key? attribute).to eq(true)
+            end
           end
         end
 
       end
+
+
     end
   end
 end
