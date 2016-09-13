@@ -27,7 +27,7 @@ FactoryGirl.define do
      location do
        {
          :location => "#{Faker::Number.number(8)}",
-         :lowestRackUnit => Random.rand(20).to_i,
+         :lowestRackUnit => Random.rand(20).to_s ,
          :rack => "#{Faker::Hipster.sentence(2)}",
          :room => "#{Faker::Hipster.sentence(3)}"
        }
