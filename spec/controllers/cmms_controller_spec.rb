@@ -72,8 +72,7 @@ RSpec.describe CmmsController, type: :controller do
 
       it "update the requested cmm(properties values)" do
 
-
-        put :update, id: @cmm._id, cmm: {_id: @cmm._id, properties: @new_attributes}
+        put :update, id: @cmm._id, properties: @new_attributes
 
         expect(response).to have_http_status(:no_content)
         cmm_updated_properties = Cmm.find(@cmm._id).properties.deep_symbolize_keys

@@ -19,7 +19,7 @@ class CmmPropertiesValidator < ActiveModel::Validator
     validate_type(:cmmHealthState, String)
     validate_values(:cmmHealthState, @valid_values[:cmmHealthState])
 
-    validate_type(:dataHandle, Fixnum)
+    validate_type(:dataHandle, String)
     validate_type(:description, String)
     validate_type(:dnsHostNames, Array)
     validate_type(:domainName, String)
@@ -58,7 +58,7 @@ class CmmPropertiesValidator < ActiveModel::Validator
     validate_values(:role, @valid_values[:role])
 
     validate_type(:serialNumber, String)
-    validate_type(:slots, Integer)
+    validate_type(:slots, String)
     validate_type(:type, String)
     validate_type(:userDescription, String)
     validate_type(:uri, String)

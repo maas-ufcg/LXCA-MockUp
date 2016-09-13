@@ -8,7 +8,7 @@ FactoryGirl.define do
     backedBy { possible_values[:backedBy].sample }
     cmmDisplayName { Faker::Lorem.word }
     cmmHealthState { possible_values[:cmmHealthState].sample }
-    dataHandle { DateTime.now.strftime('%Q').to_i }
+    dataHandle { DateTime.now.strftime('%Q') }
     description { Faker::Lorem.sentence }
     dnsHostNames { [Faker::Lorem.word] }
     domainName { Faker::Internet.domain_name }
@@ -58,7 +58,43 @@ FactoryGirl.define do
 
     hostname { Faker::Internet.domain_name }
 
-    ipInterfaces { FactoryGirl.build :ip_interfaces }
+    ipInterfaces do
+      (0..2).map do
+        {
+        :IPv4assignments => (0..2).map do
+          {
+            :address => Faker::Internet.ip_v4_address,
+            :gateway => Faker::Lorem.word,
+            :id => Faker::Number.number(2),
+            :subnet => Faker::Internet.ip_v4_address,
+            :type => possible_values[:ip_interfaces_ipv4assignments_type].sample
+          }
+        end,
+
+        :IPv4DHCPmode => possible_values[:ip_interfaces_IPv4DHCPmode].sample,
+        :IPv4enabled => possible_values[:boolean].sample,
+
+        :IPv6assignments => (0..2).map do
+            {
+              :address => Faker::Internet.ip_v6_address,
+              :gateway => Faker::Internet.ip_v4_address,
+              :id => Faker::Number.number(2),
+              :prefix => Faker::Number.number(2),
+              :scope => possible_values[:ip_interfaces_ipv6assignments_scope].sample,
+              :source => possible_values[:ip_interfaces_ipv6assignments_source].sample,
+              :type => possible_values[:ip_interfaces_ipv6assignments_type].sample
+            }
+          end,
+
+          :IPv6DHCPenabled => possible_values[:boolean].sample,
+          :IPv6enabled => possible_values[:boolean].sample,
+          :IPv6statelessEnabled => possible_values[:boolean].sample,
+          :IPv6staticEnabled => possible_values[:boolean].sample,
+          :label => Faker::Lorem.word,
+          :name => Faker::Lorem.word
+      }
+      end
+    end
 
     ipv4Addresses { [Faker::Internet.ip_v4_address, Faker::Internet.ip_v4_address] }
     ipv6Addresses { [Faker::Internet.ip_v6_address, Faker::Internet.ip_v6_address] }
@@ -91,15 +127,15 @@ FactoryGirl.define do
 
     powerAllocation do
       {
-        :maximumAllocatedPower => DateTime.now.strftime('%Q').to_i,
-        :minimumAllocatedPower => DateTime.now.strftime('%Q').to_i
+        :maximumAllocatedPower => DateTime.now.strftime('%Q'),
+        :minimumAllocatedPower => DateTime.now.strftime('%Q')
       }
     end
 
     productID { Faker::Number.number(3) }
     role { possible_values[:role].sample }
     serialNumber { Faker::Lorem.word }
-    slots { Random.rand(20).to_i }
+    slots { Faker::Number.number(2) }
     type { "CMM" }
     userDescription { Faker::Lorem.sentence }
     uri { Faker::Lorem.word }

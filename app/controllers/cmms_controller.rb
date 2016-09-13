@@ -23,6 +23,7 @@ class CmmsController < ApplicationController
   # PATCH/PUT /cmms/1.json
   def update
       begin
+
         if update_cmm(cmm_params)
           head :no_content
         else
@@ -46,7 +47,7 @@ class CmmsController < ApplicationController
     end
 
     def cmm_params
-      params.require(:cmm).require(:properties).to_hash.deep_symbolize_keys
+      params.require("properties").deep_symbolize_keys
 
     end
 
