@@ -1,4 +1,3 @@
-
 FactoryGirl.define do
 
 factory :power_supply, aliases: [:valid_power_supply] do
@@ -29,7 +28,7 @@ factory :power_supply, aliases: [:valid_power_supply] do
 
       properties {FactoryGirl.build(:power_supply_properties)}
     end
-    
+
 
     factory :"empty_string_#{key}_power_supply", class: PowerSupply do
       after :build do |power_supply|
