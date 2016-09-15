@@ -26,7 +26,9 @@ class NodesController < ApplicationController
     if @nodes.nil?
       head :not_found
     else
-      render(json: @nodes.map {|n| n.properties})
+      render(json: @nodes.map {|n|
+        setup_node_properties n
+        n.properties })
     end
 end
 
