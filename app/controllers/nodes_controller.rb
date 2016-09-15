@@ -23,10 +23,10 @@ class NodesController < ApplicationController
   # GET /nodes/1
   # GET /nodes/1.json
   def show
-    if @node.nil?
+    if @nodes.nil?
       head :not_found
     else
-      render json: @node.properties
+      render(json: @nodes.map {|n| n.properties})
     end
 end
 
@@ -49,11 +49,13 @@ end
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_node
-      @node = begin
-          Node.find(params[:id])
-        rescue Mongoid::Errors::DocumentNotFound => ex
-        end
-        setup_node_properties @node
+      @nodes = begin
+                 params[:id].split(',').map do |id|
+                   Node.find(id)
+                 end
+               rescue Mongoid::Errors::DocumentNotFound => ex
+               end
+               setup_node_properties @node
     end
 
     def setup_node_properties(node)
