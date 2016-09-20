@@ -36,13 +36,6 @@ RSpec.describe "ScalableComplex", type: :request do
           expect(object).to be_a(Hash)
         end
       end
-
-      it "All items in the array should be of type Scalable Complex" do
-        JSON.parse(response.body).each do |object|
-          expect(object["type"]).to eq("ScalableComplex")
-        end
-      end
-
     end
 
     context "With includeAttributes parameters" do
