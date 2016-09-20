@@ -31,7 +31,7 @@ class ScalableComplexValidators < ActiveModel::Validator
 
   def validate_keys(record_v)
 		ScalableComplexHelper::required_fields.each do |key|
-			if record_v.properties[key].nil?
+			if record_v.properties[key].nil? or record_v.properties[key] == "" 
 				record_v.errors[:base] << "inconsistent object, missing property #{key}."
 				break
 			end
