@@ -1,7 +1,5 @@
 RSpec.describe ScalableComplex, type: :model do
 
-	pending "add some examples to (or delete) #{__FILE__}"
-
 	describe "Model validations:" do
 		context "Factory :scalableComplex" do
 			before :each do
