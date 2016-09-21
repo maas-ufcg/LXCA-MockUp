@@ -2,9 +2,6 @@ require 'securerandom'
 
 FactoryGirl.define do
   factory :scalable_complex_properties, class: Hash do
-    after :build do |scalable_complex_properties|
-      scalable_complex_properties[:uri] = "/#{scalable_complex_properties[:uuid]}"
-    end
 
     location do
       [{

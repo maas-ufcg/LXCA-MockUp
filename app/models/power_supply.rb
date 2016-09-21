@@ -6,6 +6,6 @@ class PowerSupply
   field :_id, type: String
   field :properties, type: Hash
 
-  validates_with PowerSuppliesValidators
-  validates_with PowerSupplyConsistencyValidator
+#  validates_with PowerSuppliesValidators
+#  validates_with PowerSupplyConsistencyValidator
 end

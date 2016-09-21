@@ -5,7 +5,15 @@ class ScalableComplexesController < ApplicationController
   #GET /scalable_complex
   #GET /scalable_complex.json
   def index
-    @scalableComplexes = ScalableComplex.all.to_a
+    param = params[:status]
+    formatType = params[:formatType]
+    if param.nil?
+        @scalableComplexes = ScalableComplex.all.to_a
+    else
+        @scalableComplexes = Switch.all.to_a.select do |scalableComplexes|
+      scalableComplexes.properties.to_hash.deep_symbolize_keys[:status][:message] == param
+    end
+  end
     render(json: @scalableComplexes.map do |scalableComplex|
       setup_scalableComplex_properties scalableComplex
       scalableComplex.properties
@@ -18,7 +26,9 @@ class ScalableComplexesController < ApplicationController
     if @scalableComplex.nil?
       head :not_found
     else
-      render json: @scalableComplex.properties
+      render(json: @scalableComplex.map {|n|
+        setup_scalableComplex_properties n
+        n.properties })
     end
   end
 
@@ -27,7 +37,9 @@ class ScalableComplexesController < ApplicationController
   # Use callbacks to share common setup or constraints between actions.
   def set_scalableComplex
     @scalableComplex = begin
-                ScalableComplex.find(params[:id])
+              params[:id].split(',').map do |id|
+                    ScalableComplex.find(id)
+                end
                 rescue Mongoid::Errors::DocumentNotFound => ex
               end
     setup_scalableComplex_properties @scalableComplex
@@ -55,7 +67,7 @@ class ScalableComplexesController < ApplicationController
   end
 
   def scalableComplex_params
-    params.require(:fan).permit(:_id, :properties)
+    params.require(:scalable_complex).permit(:_id, :properties)
   end
 
 end
