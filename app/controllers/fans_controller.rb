@@ -5,7 +5,7 @@ class FansController < ApplicationController
   # GET /fans.json
   def index
     @fans = Fan.all.to_a
-    render(json: @fans.map do |fan| 
+    render(json: @fans.map do |fan|
       setup_fan_properties fan
       fan.properties
     end)
@@ -52,5 +52,6 @@ class FansController < ApplicationController
     # Never trust parameters from the scary internet, only allow the white list through.
     def fan_params
       params.require(:fan).permit(:_id, :properties)
+      
     end
 end
