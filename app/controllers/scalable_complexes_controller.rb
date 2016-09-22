@@ -19,9 +19,6 @@ class ScalableComplexesController < ApplicationController
       head :not_found
     else
       render json: @scalableComplex.properties
-      # render(json: @scalableComplex.map {|n|
-      #   setup_scalableComplex_properties n
-      #   n.properties })
     end
   end
 
