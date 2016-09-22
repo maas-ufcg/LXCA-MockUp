@@ -26,19 +26,18 @@ class ScalableComplexesController < ApplicationController
 
   # Use callbacks to share common setup or constraints between actions.
   def set_scalableComplex
+
     @scalableComplex = begin
-                ScalableComplex.find(params[:id])
-                rescue Mongoid::Errors::DocumentNotFound => ex
-              end
-    setup_scalableComplex_properties @scalableComplex
+        ScalableComplex.find(params[:id])
+        rescue Mongoid::Errors::DocumentNotFound => ex
+        end
+        setup_scalableComplex_properties @scalableComplex
   end
 
   def setup_scalableComplex_properties(scalableComplex)
     return if scalableComplex.nil?
     excludeAttributes = split_to_sym params[:excludeAttributes]
     includeAttributes = split_to_sym params[:includeAttributes]
-
-
 
     unless includeAttributes.nil?
       excludeAttributes = ScalableComplexHelper::required_fields-includeAttributes
@@ -55,7 +54,7 @@ class ScalableComplexesController < ApplicationController
   end
 
   def scalableComplex_params
-    params.require(:fan).permit(:_id, :properties)
+    params.require(:scalable_complex).permit(:_id, :properties)
   end
 
 end
