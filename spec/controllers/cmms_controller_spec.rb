@@ -30,6 +30,8 @@ RSpec.describe CmmsController, type: :controller do
     end
   end
 
+  ###################################### DONE ABOVE ################
+
   describe "GET #show" do
     context "fetching existing cmms" do
       before :each do
@@ -38,8 +40,13 @@ RSpec.describe CmmsController, type: :controller do
 
       it "all cmms should be fetched individually" do
         @cmms.each do |cmm|
-          get :show, {id: cmm.id}
-          expect(assigns :cmm).to be_valid(Cmm)
+          get :show, {id: cmm._id}
+
+          cmms_response = (assigns :cmms)
+
+          cmms_response.each do |cmm|
+            expect(cmm).to be_valid(Cmm)
+          end
         end
       end
 
@@ -72,9 +79,9 @@ RSpec.describe CmmsController, type: :controller do
 
       it "update the requested cmm(properties values)" do
 
-        put :update, id: @cmm._id, properties: @new_attributes
-
+        put :update, id: @cmm._id, cmm: {_id: @cmm._id, properties: @new_attributes}
         expect(response).to have_http_status(:no_content)
+
         cmm_updated_properties = Cmm.find(@cmm._id).properties.deep_symbolize_keys
 
         @new_attributes.keys.each do |key|
@@ -82,6 +89,29 @@ RSpec.describe CmmsController, type: :controller do
         end
 
 
+
+      end
+
+      CmmsHelper::field_put_params.each do |key|
+        it "updates the requested cmm (#{key} values)" do
+          @requested_attributes = build :"cmm_valid_put_request_#{key}"
+
+
+          put :update, id: @cmm._id, cmm: {_id: @cmm._id, properties: @requested_attributes}
+
+          expect(response).to have_http_status(:no_content)
+
+          cmm_updated_properties = Cmm.find(@cmm._id).properties.deep_symbolize_keys
+
+
+          @requested_attributes.keys.each do |key|
+            if not cmm_updated_properties[key].is_a? Hash
+              expect(cmm_updated_properties[key]).to eq(@requested_attributes[key])
+            end
+          end
+
+          expect(cmm_updated_properties.size).to_not eq(@requested_attributes.size)
+        end
 
       end
 
@@ -96,7 +126,7 @@ RSpec.describe CmmsController, type: :controller do
 
       it "assigns the cmm as @cmm" do
         put :update, id: @cmm_valid._id, cmm:{id:@cmm_valid._id, properties:@cmm_request}
-        #expect(response).to have_http_status(:unprocessable_entity) - problem with requests
+        expect(response).to have_http_status(:unprocessable_entity)
       end
 
 
