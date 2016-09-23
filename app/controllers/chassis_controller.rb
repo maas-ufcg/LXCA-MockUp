@@ -4,8 +4,19 @@ class ChassisController < ApplicationController
   # GET /chassis
   # GET /chassis.json
   def index
-    @chassis = Chassi.all
-    render json: @chassis
+    param = params[:status]
+    formatType = params[:formatType]
+    if param.nil?
+      @chassis = Chassi.all.to_a
+    else
+      @chassis = Chassi.all.to_a.select do |chassi|
+        chassi.properties.to_hash.deep_symbolize_keys[:status][:message] == param
+      end
+    end
+    render(json: @chassis.map do |chassi|
+      setup_chassi_properties chassi
+      chassi.properties
+    end)
   end
 
   # GET /chassis/1
@@ -14,7 +25,11 @@ class ChassisController < ApplicationController
     if @chassi.nil?
       head :not_found
     else
-      render json: @chassi.properties
+      # render json: @chassi.properties
+      render(json: @chassis.map do |chassi|
+        setup_chassi_properties chassi
+        chassi.properties
+      end)
     end
   end
 
@@ -63,4 +78,26 @@ class ChassisController < ApplicationController
 
       @chassi.save
     end
+
+    def setup_chassi_properties(chassi)
+      return if chassi.nil?
+      excludeAttributes = split_to_sym params[:excludeAttributes]
+      includeAttributes = split_to_sym params[:includeAttributes]
+
+
+
+      unless includeAttributes.nil?
+        excludeAttributes = ChassisHelper::required_fields-includeAttributes
+      end
+      unless excludeAttributes.nil?
+        excludeAttributes.each do |attribute|
+          chassi.properties.delete(attribute)
+        end
+      end
+    end
+
+    def split_to_sym(string)
+      string.split(",").map(&:to_sym) if string.is_a?(String)
+    end
+
 end
