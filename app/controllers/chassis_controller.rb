@@ -22,19 +22,14 @@ class ChassisController < ApplicationController
   # GET /chassis/1
   # GET /chassis/1.json
   def show
-    if @chassi.nil?
+    if @chassis.nil?
       head :not_found
     else
-      # render json: @chassi.properties
-      render(json: @chassis.map do |chassi|
-        setup_chassi_properties chassi
-        chassi.properties
-      end)
+      render(json: @chassis.map {|n|
+        setup_chassi_properties n
+        n.properties })
     end
   end
-
-  # POST /chassis
-  # POST /chassis.json
 
   # PATCH/PUT /chassis/1
   # PATCH/PUT /chassis/1.json
@@ -50,23 +45,44 @@ class ChassisController < ApplicationController
     end
   end
 
-
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_chassi
-      @chassi = begin
-        Chassi.find(params[:id])
-      rescue Mongoid::Errors::DocumentNotFound => ex
+      @chassis = begin
+                 params[:id].split(',').map do |id|
+                   Chassi.find(id)
+                 end
+               rescue Mongoid::Errors::DocumentNotFound => ex
+               end
+               setup_chassi_properties @chassi
+    end
+
+    def setup_chassi_properties(chassi)
+      return if chassi.nil?
+      excludeAttributes = split_to_sym params[:excludeAttributes]
+      includeAttributes = split_to_sym params[:includeAttributes]
 
 
+
+      unless includeAttributes.nil?
+        excludeAttributes = ChassisHelper::required_fields-includeAttributes
       end
+      unless excludeAttributes.nil?
+        excludeAttributes.each do |attribute|
+          chassi.properties.delete(attribute)
+        end
+      end
+    end
+
+    def split_to_sym(string)
+      string.split(",").map(&:to_sym) if string.is_a?(String)
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def chassi_params
-      params.require(:chassi).to_hash.deep_symbolize_keys[:properties]
-
+      params.require(:chassi).permit(:_id, :properties)
     end
+
 
     def update_chassi(chassi_update_params)
 
