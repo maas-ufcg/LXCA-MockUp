@@ -40,8 +40,13 @@ RSpec.describe ChassisController, type: :controller do
 
       it "all chassis should be fetched individually" do
         @chassis.each do |chassi|
-          get :show, {id: chassi.id}
-          expect(assigns :chassi).to be_valid(Chassi)
+          get :show, {id: chassi._id}
+
+          chassis_response = (assigns :chassis)
+
+          chassis_response.each do |chassi|
+            expect(chassi).to be_valid(Chassi)
+          end
         end
       end
 
@@ -74,9 +79,9 @@ RSpec.describe ChassisController, type: :controller do
 
       it "update the requested chassi(properties values)" do
 
-
         put :update, id: @chassi._id, chassi: {_id: @chassi._id, properties: @new_attributes}
         expect(response).to have_http_status(:no_content)
+
         chassi_updated_properties = Chassi.find(@chassi._id).properties.deep_symbolize_keys
 
         @new_attributes.keys.each do |key|
