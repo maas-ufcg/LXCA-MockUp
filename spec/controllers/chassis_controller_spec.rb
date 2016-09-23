@@ -40,7 +40,7 @@ RSpec.describe ChassisController, type: :controller do
 
       it "all chassis should be fetched individually" do
         @chassis.each do |chassi|
-          get :show, {id: chassi.id}
+          get :show, {id: chassi[:uuid]}
           expect(assigns :chassi).to be_valid(Chassi)
         end
       end
