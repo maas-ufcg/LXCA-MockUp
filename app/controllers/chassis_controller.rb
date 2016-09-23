@@ -36,6 +36,8 @@ class ChassisController < ApplicationController
   # PATCH/PUT /chassis/1.json
   def update
     begin
+      @chassi = Chassi.find(params[:id])
+
       if update_chassi(chassi_params)
         head :no_content
       else
@@ -55,7 +57,6 @@ class ChassisController < ApplicationController
                  end
                rescue Mongoid::Errors::DocumentNotFound => ex
                end
-               setup_chassi_properties @chassi
     end
 
     def setup_chassi_properties(chassi)
@@ -81,18 +82,19 @@ class ChassisController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def chassi_params
-      params.require(:chassi).permit(:_id, :properties)
+      params.require(:chassi).require(:properties).to_hash.deep_symbolize_keys
     end
 
 
     def update_chassi(chassi_update_params)
+      unless chassi_update_params.nil?
 
-      if not chassi_update_params.nil?
         chassi_update_params.each do |key, value|
           @chassi.properties[key] = value
         end
-      end
 
       @chassi.save
+
+      end
     end
 end
