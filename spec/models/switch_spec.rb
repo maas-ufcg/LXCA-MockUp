@@ -52,7 +52,20 @@ RSpec.describe Switch, type: :model do
 
     end
 
+    SwitchesHelper::defined_fields.each do |key|
+     context "Factory invalid values for '#{key}'" do
+       before :each do
+         @switch = build :"invalid_#{key}_switch"
+       end
 
+       it ":invalid_#{key}_switch factory should build an invalid object" do
+         expect(@switch).to_not be_valid(Switch)
+       end
+       it "should not save switch with invalid #{key}, the number of elements in BD should not change." do
+         expect{@switch.save}.to change{Switch.count}.by 0
+       end
+      end
+    end
   end
 
 end

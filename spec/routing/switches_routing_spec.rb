@@ -15,7 +15,5 @@ RSpec.describe SwitchesController, type: :routing do
       expect(:put => "/switches/1").to route_to("switches#update", :id => "1")
     end
 
-  
-
   end
 end

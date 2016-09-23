@@ -15,6 +15,4 @@ class Switch
   end
 
   validates_with SwitchValidators
-
-
 end

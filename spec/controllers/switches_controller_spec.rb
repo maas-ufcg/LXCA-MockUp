@@ -2,142 +2,177 @@ require 'rails_helper'
 
 RSpec.describe SwitchesController, type: :controller do
 
+  let(:valid_attributes) {
+    skip("Add a hash of attributes valid for your model")
+  }
+
   describe "GET #index" do
     context "for 5 existing valid switches" do
-        before :each do
-          @switches = (0..4).map{|n| create :valid_switch}
-          get :index
-        end
+      before :each do
+        @switches = (0..4).map{|n| create :valid_switch}
+        get :index
+      end
 
-        it "must store all five switches assigned to @switches" do
-          expect(assigns(:switches).count).to eq(5)
-        end
+      it "must store all five switches assigned to @switches" do
+        expect(assigns(:switches).count).to eq(5)
+      end
 
-        it "all must be valid" do
-          assigns(:switches).each do |switch|
-            expect(switch).to be_valid(Switch)
+      it "all must be valid" do
+        assigns(:switches).each do |switch|
+          expect(switch).to be_valid(Switch)
 
-          end
         end
+      end
 
-        it "must to respond HTTP 200(OK)" do
-           expect(response).to have_http_status(:success)
-        end
+      it "must to respond HTTP 200(OK)" do
+        expect(response).to have_http_status(:success)
+      end
     end
 
+    context "With includeAttributes parameters" do
+      before :each do
+        @includeAttributes = %i(
+        accessState)
 
+        @switches = (0..5).map {|n| create :valid_switch}
+        get :index, {includeAttributes:  @includeAttributes.join(",")}
+      end
+
+      it "must assign an array to @switches" do
+        expect(@switches).to be_a(Array)
+      end
+      it "must store all six switches assigned to @switches" do
+      expect(@switches.count).to eq(6)
+    end
+
+    it "All switches have the attributes included" do
+      assigns(:switches).each do |switch|
+        @includeAttributes.each do |attribute|
+          expect(switch.properties.has_key? attribute).to eq(true)
+        end
+      end
+    end
   end
+end
 
   describe "GET #show" do
-    it "assigns the requested switch as @switch" do
-      switch = Switch.create! valid_attributes
-      get :show, params: {id: switch.to_param}, session: valid_session
-      expect(assigns(:switch)).to eq(switch)
+    context "fetching existing switches" do
+      before :each do
+        @switches = (0..4).map{|n| create :valid_switch}
+      end
+
+      it "all switches should be fetched individually" do
+
+        @switches.each do |switch|
+          get :show, {id: switch._id}
+          expect(switch).to be_valid(Switch)
+        end
+
+      end
+
     end
+
+    context "fetching unexisting switches" do
+      before :each do
+        @random_id = SecureRandom.hex.upcase
+        get :show, {id: @random_id}
+      end
+
+      it "returns HTTP 404(Not found) status code" do
+        expect(response).to have_http_status(:not_found)
+      end
+
+      it "expects to assign nil @switch in action" do
+        expect(assigns :switch).to be_nil
+      end
+
+    end
+
   end
 
-  describe "GET #new" do
-    it "assigns a new switch as @switch" do
-      get :new, params: {}, session: valid_session
-      expect(assigns(:switch)).to be_a_new(Switch)
-    end
-  end
-
-  describe "GET #edit" do
-    it "assigns the requested switch as @switch" do
-      switch = Switch.create! valid_attributes
-      get :edit, params: {id: switch.to_param}, session: valid_session
-      expect(assigns(:switch)).to eq(switch)
-    end
-  end
-
-  describe "POST #create" do
-    context "with valid params" do
-      it "creates a new Switch" do
-        expect {
-          post :create, params: {switch: valid_attributes}, session: valid_session
-        }.to change(Switch, :count).by(1)
-      end
-
-      it "assigns a newly created switch as @switch" do
-        post :create, params: {switch: valid_attributes}, session: valid_session
-        expect(assigns(:switch)).to be_a(Switch)
-        expect(assigns(:switch)).to be_persisted
-      end
-
-      it "redirects to the created switch" do
-        post :create, params: {switch: valid_attributes}, session: valid_session
-        expect(response).to redirect_to(Switch.last)
-      end
-    end
-
-    context "with invalid params" do
-      it "assigns a newly created but unsaved switch as @switch" do
-        post :create, params: {switch: invalid_attributes}, session: valid_session
-        expect(assigns(:switch)).to be_a_new(Switch)
-      end
-
-      it "re-renders the 'new' template" do
-        post :create, params: {switch: invalid_attributes}, session: valid_session
-        expect(response).to render_template("new")
-      end
-    end
-  end
 
   describe "PUT #update" do
     context "with valid params" do
-      let(:new_attributes) {
-        skip("Add a hash of attributes valid for your model")
-      }
+      # let(:new_attributes) {
+      #   skip("Add a hash of attributes valid for your model")
+      # }
+      before :each do
+        @switch = create :valid_switch
 
-      it "updates the requested switch" do
-        switch = Switch.create! valid_attributes
-        put :update, params: {id: switch.to_param, switch: new_attributes}, session: valid_session
-        switch.reload
-        skip("Add assertions for updated state")
+        @new_attributes = build :switches_valid_put_request_settings
       end
 
-      it "assigns the requested switch as @switch" do
-        switch = Switch.create! valid_attributes
-        put :update, params: {id: switch.to_param, switch: valid_attributes}, session: valid_session
-        expect(assigns(:switch)).to eq(switch)
+      it "updates the requested switch(settings values)" do
+
+        put :update, id: @switch._id, switch: {_id: @switch._id, properties: @new_attributes}
+
+        expect(response).to have_http_status(:no_content)
+        switch_updated_properties = Switch.find(@switch._id).properties.deep_symbolize_keys
+
+        @new_attributes.keys.each do |key|
+          expect(switch_updated_properties[key]).to eq(@new_attributes[key])
+        end
+
+        expect(switch_updated_properties.size).to_not eq(@new_attributes.size)
+
       end
 
-      it "redirects to the switch" do
-        switch = Switch.create! valid_attributes
-        put :update, params: {id: switch.to_param, switch: valid_attributes}, session: valid_session
-        expect(response).to redirect_to(switch)
+      it "updates the requested switch(settings values) missing any param inside of properties" do
+        @new_attributes.delete(%i(hostname ipv4Address location ipv6Address).sample)
+
+        put :update, id: @switch._id, switch: {_id: @switch._id, properties: @new_attributes}
+
+        expect(response).to have_http_status(:no_content)
+        switch_updated_properties = Switch.find(@switch._id).properties.deep_symbolize_keys
+
+        @new_attributes.keys.each do |key|
+          expect(switch_updated_properties[key]).to eq(@new_attributes[key])
+        end
+
+        expect(switch_updated_properties.size).to_not eq(@new_attributes.size)
+
       end
+
+
+
+      SwitchesHelper::fields_put_params.each do |key|
+        it "updates the requested switch (#{key} values)" do
+          @requested_attributes = build :"switches_valid_put_request_#{key}"
+
+          put :update, id: @switch._id, switch: {_id: @switch._id, properties: @requested_attributes}
+
+          expect(response).to have_http_status(:no_content)
+
+          switch_updated_properties = Switch.find(@switch._id).properties.deep_symbolize_keys
+
+          @requested_attributes.keys.each do |key|
+            expect(switch_updated_properties[key]).to eq(@requested_attributes[key])
+          end
+
+          expect(switch_updated_properties.size).to_not eq(@requested_attributes.size)
+        end
+
+
+      end
+
     end
 
     context "with invalid params" do
+
+      before :each do
+        @switch_request = build :switches_valid_put_request_settings
+        @switch_valid = create :valid_switch
+      end
+
       it "assigns the switch as @switch" do
-        switch = Switch.create! valid_attributes
-        put :update, params: {id: switch.to_param, switch: invalid_attributes}, session: valid_session
-        expect(assigns(:switch)).to eq(switch)
+        put :update, id: @switch_valid._id, switch:{id:@switch_valid._id}
+        expect(response).to have_http_status(:unprocessable_entity)
       end
 
-      it "re-renders the 'edit' template" do
-        switch = Switch.create! valid_attributes
-        put :update, params: {id: switch.to_param, switch: invalid_attributes}, session: valid_session
-        expect(response).to render_template("edit")
-      end
+
     end
   end
 
-  describe "DELETE #destroy" do
-    it "destroys the requested switch" do
-      switch = Switch.create! valid_attributes
-      expect {
-        delete :destroy, params: {id: switch.to_param}, session: valid_session
-      }.to change(Switch, :count).by(-1)
-    end
 
-    it "redirects to the switches list" do
-      switch = Switch.create! valid_attributes
-      delete :destroy, params: {id: switch.to_param}, session: valid_session
-      expect(response).to redirect_to(switches_url)
-    end
-  end
 
 end
