@@ -35,7 +35,7 @@ def self.possible_values_per_field
 end
 
 def self.field_put_params
-    %i(domainName hostConfig hostname ipInterfaces)
+    %i(domain_name host_config hostname ip_interfaces)
 end
 
 
