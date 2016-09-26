@@ -139,12 +139,12 @@ RSpec.describe "Nodes", type: :request do
       end
 
       it "The body should contain an array of objects" do
-        expect(JSON.parse(response.body)).to be_a(Hash)
+        expect(JSON.parse(response.body)).to be_a(Array)
       end
 
       it "Should have one of the \"Node\" types in properties" do
         valid_types = ["ITE", "Rack-Tower Server", "Lenovo ThinkServer", "SCU"]
-        expect(valid_types.include? (JSON.parse(response.body)["type"])).to be_truthy
+        expect(valid_types.include? (JSON.parse(response.body)[0]["type"])).to be_truthy
       end
     end
 
@@ -170,19 +170,19 @@ RSpec.describe "Nodes", type: :request do
       end
 
       it "The body should contain an array of objects" do
-        expect(@fetched_node).to be_a(Hash)
+        expect(@fetched_node).to be_a(Array)
       end
 
       it "All items in response should've all the specified attributes" do
         @includeAttributes.each do |attribute|
-          expect(@fetched_node.has_key? attribute.to_s).to eq(true)
+          expect(@fetched_node[0].has_key? attribute.to_s).to eq(true)
         end
       end
 
       it "All items in response shouldn't have any attribute not specified" do
         absent = NodesHelper::required_fields - @includeAttributes
         absent.each do |attribute|
-          expect(@fetched_node.has_key? attribute.to_s).to eq(false)
+          expect(@fetched_node[0].has_key? attribute.to_s).to eq(false)
         end
       end
     end
@@ -208,19 +208,19 @@ RSpec.describe "Nodes", type: :request do
       end
 
       it "The body should contain an array of objects" do
-        expect(@fetched_node).to be_a(Hash)
+        expect(@fetched_node).to be_a(Array)
       end
 
       it "All items in response shouldn't have any of the specified attributes" do
         @excludeAttributes.each do |attribute|
-          expect(@fetched_node.has_key? attribute.to_s).to eq(false)
+          expect(@fetched_node[0].has_key? attribute.to_s).to eq(false)
         end
       end
 
       it "All items in response should have all unspecified attributes" do
         absent = NodesHelper::required_fields - @excludeAttributes
         absent.each do |attribute|
-          expect(@fetched_node.has_key? attribute.to_s).to eq(true)
+          expect(@fetched_node[0].has_key? attribute.to_s).to eq(true)
         end
       end
     end

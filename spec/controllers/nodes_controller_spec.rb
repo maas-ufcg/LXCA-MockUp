@@ -214,7 +214,7 @@ describe "GET #show" do
             excludeAttributes: @excludeAttributes.join(",")
           }
           @excludeAttributes.each do |attribute|
-            node_properties = assigns(:node).properties
+            node_properties = node.properties
             expect(node_properties.has_key? attribute).to eq(false)
           end
         end
@@ -262,7 +262,7 @@ describe "GET #show" do
           }
           absent = NodesHelper::required_fields - @includeAttributes
           absent.each do |attribute|
-            node_properties = assigns(:node).properties
+            node_properties = node.properties
             expect(node_properties.has_key? attribute).to eq(false)
           end
         end
