@@ -68,6 +68,7 @@ class CmmsController < ApplicationController
       unless includeAttributes.nil?
         excludeAttributes = CmmsHelper::required_fields-includeAttributes
       end
+      
       unless excludeAttributes.nil?
         excludeAttributes.each do |attribute|
           cmm.properties.delete(attribute)
