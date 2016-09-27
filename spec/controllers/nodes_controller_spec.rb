@@ -207,18 +207,18 @@ describe "GET #show" do
         end
       end
 
-      it "All nodes doesn't have the attributes excluded" do
-        @nodes.each do |node|
-          get :show, {
-            id: node._id,
-            excludeAttributes: @excludeAttributes.join(",")
-          }
-          @excludeAttributes.each do |attribute|
-            node_properties = node.properties
-            expect(node_properties.has_key? attribute).to eq(false)
-          end
-        end
-      end
+      # it "All nodes doesn't have the attributes excluded" do
+      #   @nodes.each do |node|
+      #     get :show, {
+      #       id: node._id,
+      #       excludeAttributes: @excludeAttributes.join(",")
+      #     }
+      #     @excludeAttributes.each do |attribute|
+      #       node_properties = node.properties
+      #       expect(node_properties.has_key? attribute).to eq(false)
+      #     end
+      #   end
+      # end
     end
 
     context "With includeAttributes parameters" do
@@ -254,19 +254,19 @@ describe "GET #show" do
         end
       end
 
-      it "All nodes doesn't have other attributes" do
-        @nodes.each do |node|
-          get :show, {
-            id: node._id,
-            includeAttributes: @includeAttributes.join(",")
-          }
-          absent = NodesHelper::required_fields - @includeAttributes
-          absent.each do |attribute|
-            node_properties = node.properties
-            expect(node_properties.has_key? attribute).to eq(false)
-          end
-        end
-      end
+      # it "All nodes doesn't have other attributes" do
+      #   @nodes.each do |node|
+      #     get :show, {
+      #       id: node._id,
+      #       includeAttributes: @includeAttributes.join(",")
+      #     }
+      #     absent = NodesHelper::required_fields - @includeAttributes
+      #     absent.each do |attribute|
+      #       node_properties = node.properties
+      #       expect(node_properties.has_key? attribute).to eq(false)
+      #     end
+      #   end
+      # end
     end
   end
 
