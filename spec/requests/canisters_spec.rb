@@ -159,7 +159,7 @@ RSpec.describe "Canisters", type: :request do
       end
 
       it "The body should contain an array of objects" do
-        expect(JSON.parse(response.body)).to be_a(Hash)
+        expect(JSON.parse(response.body)).to be_a(Array)
       end
 
 
@@ -175,7 +175,7 @@ RSpec.describe "Canisters", type: :request do
         )
 
         get canister_path(canister), {includeAttributes: @includeAttributes.join(",")}
-        @fetched_canister = JSON.parse(response.body)
+        @fetched_canisters = JSON.parse(response.body)
       end
 
       it "HTTP response code is 200 (OK)" do
@@ -187,19 +187,23 @@ RSpec.describe "Canisters", type: :request do
       end
 
       it "The body should contain an array of objects" do
-        expect(@fetched_canister).to be_a(Hash)
+        expect(@fetched_canisters).to be_a(Array)
       end
 
       it "All items in response should've all the specified attributes" do
-        @includeAttributes.each do |attribute|
-          expect(@fetched_canister.has_key? attribute.to_s).to eq(true)
+        @fetched_canisters.each do |canister|
+          @includeAttributes.each do |attribute|
+            expect(canister.has_key? attribute.to_s).to eq(true)
+          end
         end
       end
 
       it "All items in response shouldn't have any attribute not specified" do
         absent = CanistersHelper::required_fields - @includeAttributes
-        absent.each do |attribute|
-          expect(@fetched_canister.has_key? attribute.to_s).to eq(false)
+        @fetched_canisters.each do |canister|
+          absent.each do |attribute|
+            expect(canister.has_key? attribute.to_s).to eq(false)
+          end
         end
       end
     end
@@ -213,7 +217,7 @@ RSpec.describe "Canisters", type: :request do
         )
 
         get canister_path(canister), {excludeAttributes: @excludeAttributes.join(",")}
-        @fetched_canister = JSON.parse(response.body)
+        @fetched_canisters = JSON.parse(response.body)
       end
 
       it "HTTP response code is 200 (OK)" do
@@ -225,19 +229,23 @@ RSpec.describe "Canisters", type: :request do
       end
 
       it "The body should contain an array of objects" do
-        expect(@fetched_canister).to be_a(Hash)
+        expect(@fetched_canisters).to be_a(Array)
       end
 
       it "All items in response shouldn't have any of the specified attributes" do
-        @excludeAttributes.each do |attribute|
-          expect(@fetched_canister.has_key? attribute.to_s).to eq(false)
+        @fetched_canisters.each do |canister|
+          @excludeAttributes.each do |attribute|
+            expect(canister.has_key? attribute.to_s).to eq(false)
+          end
         end
       end
 
       it "All items in response should have all unspecified attributes" do
         absent = CanistersHelper::required_fields - @excludeAttributes
-        absent.each do |attribute|
-          expect(@fetched_canister.has_key? attribute.to_s).to eq(true)
+        @fetched_canisters.each do |canister|
+          absent.each do |attribute|
+            expect(canister.has_key? attribute.to_s).to eq(true)
+          end
         end
       end
     end
