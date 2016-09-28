@@ -33,7 +33,32 @@ class SwitchesController < ApplicationController
     end
 
 
+    # PATCH/PUT /switches/1
+    # PATCH/PUT /switches/1.json
+    def update
+      begin
+        @switch = Switch.find(params[:id])
+
+        if update_switch (switch_params)
+          head :no_content
+        else
+          render json: @switch.errors, status: :unprocessable_entity
+        end
+      rescue ActionController::ParameterMissing => e
+        head :unprocessable_entity
+      end
+    end
+
     private
+
+    def set_switch
+      @switches = begin
+        params[:id].split(',').map do |id|
+          Switch.find(id)
+        end
+      rescue Mongoid::Errors::DocumentNotFound => ex
+      end
+    end
 
     def setup_switch_properties(switch)
       return if switch.nil?
@@ -56,27 +81,20 @@ class SwitchesController < ApplicationController
       string.split(",").map(&:to_sym) if string.is_a?(String)
     end
 
-
-    def set_switch
-      @switches = begin
-                params[:id].split(',').map do |id|
-                    Switch.find(id)
-                  end
-                rescue Mongoid::Errors::DocumentNotFound => ex
-                end
-                setup_switch_properties @switch
-    end
-
     # Never trust parameters from the scary internet, only allow the white list through.
     def switch_params
-      params.require(:switch).permit(:_id, :properties)
+      params.require(:switch).require(:properties).to_hash.deep_symbolize_keys
     end
 
     def update_switch(switch_update_params)
-      switch_update_params.each do |key,value|
-        @switch.properties[key] = value
+      unless switch_update_params.nil?
+
+        switch_update_params.each do |key,value|
+          @switch.properties[key] = value
+        end
+
+        @switch.save
       end
-      @switch.save
     end
 
-end
+  end

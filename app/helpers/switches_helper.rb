@@ -17,3 +17,4 @@ module SwitchesHelper
   end
 
 end
+
