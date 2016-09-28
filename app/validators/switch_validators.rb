@@ -149,3 +149,4 @@ class SwitchValidators < ActiveModel::Validator
 	end
 
 end
+

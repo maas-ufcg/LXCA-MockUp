@@ -69,3 +69,4 @@ RSpec.describe Switch, type: :model do
   end
 
 end
+
